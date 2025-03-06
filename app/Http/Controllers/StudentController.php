@@ -11,7 +11,14 @@ class StudentController extends Controller
 
     public function index()
     {
-        return view('frontend.pages.dashboard');
+        $user = auth('student')->user();
+        $districts = Location::whereNull('parent_id')->pluck('name', 'id');
+        if($user->district_id){
+            $upazilas = Location::where('parent_id', $user->district_id)->pluck('name', 'id');
+        }else{
+            $upazilas = [];
+        }
+        return view('frontend.pages.dashboard', compact('user', 'districts', 'upazilas'));
     }
 
     /**
