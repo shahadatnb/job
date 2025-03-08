@@ -8,20 +8,17 @@ use App\Models\User;
 use App\Models\Branch;
 use App\Models\Menu;
 use App\Models\MenuItem;
-use App\Models\Student\AcademicYear;
 
 class AdminController extends Controller
 {
     
     public function index()
     {      
-        $this->middleware('branch');  
         return view('admin.pages.dashboard');
     }
 
     public function home(){
-         $branches = auth()->user()->branches->pluck('name','id')->toArray();
-         return view('admin.pages.home',compact('branches'));
+         return redirect()->route('dashboard');
      }
 
      public function branchSelect(Request $request){

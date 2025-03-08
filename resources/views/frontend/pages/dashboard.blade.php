@@ -25,8 +25,9 @@
                 <nav>
                     <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
                         <button class="nav-link active" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#nav-basic" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Basic</button>
-                        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
-                        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
+                        <button class="nav-link" id="nav-education-tab" data-bs-toggle="tab" data-bs-target="#nav-education" type="button" role="tab" aria-controls="nav-education" aria-selected="false">Education/Training</button>
+                        <button class="nav-link" id="nav-employment-tab" data-bs-toggle="tab" data-bs-target="#nav-employment" type="button" role="tab" aria-controls="nav-employment" aria-selected="false">Employment</button>
+                        <button class="nav-link" id="nav-others-tab" data-bs-toggle="tab" data-bs-target="#nav-others" type="button" role="tab" aria-controls="nav-others" aria-selected="false">Others</button>
                     </div>
                 </nav>
                 <div class="tab-content p-3 border bg-light" id="nav-basic">
@@ -74,17 +75,33 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                        <p><strong>This is some placeholder content the Profile tab's associated content.</strong>
-                            Clicking another tab will toggle the visibility of this one for the next.
-                            The tab JavaScript swaps classes to control the content visibility and styling. You can use it with
-                            tabs, pills, and any other <code>.nav</code>-powered navigation.</p>
+                    <div class="tab-pane fade" id="nav-education" role="tabpanel" aria-labelledby="nav-education-tab">
+                        <h2>Academic Summary</h2>
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Exam</th>
+                                <th>Group</th>
+                                <th>Passing Year</th>
+                                <th>Board</th>
+                                <th>Result</th>
+                            </tr>
+                            @foreach($education as $edu)
+                            <tr>
+                                <td>{{ $edu->exam }}</td>
+                                <td>{{ $edu->group }}</td>
+                                <td>{{ $edu->passing_year }}</td>
+                                <td>{{ $edu->board }}</td>
+                                <td>{{ $edu->result }}</td>
+                            </tr>
+                            @endforeach
+                        </table>
+                        <h2>Training Summary</h2>
                     </div>
-                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                        <p><strong>This is some placeholder content the Contact tab's associated content.</strong>
-                            Clicking another tab will toggle the visibility of this one for the next.
-                            The tab JavaScript swaps classes to control the content visibility and styling. You can use it with
-                            tabs, pills, and any other <code>.nav</code>-powered navigation.</p>
+                    <div class="tab-pane fade" id="nav-employment" role="tabpanel" aria-labelledby="nav-employment-tab">
+                        
+                    </div>
+                    <div class="tab-pane fade" id="nav-others" role="tabpanel" aria-labelledby="nav-others-tab">
+                        
                     </div>
                 </div>
             </div>
