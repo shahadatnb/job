@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EduLevel;
 use App\Models\Student;
 use App\Models\Location;
+use App\Models\StudentEducation;
+use App\Models\StudentEmployment;
+use App\Models\StudentCertification;
+use App\Models\StudentTraining;
+use App\Models\StudentSkill;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -18,7 +25,8 @@ class StudentController extends Controller
         }else{
             $upazilas = [];
         }
-        return view('frontend.pages.dashboard', compact('user', 'districts', 'upazilas'));
+        $exams = EduLevel::where('is_active', 1)->get();//->pluck('name', 'id');
+        return view('frontend.pages.dashboard', compact('user', 'districts', 'upazilas', 'exams'));
     }
 
     /**
@@ -96,6 +104,29 @@ class StudentController extends Controller
         $user->save();
         session()->flash('success', 'Profile updated successfully');
         return redirect()->route('student.profile');
+    }
+
+    public function education_store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'edu_level_id' => 'required',
+            'edu_group_id' => 'required',
+            'edu_board_id' => 'required',
+            'passing_year' => 'required',
+            'gpa' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
+        }
+        $edu = new StudentEducation();
+        $edu->student_id = auth('student')->user()->id;
+        $edu->edu_level_id = $request->edu_level_id;
+        $edu->edu_group_id = $request->edu_group_id;
+        $edu->edu_board_id = $request->edu_board_id;
+        $edu->passing_year = $request->passing_year;
+        $edu->gpa = $request->gpa;
+        $edu->save();
+        return response()->json(['status' => true, 'message' => 'Education saved successfully']);
     }
 
     public function destroy(Student $student)

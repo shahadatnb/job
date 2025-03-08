@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 02, 2025 at 05:33 PM
+-- Generation Time: Mar 08, 2025 at 05:25 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -20,6 +20,72 @@ SET time_zone = "+00:00";
 --
 -- Database: `laravel_job`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `edu_boards`
+--
+
+CREATE TABLE `edu_boards` (
+  `id` bigint UNSIGNED NOT NULL,
+  `edu_level_id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_active` tinyint UNSIGNED DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `edu_groups`
+--
+
+CREATE TABLE `edu_groups` (
+  `id` bigint UNSIGNED NOT NULL,
+  `edu_level_id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_active` tinyint UNSIGNED DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `edu_groups`
+--
+
+INSERT INTO `edu_groups` (`id`, `edu_level_id`, `name`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Scince', 1, NULL, NULL),
+(2, 1, 'Arts', 1, NULL, NULL),
+(3, 1, 'Commerce', 1, NULL, NULL),
+(4, 2, 'Computer Science', 1, NULL, NULL),
+(5, 2, 'Electrical', 1, NULL, NULL),
+(6, 2, 'Electronics', 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `edu_levels`
+--
+
+CREATE TABLE `edu_levels` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_diploma` tinyint UNSIGNED DEFAULT '0',
+  `serial` tinyint UNSIGNED DEFAULT '0',
+  `is_active` tinyint UNSIGNED DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `edu_levels`
+--
+
+INSERT INTO `edu_levels` (`id`, `name`, `is_diploma`, `serial`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'SSC/Equivalent', 0, 1, 1, NULL, NULL),
+(2, 'Diploma', 1, 2, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -769,7 +835,15 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (153, '2025_01_21_072326_create_financial_years_table', 45),
 (154, '2025_01_21_074023_create_holding_taxes_table', 45),
 (155, '2025_01_21_080218_create_citizens_table', 45),
-(156, '2025_01_24_104424_create_tax_items_table', 45);
+(156, '2025_01_24_104424_create_tax_items_table', 45),
+(157, '2025_03_08_214747_create_edu_levels_table', 46),
+(158, '2025_03_08_214824_create_edu_groups_table', 46),
+(159, '2025_03_08_215049_create_edu_boards_table', 46),
+(160, '2025_03_08_215146_create_student_education_table', 46),
+(161, '2025_03_08_215216_create_student_employments_table', 46),
+(162, '2025_03_08_215310_create_student_trainings_table', 46),
+(163, '2025_03_08_215320_create_student_skills_table', 46),
+(164, '2025_03_08_221457_create_student_certifications_table', 46);
 
 -- --------------------------------------------------------
 
@@ -965,56 +1039,6 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sms_contacts`
---
-
-CREATE TABLE `sms_contacts` (
-  `id` bigint UNSIGNED NOT NULL,
-  `branch_id` int UNSIGNED DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `mobile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `category_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `sms_contacts`
---
-
-INSERT INTO `sms_contacts` (`id`, `branch_id`, `name`, `mobile`, `category_id`, `note`, `status`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'Zakir', '01740836439', '2', NULL, 1, '2023-11-08 02:27:35', '2023-11-08 02:27:35'),
-(2, NULL, 'Shahadat Hosain', '01757839516', '2', NULL, 1, '2024-10-28 09:26:23', '2024-10-28 09:26:23'),
-(3, NULL, 'Bulbul', '01912624881', '1', NULL, 1, '2024-10-28 09:26:52', '2024-10-28 09:26:52');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sms_contact_categories`
---
-
-CREATE TABLE `sms_contact_categories` (
-  `id` bigint UNSIGNED NOT NULL,
-  `branch_id` int UNSIGNED DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `sms_contact_categories`
---
-
-INSERT INTO `sms_contact_categories` (`id`, `branch_id`, `name`, `status`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'Family', 1, '2023-11-08 02:24:42', '2023-11-08 02:24:42'),
-(2, NULL, 'Friend', 1, '2023-11-08 02:27:17', '2023-11-08 02:27:17');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `sms_logs`
 --
 
@@ -1110,6 +1134,97 @@ CREATE TABLE `students` (
 
 INSERT INTO `students` (`id`, `name`, `name_bn`, `email`, `email_verified_at`, `password`, `remember_token`, `father_name`, `mother_name`, `nid`, `phone`, `date_of_birth`, `gender`, `religion`, `blood_group`, `village`, `post_office`, `post_code`, `upazila_id`, `district_id`, `parmanent_village`, `parmanent_post_office`, `parmanent_post_code`, `parmanent_upazila_id`, `parmanent_district_id`, `created_at`, `updated_at`) VALUES
 (1, 'Shahadat Hosain', 'শাহাদাত হোসেন', 'shahadat@asiancoder.com', NULL, '$2y$12$z.oXPirU29HjY6MEPnxzQekGLoSvP3zjNTQ/ECamtXbLGmRT7xv2.', NULL, 'Mostafa Kamal', 'Sazida Begum', '123456', '01757839516', '2024-12-01', 'male', 'Muslim', 'AB+', 'Kecuatoil', 'Khorkhori', '6204', 545, 391, NULL, NULL, NULL, NULL, NULL, '2025-01-24 05:47:21', '2025-02-06 06:46:12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_certifications`
+--
+
+CREATE TABLE `student_certifications` (
+  `id` bigint UNSIGNED NOT NULL,
+  `student_id` bigint UNSIGNED NOT NULL,
+  `certification` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `institute` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date DEFAULT NULL,
+  `location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_education`
+--
+
+CREATE TABLE `student_education` (
+  `id` bigint UNSIGNED NOT NULL,
+  `student_id` bigint UNSIGNED NOT NULL,
+  `edu_level_id` bigint UNSIGNED NOT NULL,
+  `edu_group_id` bigint UNSIGNED NOT NULL,
+  `edu_board_id` bigint UNSIGNED NOT NULL,
+  `roll_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reg_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `passing_year` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gpa` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_employments`
+--
+
+CREATE TABLE `student_employments` (
+  `id` bigint UNSIGNED NOT NULL,
+  `student_id` bigint UNSIGNED NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date DEFAULT NULL,
+  `is_current` tinyint UNSIGNED DEFAULT '0',
+  `company_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `job_title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `job_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_skills`
+--
+
+CREATE TABLE `student_skills` (
+  `id` bigint UNSIGNED NOT NULL,
+  `student_id` bigint UNSIGNED NOT NULL,
+  `skill` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_trainings`
+--
+
+CREATE TABLE `student_trainings` (
+  `id` bigint UNSIGNED NOT NULL,
+  `student_id` bigint UNSIGNED NOT NULL,
+  `training_title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `topics_covered` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `training_year` date NOT NULL,
+  `training_institute` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `training_duration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `training_location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1211,6 +1326,26 @@ INSERT INTO `user_branches` (`id`, `branch_id`, `user_id`) VALUES
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `edu_boards`
+--
+ALTER TABLE `edu_boards`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `edu_boards_edu_level_id_foreign` (`edu_level_id`);
+
+--
+-- Indexes for table `edu_groups`
+--
+ALTER TABLE `edu_groups`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `edu_groups_edu_level_id_foreign` (`edu_level_id`);
+
+--
+-- Indexes for table `edu_levels`
+--
+ALTER TABLE `edu_levels`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -1315,18 +1450,6 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
--- Indexes for table `sms_contacts`
---
-ALTER TABLE `sms_contacts`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sms_contact_categories`
---
-ALTER TABLE `sms_contact_categories`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `sms_logs`
 --
 ALTER TABLE `sms_logs`
@@ -1344,6 +1467,44 @@ ALTER TABLE `sms_templates`
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `citizens_email_unique` (`email`);
+
+--
+-- Indexes for table `student_certifications`
+--
+ALTER TABLE `student_certifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_certifications_student_id_foreign` (`student_id`);
+
+--
+-- Indexes for table `student_education`
+--
+ALTER TABLE `student_education`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_education_student_id_foreign` (`student_id`),
+  ADD KEY `student_education_edu_level_id_foreign` (`edu_level_id`),
+  ADD KEY `student_education_edu_group_id_foreign` (`edu_group_id`),
+  ADD KEY `student_education_edu_board_id_foreign` (`edu_board_id`);
+
+--
+-- Indexes for table `student_employments`
+--
+ALTER TABLE `student_employments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_employments_student_id_foreign` (`student_id`);
+
+--
+-- Indexes for table `student_skills`
+--
+ALTER TABLE `student_skills`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_skills_student_id_foreign` (`student_id`);
+
+--
+-- Indexes for table `student_trainings`
+--
+ALTER TABLE `student_trainings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_trainings_student_id_foreign` (`student_id`);
 
 --
 -- Indexes for table `taxonomies`
@@ -1387,6 +1548,24 @@ ALTER TABLE `user_branches`
 --
 
 --
+-- AUTO_INCREMENT for table `edu_boards`
+--
+ALTER TABLE `edu_boards`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `edu_groups`
+--
+ALTER TABLE `edu_groups`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `edu_levels`
+--
+ALTER TABLE `edu_levels`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -1420,7 +1599,7 @@ ALTER TABLE `menu_items`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1459,18 +1638,6 @@ ALTER TABLE `roles`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `sms_contacts`
---
-ALTER TABLE `sms_contacts`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `sms_contact_categories`
---
-ALTER TABLE `sms_contact_categories`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- AUTO_INCREMENT for table `sms_logs`
 --
 ALTER TABLE `sms_logs`
@@ -1487,6 +1654,36 @@ ALTER TABLE `sms_templates`
 --
 ALTER TABLE `students`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `student_certifications`
+--
+ALTER TABLE `student_certifications`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_education`
+--
+ALTER TABLE `student_education`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_employments`
+--
+ALTER TABLE `student_employments`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_skills`
+--
+ALTER TABLE `student_skills`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_trainings`
+--
+ALTER TABLE `student_trainings`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `taxonomies`
@@ -1517,11 +1714,56 @@ ALTER TABLE `user_branches`
 --
 
 --
+-- Constraints for table `edu_boards`
+--
+ALTER TABLE `edu_boards`
+  ADD CONSTRAINT `edu_boards_edu_level_id_foreign` FOREIGN KEY (`edu_level_id`) REFERENCES `edu_levels` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `edu_groups`
+--
+ALTER TABLE `edu_groups`
+  ADD CONSTRAINT `edu_groups_edu_level_id_foreign` FOREIGN KEY (`edu_level_id`) REFERENCES `edu_levels` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `roles_permissions`
 --
 ALTER TABLE `roles_permissions`
   ADD CONSTRAINT `roles_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `roles_permissions_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_certifications`
+--
+ALTER TABLE `student_certifications`
+  ADD CONSTRAINT `student_certifications_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_education`
+--
+ALTER TABLE `student_education`
+  ADD CONSTRAINT `student_education_edu_board_id_foreign` FOREIGN KEY (`edu_board_id`) REFERENCES `edu_boards` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_education_edu_group_id_foreign` FOREIGN KEY (`edu_group_id`) REFERENCES `edu_groups` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_education_edu_level_id_foreign` FOREIGN KEY (`edu_level_id`) REFERENCES `edu_levels` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_education_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_employments`
+--
+ALTER TABLE `student_employments`
+  ADD CONSTRAINT `student_employments_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_skills`
+--
+ALTER TABLE `student_skills`
+  ADD CONSTRAINT `student_skills_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_trainings`
+--
+ALTER TABLE `student_trainings`
+  ADD CONSTRAINT `student_trainings_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `users_permissions`

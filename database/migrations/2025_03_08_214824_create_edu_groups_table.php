@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('options', function (Blueprint $table) {
+        Schema::create('edu_groups', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('edu_level_id');
+            $table->foreign('edu_level_id')->references('id')->on('edu_levels')->onDelete('cascade');
             $table->string('name');
-            $table->string('name_en')->nullable();
+            $table->unsignedTinyInteger('is_active')->default(1)->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('options');
+        Schema::dropIfExists('edu_groups');
     }
 };

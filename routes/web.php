@@ -64,6 +64,22 @@ Route::group(['prefix'=>'student','middleware'=>'auth:student'], function(){
     Route::post('/application/store', [ApplicationController::class,'store'])->name('student.application.store');
     Route::get('/application', [ApplicationController::class,'index'])->name('student.application.index');
     //Route::resource('unit', UnitController::class);
+
+    Route::post('education_store', [StudentController::class, 'education_store'])->name('student.education.store');
+    Route::post('education_update', [StudentController::class, 'education_update'])->name('student.education.update');
+    Route::post('education_destroy', [StudentController::class, 'education_destroy'])->name('student.education.destroy');
+
+    Route::post('experience_store', [StudentController::class, 'experience_store'])->name('student.experience.store');
+    Route::post('experience_update', [StudentController::class, 'experience_update'])->name('student.experience.update');
+    Route::post('experience_destroy', [StudentController::class, 'experience_destroy'])->name('student.experience.destroy');
+
+    Route::post('training_store', [StudentController::class, 'training_store'])->name('student.training.store');
+    Route::post('training_update', [StudentController::class, 'training_update'])->name('student.training.update');
+    Route::post('training_destroy', [StudentController::class, 'training_destroy'])->name('student.training.destroy');
+
+    Route::post('skill_store', [StudentController::class, 'skill_store'])->name('student.skill.store');
+    Route::post('skill_update', [StudentController::class, 'skill_update'])->name('student.skill.update');
+    Route::post('skill_destroy', [StudentController::class, 'skill_destroy'])->name('student.skill.destroy');
 });
 
 Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth'], function(){  
@@ -120,7 +136,6 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth
 
 Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth','role:superadmin,admin']], function(){
     Route::resource('users', UsersController::class);
-    Route::resource('branch', BranchController::class);
     Route::resource('location', LocationController::class);
     Route::resource('menus',MenuController::class);
 

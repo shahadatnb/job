@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tax_items', function (Blueprint $table) {
+        Schema::create('edu_levels', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('name_bn')->nullable();
-            $table->decimal('amount', 10, 2);
+            $table->unsignedTinyInteger('is_diploma')->default(0)->nullable();
+            $table->unsignedTinyInteger('serial')->default(0)->nullable();
+            $table->unsignedTinyInteger('is_active')->default(1)->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tax_items');
+        Schema::dropIfExists('edu_levels');
     }
 };

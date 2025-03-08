@@ -83,19 +83,45 @@
                                 <th>Group</th>
                                 <th>Passing Year</th>
                                 <th>Board</th>
+                                <th>Year</th>
                                 <th>Result</th>
+                                <th>Action</th>
                             </tr>
-                            @foreach($education as $edu)
+                            @foreach($user->educations as $edu)
                             <tr>
-                                <td>{{ $edu->exam }}</td>
-                                <td>{{ $edu->group }}</td>
+                                <td>{{ $edu->exam->name }}</td>
+                                <td>{{ $edu->group->name }}</td>
                                 <td>{{ $edu->passing_year }}</td>
-                                <td>{{ $edu->board }}</td>
-                                <td>{{ $edu->result }}</td>
+                                <td>{{ $edu->board->name }}</td>
+                                <td>{{ $edu->passing_year }}</td>    
+                                <td>{{ $edu->gpa }}</td>
                             </tr>
                             @endforeach
                         </table>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newEduModal">New Entry</button>
                         <h2>Training Summary</h2>
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Training</th>
+                                <th>Training Center</th>
+                                <th>Training Year</th>
+                                <th>Training Type</th>
+                                <th>Training Duration</th>
+                                <th>Training Result</th>
+                                <th>Action</th>
+                            </tr>
+                            @foreach($user->trainings as $edu)
+                            <tr>
+                                <td>{{ $edu->training->name }}</td>
+                                <td>{{ $edu->training_center }}</td>
+                                <td>{{ $edu->training_year }}</td>
+                                <td>{{ $edu->training_type }}</td>
+                                <td>{{ $edu->training_duration }}</td>
+                                <td>{{ $edu->training_result }}</td>
+                            </tr>
+                            @endforeach
+                        </table>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#newTrainingModal">New Entry</button>
                     </div>
                     <div class="tab-pane fade" id="nav-employment" role="tabpanel" aria-labelledby="nav-employment-tab">
                         
@@ -109,6 +135,52 @@
     </div>
 </div>
 
+<div class="modal fade" id="newEduModal" tabindex="-1" role="dialog" aria-labelledby="newEduModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newEduModalLabel">New Education</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="{{route('student.education.store')}}" method="post">
+                @csrf
+                <div class="form-group">
+                    <label for="exam_id">Exam</label>
+                    <select name="exam_id" id="exam_id" class="form-control">
+                        <option value="">Select Exam</option>
+                        @foreach($exams as $exam)
+                        <option value="{{$exam->id}}">{{$exam->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edu_group_id">Group</label>
+                    <select name="edu_group_id" id="edu_group_id" class="form-control">
+                        <option value="">Select Group</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edu_board_id">Board</label>
+                    <select name="edu_board_id" id="edu_board_id" class="form-control">
+                        <option value="">Select Board</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="passing_year">Passing Year</label>
+                    <input type="text" name="passing_year" id="passing_year" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="gpa">GPA</label>
+                    <input type="text" name="gpa" id="gpa" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
 
 @endsection
 

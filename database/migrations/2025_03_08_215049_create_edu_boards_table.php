@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('heirs', function (Blueprint $table) {
+        Schema::create('edu_boards', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('service_id');            
-            $table->string('name')->nullable();
-            $table->date('dob')->nullable();
-            $table->string('relation')->nullable();
-            $table->string('gender')->nullable();            
+            $table->unsignedBigInteger('edu_level_id');
+            $table->foreign('edu_level_id')->references('id')->on('edu_levels')->onDelete('cascade');            
+            $table->string('name');
+            $table->unsignedTinyInteger('is_active')->default(1)->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('heirs');
+        Schema::dropIfExists('edu_boards');
     }
 };

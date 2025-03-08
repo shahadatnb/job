@@ -46,4 +46,29 @@ class Student extends Authenticatable
         return $this->belongsTo(Location::class, 'parmanent_district_id');
     }
 
+    public function educations()
+    {
+        return $this->hasMany(StudentEducation::class);
+    }
+
+    public function employments()
+    {
+        return $this->hasMany(StudentEmployment::class);
+    }
+
+    public function trainings()
+    {
+        return $this->hasMany(StudentTraining::class);
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(StudentSkill::class);
+    }
+
+    public function certifications()
+    {
+        return $this->hasMany(StudentCertification::class);
+    }
+
 }

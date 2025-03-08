@@ -21,13 +21,6 @@ class AdminController extends Controller
          return redirect()->route('dashboard');
      }
 
-     public function branchSelect(Request $request){
-         $branch = Branch::find($request->branch_id);
-         //session()->forget('branch');
-         session()->put('branch',$branch->toArray());
-         return redirect()->route('dashboard');
-     }
-
     public function settings()
     {
         $this->middleware('branch');
