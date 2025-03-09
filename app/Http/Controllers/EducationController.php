@@ -18,7 +18,7 @@ class EducationController extends Controller
         return response()->json(['status'=>true,'groups' => $groups, 'boards' => $boards]);
     }
 
-    public function education_store(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'edu_level_id' => 'required',
@@ -38,6 +38,6 @@ class EducationController extends Controller
         $edu->passing_year = $request->passing_year;
         $edu->gpa = $request->gpa;
         $edu->save();
-        return response()->json(['status' => true, 'message' => 'Education saved successfully']);
+        return response()->json(['status' => true, 'type'=> 'save', 'data'=> $edu, 'message' => 'Education saved successfully']);
     }
 }

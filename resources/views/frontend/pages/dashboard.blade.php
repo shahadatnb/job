@@ -98,7 +98,7 @@
                             </tr>
                             @endforeach
                         </table>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newEduModal">New Entry</button>
+                        <button class="btn btn-primary" id="newAcademicModal">New Entry</button>
                         <h2>Training Summary</h2>
                         <table class="table table-sm">
                             <tr>
@@ -146,8 +146,8 @@
             <form action="{{route('student.education.store')}}" id="eduForm" method="post">
                 @csrf
                 <div class="form-group">
-                    <label for="exam_id">Exam</label>
-                    <select name="exam_id" id="exam_id" class="form-control">
+                    <label for="edu_level_id">Exam</label>
+                    <select name="edu_level_id" id="edu_level_id" class="form-control">
                         <option value="">Select Exam</option>
                         @foreach($exams as $exam)
                         <option value="{{$exam->id}}">{{$exam->name}}</option>
@@ -188,10 +188,10 @@
 @section('js')
 <script>
     $(document).ready(function() {
-        $('#exam_id').change(function() {
-            var examId = $(this).val();
+        $('#edu_level_id').change(function() {
+            var edu_level_id = $(this).val();
             $.ajax({
-                url: "{{route('student.education.group')}}?edu_level_id=" + examId,
+                url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
                 method: 'GET',
                 success: function(data) {
                     console.log(data);
@@ -211,11 +211,17 @@
                 }
             });
         });
+
+        $('#newAcademicModal').click(function() {
+            $('#eduForm').attr('action', "{{route('student.education.store')}}");
+            $('#newEduModal').modal('show');
+        });
     
         $('#eduForm').submit(function(e) {
             e.preventDefault();
             var formData = $(this).serialize();
             let url = $(this).attr('action');
+            $("#errorMsg").empty();
             $.ajax({
                 url: url,
                 method: 'POST',
@@ -225,6 +231,14 @@
                     if(data.status == true){
                         $('#eduForm')[0].reset();
                         $('#newEduModal').modal('hide');
+                    }else{
+                        //console.log(data);
+                        if(data.message){
+                            $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+                        }
+                            data.errors.forEach(function(element){
+                            $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+                        });
                     }
                 }
             });

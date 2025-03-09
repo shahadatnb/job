@@ -65,21 +65,6 @@ class AppServiceProvider extends ServiceProvider
             });
         */
         
-        Validator::extend('unique_with', function ($attribute, $value, $parameters, $validator) {
-          //dd($attribute, $value, $parameters, $validator);
-          $table = array_shift($parameters);
-          $field = array_shift($parameters);
-          $skipId = array_shift($parameters);
-          $count = DB::table($table)->where($field, $value)->where('branch_id', session('branch')['id']);
-          if($skipId != null){
-            $count = $count->where('id', '!=', $skipId);
-          }
-          $count = $count->count();
-          if($count > 0){
-            return false;
-          }
-          return true;
-        });
 
         \View::share('postType', $this->postType);
 
