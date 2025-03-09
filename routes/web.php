@@ -74,27 +74,27 @@ Route::group(['prefix'=>'student','middleware'=>'auth:student'], function(){
     Route::post('education_store', [EducationController::class, 'store'])->name('student.education.store');
     Route::get('education_edit', [EducationController::class, 'edit'])->name('student.education.edit');
     Route::post('education_update', [EducationController::class, 'update'])->name('student.education.update');
-    Route::post('education_destroy', [EducationController::class, 'destroy'])->name('student.education.destroy');
+    Route::get('education_destroy', [EducationController::class, 'destroy'])->name('student.education.destroy');
 
     Route::post('certification_store', [CertificationController::class, 'store'])->name('student.certification.store');
     Route::get('certification_edit', [CertificationController::class, 'edit'])->name('student.certification.edit');
     Route::post('certification_update', [CertificationController::class, 'update'])->name('student.certification.update');
-    Route::post('certification_destroy', [CertificationController::class, 'destroy'])->name('student.certification.destroy');
+    Route::get('certification_destroy', [CertificationController::class, 'destroy'])->name('student.certification.destroy');
 
     Route::post('experience_store', [EmploymentController::class, 'store'])->name('student.experience.store');
     Route::get('experience_edit', [EmploymentController::class, 'edit'])->name('student.experience.edit');
     Route::post('experience_update', [EmploymentController::class, 'update'])->name('student.experience.update');
-    Route::post('experience_destroy', [EmploymentController::class, 'destroy'])->name('student.experience.destroy');
+    Route::get('experience_destroy', [EmploymentController::class, 'destroy'])->name('student.experience.destroy');
 
     Route::post('training_store', [TrainingController::class, 'store'])->name('student.training.store');
     Route::get('training_edit', [TrainingController::class, 'edit'])->name('student.training.edit');
     Route::post('training_update', [TrainingController::class, 'update'])->name('student.training.update');
-    Route::post('training_destroy', [TrainingController::class, 'destroy'])->name('student.training.destroy');
+    Route::get('training_destroy', [TrainingController::class, 'destroy'])->name('student.training.destroy');
 
     Route::post('skill_store', [SkillConrtoller::class, 'store'])->name('student.skill.store');
     Route::get('skill_edit', [SkillConrtoller::class, 'edit'])->name('student.skill.edit');
     Route::post('skill_update', [SkillConrtoller::class, 'update'])->name('student.skill.update');
-    Route::post('skill_destroy', [SkillConrtoller::class, 'destroy'])->name('student.skill.destroy');
+    Route::get('skill_destroy', [SkillConrtoller::class, 'destroy'])->name('student.skill.destroy');
 });
 
 Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth'], function(){  

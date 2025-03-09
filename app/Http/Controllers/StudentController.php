@@ -65,6 +65,7 @@ class StudentController extends Controller
 
     public function updateProfile(Request $request)
     {
+        /*
         $request->validate([
             'name' => 'required|string|max:50',
             'email' => 'required|email',
@@ -78,7 +79,33 @@ class StudentController extends Controller
             'post_office' => 'required|string|max:50',
             'post_code' => 'required|numeric',
 
-        ]);        
+            'village' => 'required|string|max:50',
+            'ward' => 'required|numeric',
+            'post_office' => 'required|string|max:50',
+            'post_code' => 'required|numeric',
+            'district_id' => 'required',
+            'upazila_id' => 'required',
+            'parmanent_village' => 'required|string|max:50',
+            'parmanent_ward' => 'required|numeric',
+            'parmanent_post_office' => 'required|string|max:50',
+            'parmanent_post_code' => 'required|numeric',
+            'parmanent_district_id' => 'required',
+            'parmanent_upazila_id' => 'required',
+        ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:50',
+            'email' => 'required|email',
+            'phone' => 'required|digits:11',
+            'nid' => 'required|max:17',
+            'date_of_birth' => 'required',
+            'father_name' => 'required|string|max:50',
+            'mother_name' => 'required|string|max:50',            
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
+        }
 
         $user = Student::find(auth('student')->user()->id);
         $user->name = $request->name;
@@ -91,6 +118,7 @@ class StudentController extends Controller
         $user->blood_group = $request->blood_group;
         $user->father_name = $request->father_name;
         $user->mother_name = $request->mother_name;
+        /*
         $user->village = $request->village;
         $user->post_office = $request->post_office;
         $user->post_code = $request->post_code;
@@ -101,9 +129,12 @@ class StudentController extends Controller
         $user->parmanent_post_code = $request->parmanent_post_code;
         $user->parmanent_district_id = $request->parmanent_district_id;
         $user->parmanent_upazila_id = $request->parmanent_upazila_id;
+        */
         $user->save();
-        session()->flash('success', 'Profile updated successfully');
-        return redirect()->route('student.profile');
+        return response()->json(['status' => true, 'type'=> 'save', 'student'=> $user, 'message' => 'Education saved successfully']);
+
+        //session()->flash('success', 'Profile updated successfully');
+        //return redirect()->route('student.profile');
     }
 
     

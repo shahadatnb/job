@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 09, 2025 at 02:57 AM
+-- Generation Time: Mar 09, 2025 at 06:35 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -1181,6 +1181,13 @@ CREATE TABLE `student_education` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `student_education`
+--
+
+INSERT INTO `student_education` (`id`, `student_id`, `edu_level_id`, `edu_group_id`, `edu_board_id`, `roll_no`, `reg_no`, `passing_year`, `gpa`, `created_at`, `updated_at`) VALUES
+(8, 1, 1, 2, 1, NULL, NULL, '2004', '3.25', '2025-03-09 18:06:49', '2025-03-09 18:06:49');
+
 -- --------------------------------------------------------
 
 --
@@ -1224,15 +1231,22 @@ CREATE TABLE `student_skills` (
 CREATE TABLE `student_trainings` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
-  `training_title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `topics_covered` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `training_year` date NOT NULL,
-  `training_institute` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `training_duration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `training_location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `training_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `topics_covered` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `training_year` year DEFAULT NULL,
+  `training_institute` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `training_duration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `training_location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `student_trainings`
+--
+
+INSERT INTO `student_trainings` (`id`, `student_id`, `training_title`, `topics_covered`, `training_year`, `training_institute`, `training_duration`, `training_location`, `created_at`, `updated_at`) VALUES
+(1, 1, 'PHP', 'php mysql', 2024, 'rpi', '3moth', 'rajshahi', '2025-03-09 17:58:00', '2025-03-09 17:58:00');
 
 -- --------------------------------------------------------
 
@@ -1673,7 +1687,7 @@ ALTER TABLE `student_certifications`
 -- AUTO_INCREMENT for table `student_education`
 --
 ALTER TABLE `student_education`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `student_employments`
@@ -1691,7 +1705,7 @@ ALTER TABLE `student_skills`
 -- AUTO_INCREMENT for table `student_trainings`
 --
 ALTER TABLE `student_trainings`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `taxonomies`

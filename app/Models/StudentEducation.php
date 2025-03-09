@@ -11,16 +11,16 @@ class StudentEducation extends Model
 
     public function exam()
     {
-        return $this->belongsTo(EduLevel::class);
+        return $this->belongsTo(EduLevel::class, 'edu_level_id');
     }
 
     public function board()
     {
-        return $this->belongsTo(EduBoard::class);
+        return $this->belongsTo(EduBoard::class, 'edu_board_id');
     }
 
     public function group()
     {
-        return $this->belongsTo(EduGroup::class);
+        return $this->belongsTo(EduGroup::class, 'edu_group_id');
     }
 }
