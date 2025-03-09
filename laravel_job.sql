@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 08, 2025 at 05:25 PM
+-- Generation Time: Mar 09, 2025 at 02:57 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -35,6 +35,14 @@ CREATE TABLE `edu_boards` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `edu_boards`
+--
+
+INSERT INTO `edu_boards` (`id`, `edu_level_id`, `name`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 1, 'BTEB', 1, NULL, NULL),
+(2, 2, 'BTEB', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1551,7 +1559,7 @@ ALTER TABLE `user_branches`
 -- AUTO_INCREMENT for table `edu_boards`
 --
 ALTER TABLE `edu_boards`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `edu_groups`

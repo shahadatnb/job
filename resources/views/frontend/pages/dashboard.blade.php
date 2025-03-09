@@ -143,7 +143,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form action="{{route('student.education.store')}}" method="post">
+            <form action="{{route('student.education.store')}}" id="eduForm" method="post">
                 @csrf
                 <div class="form-group">
                     <label for="exam_id">Exam</label>
@@ -186,5 +186,51 @@
 
 
 @section('js')
+<script>
+    $(document).ready(function() {
+        $('#exam_id').change(function() {
+            var examId = $(this).val();
+            $.ajax({
+                url: "{{route('student.education.group')}}?edu_level_id=" + examId,
+                method: 'GET',
+                success: function(data) {
+                    console.log(data);
+                    
+                    if(data.status == true){
+                        $('#edu_group_id').empty();
+                        $('#edu_group_id').append('<option value="">Select Group</option>');
+                        $.each(data.groups, function(index, value) {
+                            $('#edu_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                        $('#edu_board_id').empty();
+                        $('#edu_board_id').append('<option value="">Select Board</option>');
+                        $.each(data.boards, function(index, value) {
+                            $('#edu_board_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });                        
+                    }
+                }
+            });
+        });
+    
+        $('#eduForm').submit(function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            let url = $(this).attr('action');
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: formData,
+                success: function(data) {
+                    console.log(data);
+                    if(data.status == true){
+                        $('#eduForm')[0].reset();
+                        $('#newEduModal').modal('hide');
+                    }
+                }
+            });
+        });
 
+
+    });
+</script>
 @endsection

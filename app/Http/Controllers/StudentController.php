@@ -106,28 +106,7 @@ class StudentController extends Controller
         return redirect()->route('student.profile');
     }
 
-    public function education_store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'edu_level_id' => 'required',
-            'edu_group_id' => 'required',
-            'edu_board_id' => 'required',
-            'passing_year' => 'required',
-            'gpa' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
-        }
-        $edu = new StudentEducation();
-        $edu->student_id = auth('student')->user()->id;
-        $edu->edu_level_id = $request->edu_level_id;
-        $edu->edu_group_id = $request->edu_group_id;
-        $edu->edu_board_id = $request->edu_board_id;
-        $edu->passing_year = $request->passing_year;
-        $edu->gpa = $request->gpa;
-        $edu->save();
-        return response()->json(['status' => true, 'message' => 'Education saved successfully']);
-    }
+    
 
     public function destroy(Student $student)
     {
