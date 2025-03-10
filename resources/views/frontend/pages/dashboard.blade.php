@@ -11,7 +11,7 @@
             <div class="card-body">
                 <ul class="list-group list-group-flush">
                     <li class="list-group list-group-item"><a href="{{route('student.dashboard')}}">Dashboard</a></li>
-                    <li class="list-group list-group-item"><a href="{{route('student.profile')}}">Profile</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('student.view_cv')}}">View CV</a></li>
                 </ul>
             </div>
         </div>
@@ -39,43 +39,43 @@
 														</tr>
                             <tr>
                                 <th>Name</th>
-                                <td id="profile_name">{{ $user->name }}</td>
+                                <td id="profile_name">{{ $student->name }}</td>
                             </tr>
                             <tr>
                                 <th>Father Name</th>
-                                <td id="profile_father_name">{{ $user->father_name }}</td>
+                                <td id="profile_father_name">{{ $student->father_name }}</td>
                             </tr>
                             <tr>
                                 <th>Mother Name</th>
-                                <td id="profile_mother_name">{{ $user->mother_name }}</td>
+                                <td id="profile_mother_name">{{ $student->mother_name }}</td>
                             </tr>
                             <tr>
                                 <th>Email</th>
-                                <td id="profile_email">{{ $user->email }}</td>
+                                <td id="profile_email">{{ $student->email }}</td>
                             </tr>
                             <tr>
                                 <th>Phone</th>
-                                <td id="profile_phone">{{ $user->phone }}</td>
+                                <td id="profile_phone">{{ $student->phone }}</td>
                             </tr>
                             <tr>
                                 <th>NID</th>
-                                <td id="profile_nid">{{ $user->nid }}</td>
+                                <td id="profile_nid">{{ $student->nid }}</td>
                             </tr>
                             <tr>
                                 <th>Date of Birth</th>
-                                <td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($user->date_of_birth)) }}</td>
+                                <td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($student->date_of_birth)) }}</td>
                             </tr>
                             <tr>
                                 <th>Gender</th>
-                                <td id="profile_gender">{{ $user->gender }}</td>
+                                <td id="profile_gender">{{ $student->gender }}</td>
                             </tr>
                             <tr>
                                 <th>Religion</th>
-                                <td id="profile_religion">{{ $user->religion }}</td>
+                                <td id="profile_religion">{{ $student->religion }}</td>
                             </tr>
                             <tr>
                                 <th>Blood Group</th>
-                                <td id="profile_blood_group">{{ $user->blood_group }}</td>
+                                <td id="profile_blood_group">{{ $student->blood_group }}</td>
                             </tr>
 													</tbody>
                         </table>
@@ -93,8 +93,8 @@
                                 <th>Action</th>
                             </tr>
                         	</thead>
-													<tbody id="academicTable">
-                            @foreach($user->educations as $edu)
+							            <tbody id="academicTable">
+                            @foreach($student->educations as $edu)
                             <tr data-id="{{ $edu->id }}">
                                 <td>{{ $edu->exam->name }}</td>
                                 <td>{{ $edu->group->name }}</td>
@@ -124,7 +124,7 @@
                             </tr>
 													</thead>
 													<tbody id="trainingTable">
-                            @foreach($user->trainings as $edu)
+                            @foreach($student->trainings as $edu)
                             <tr data-id="{{ $edu->id }}">
                                 <td>{{ $edu->training_title }}</td>
                                 <td>{{ $edu->topics_covered }}</td>
@@ -170,6 +170,14 @@
 							<input type="text" name="name" id="name" class="form-control">
 						</div>
 						<div class="form-group">
+							<label for="father_name"></label>
+							<input type="text" name="father_name" id="father_name" class="form-control">
+						</div>
+						<div class="form-group">
+							<label for="mother_name">Mother Name</label>
+							<input type="text" name="mother_name" id="mother_name" class="form-control">
+						</div>
+						<div class="form-group">
 							<label for="email">Email</label>
 							<input type="email" name="email" id="email" class="form-control">
 						</div>
@@ -178,8 +186,42 @@
 							<input type="text" name="phone" id="phone" class="form-control">
 						</div>
 						<div class="form-group">
-							<label for="address">Address</label>
-							<textarea name="address" id="address" class="form-control"></textarea>
+							<label for="nid">NID</label>
+							<input type="text" name="nid" id="nid" class="form-control">
+						</div>
+						<div class="form-group">
+							<label for="date_of_birth">Date of Birth</label>
+							{!! Form::text('date_of_birth', $student->date_of_birth, ['class' => 'form-control datetimepicker-input','id'=>'date_of_birth', 'data-toggle'=>"datetimepicker", 'data-target'=>"#datetimepicker5", 'placeholder' => 'YYYY-MM-DD', 'required']) !!}
+						</div>
+						<div class="form-group">
+							<label for="gender">Gender</label>
+							<select name="gender" id="gender" class="form-control">
+								<option value="male">Male</option>
+								<option value="female">Female</option>
+								<option value="other">Other</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="religion">Religion</label>
+							<select name="religion" id="religion" class="form-control">
+								<option value="islam">Islam</option>
+								<option value="hindu">Hindu</option>
+								<option value="christian">Christian</option>
+								<option value="others">Others</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="blood_group">Blood Group</label>
+							<select name="blood_group" id="blood_group" class="form-control">
+								<option value="A+">A+</option>
+								<option value="A-">A-</option>
+								<option value="B+">B+</option>
+								<option value="B-">B-</option>
+								<option value="O+">O+</option>
+								<option value="O-">O-</option>
+								<option value="AB+">AB+</option>
+								<option value="AB-">AB-</option>
+							</select>
 						</div>
 						<div class="form-group">
 							<button type="submit" class="btn btn-primary">Save</button>
@@ -284,6 +326,11 @@
 
 
 @section('js')
+<script src="{{ asset('assets/admin/plugins/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('assets/admin/plugins/moment/moment.min.js') }}"> </script>
+<!-- Tempusdominus -->
+<script src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"> </script>
+
 <script>
     $(document).ready(function() {
         $('#edu_level_id').change(function() {
@@ -310,9 +357,64 @@
             });
         });
 
+// basic
+		$('#date_of_birth').datetimepicker({
+            //format: 'DD/MM/YYYY'
+            format: 'YYYY-MM-DD'
+        });
+        $('.select2').select2();
+        $('.select2-multi').select2();
+
+        $('#district_id').change(function(){
+          $.get('{{ route('childLocation') }}', {
+                option: $(this).val()
+            },
+            function(data) {
+                var subcat = $('#upazila_id');
+                subcat.empty();
+                subcat.append("<option value=''>-----</option>");
+                $.each(data, function(index, element) {
+                    subcat.append("<option value='"+ element.id +"'>" + element.name + "</option>");
+                });
+            });
+        });
+
+        $('#parmanent_district_id').change(function(){
+          $.get('{{ route('childLocation') }}', {
+                option: $(this).val()
+            },
+            function(data) {
+                var subcat = $('#parmanent_upazila_id');
+                subcat.empty();
+                subcat.append("<option value=''>-----</option>");
+                $.each(data, function(index, element) {
+                    subcat.append("<option value='"+ element.id +"'>" + element.name + "</option>");
+                });
+            });
+        });
+
+        $("#sameAsPresent").change(function(){
+            if($(this).is(":checked")) {
+                $("#permanentVillage").val($("#presentVillage").val());
+                $("#permanentPost").val($("#presentPost").val());
+                $("#permanentDistrict").empty();
+                $("#permanentDistrict").append(`<option value='${$("#presentDistrict").val()}'>${$("#presentDistrict").find(':selected').text()}</option>`);
+                $("#permanentDistrict").val($("#presentDistrict").val());
+                $("#permanentUpazila").append(`<option value='${$("#presentUpazila").val()}'>${$("#presentUpazila").find(':selected').text()}</option>`);
+                $("#permanentUpazila").val($("#presentUpazila").val());
+            }
+        }); 
+
 				$("#btnBasicModal").click(function() {
 					$('#basicForm').attr('action', "{{route('student.updateProfile')}}");
 					$('#name').val($("#profile_name").text());
+					$('#father_name').val($("#profile_father_name").text());
+					$('#mother_name').val($("#profile_mother_name").text());
+					$('#nid').val($("#profile_nid").text());
+					$('#date_of_birth').val($("#profile_date_of_birth").text());
+					$('#gender').val($("#profile_gender").text());
+					$('#religion').val($("#profile_religion").text());
+					$('#blood_group').val($("#profile_blood_group").text());					
 					$('#email').val($("#profile_email").text());
 					$('#phone').val($("#profile_phone").text());
 					$('#basicModal').modal('show');
@@ -331,8 +433,15 @@
 							console.log(data);
 							if(data.status == true){
 								$("#profile_name").text(data.student.name);
+								$("#profile_father_name").text(data.student.father_name);
+								$("#profile_mother_name").text(data.student.mother_name);
 								$("#profile_email").text(data.student.email);
 								$("#profile_phone").text(data.student.phone);
+								$("#profile_nid").text(data.student.nid);
+								$("#profile_date_of_birth").text(data.student.date_of_birth);
+								$("#profile_gender").text(data.student.gender);
+								$("#profile_religion").text(data.student.religion);
+								$("#profile_blood_group").text(data.student.blood_group);
 								$('#basicModal').modal('hide');
 							}else{
 								if(data.message){

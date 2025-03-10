@@ -18,15 +18,15 @@ class StudentController extends Controller
 
     public function index()
     {
-        $user = auth('student')->user();
+        $student = auth('student')->user();
         $districts = Location::whereNull('parent_id')->pluck('name', 'id');
-        if($user->district_id){
-            $upazilas = Location::where('parent_id', $user->district_id)->pluck('name', 'id');
+        if($student->district_id){
+            $upazilas = Location::where('parent_id', $student->district_id)->pluck('name', 'id');
         }else{
             $upazilas = [];
         }
         $exams = EduLevel::where('is_active', 1)->get();//->pluck('name', 'id');
-        return view('frontend.pages.dashboard', compact('user', 'districts', 'upazilas', 'exams'));
+        return view('frontend.pages.dashboard', compact('student', 'districts', 'upazilas', 'exams'));
     }
 
     /**
@@ -41,14 +41,15 @@ class StudentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function view_cv()
     {
-        //
+        $student = auth('student')->user();
+        return view('frontend.pages.cv', compact('student'));
     }
 
     public function show(Student $student)
     {
-        //
+        return view('frontend.pages.cv', compact('student'));
     }
 
     public function editProfile()

@@ -64,6 +64,7 @@ Route::group(['prefix'=>'student','middleware'=>'auth:student'], function(){
     Route::get('/editProfile', [StudentController::class,'editProfile'])->name('student.editProfile');
     Route::post('/updateProfile', [StudentController::class,'updateProfile'])->name('student.updateProfile');
     Route::post('/chengePassword', [StudentController::class,'chengePassword'])->name('student.chengePassword');
+    Route::get('/view_cv', [StudentController::class,'view_cv'])->name('student.view_cv');
 
     Route::get('/application/create', [ApplicationController::class,'create'])->name('student.application.create');
     Route::post('/application/store', [ApplicationController::class,'store'])->name('student.application.store');
