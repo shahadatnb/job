@@ -71,6 +71,30 @@
                 </tbody>
               </table>
 
+              <h2>Experience</h2>
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                      <th>Job Title</th>
+                      <th>Company</th>
+                      <th>Job Description</th>
+                      <th>From</th>
+                      <th>To</th>
+                  </tr>
+                </thead>
+                <tbody id="experienceTable">
+                  @foreach($student->employments as $exp)
+                  <tr data-id="{{ $exp->id }}">
+                      <td>{{ $exp->job_title }}</td>
+                      <td>{{ $exp->company_name }}</td>
+                      <td>{{ $exp->job_description }}</td>
+                      <td>{{ date('d-m-Y', strtotime($exp->from)) }}</td>
+                      <td>{{ date('d-m-Y', strtotime($exp->to)) }}</td>
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
+
               <h2>Academic Summary</h2>
               <table class="table table-sm">
                 <thead>

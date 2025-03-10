@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 09, 2025 at 06:35 PM
+-- Generation Time: Mar 10, 2025 at 05:03 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -1141,7 +1141,7 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `name`, `name_bn`, `email`, `email_verified_at`, `password`, `remember_token`, `father_name`, `mother_name`, `nid`, `phone`, `date_of_birth`, `gender`, `religion`, `blood_group`, `village`, `post_office`, `post_code`, `upazila_id`, `district_id`, `parmanent_village`, `parmanent_post_office`, `parmanent_post_code`, `parmanent_upazila_id`, `parmanent_district_id`, `created_at`, `updated_at`) VALUES
-(1, 'Shahadat Hosain', 'শাহাদাত হোসেন', 'shahadat@asiancoder.com', NULL, '$2y$12$z.oXPirU29HjY6MEPnxzQekGLoSvP3zjNTQ/ECamtXbLGmRT7xv2.', NULL, 'Mostafa Kamal', 'Sazida Begum', '123456', '01757839516', '2024-12-01', 'male', 'Muslim', 'AB+', 'Kecuatoil', 'Khorkhori', '6204', 545, 391, NULL, NULL, NULL, NULL, NULL, '2025-01-24 05:47:21', '2025-02-06 06:46:12');
+(1, 'Shahadat Hosain', 'শাহাদাত হোসেন', 'shahadat@asiancoder.com', NULL, '$2y$12$z.oXPirU29HjY6MEPnxzQekGLoSvP3zjNTQ/ECamtXbLGmRT7xv2.', NULL, 'Mostafa Kamal', 'Sazida Begum', '123456', '01757839516', '01-12-2024', 'male', 'islam', 'AB+', 'Kecuatoil', 'Khorkhori', '6204', 545, 391, NULL, NULL, NULL, NULL, NULL, '2025-01-24 05:47:21', '2025-03-10 02:31:04');
 
 -- --------------------------------------------------------
 
@@ -1203,10 +1203,17 @@ CREATE TABLE `student_employments` (
   `company_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `job_title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `job_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `company_location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `student_employments`
+--
+
+INSERT INTO `student_employments` (`id`, `student_id`, `start_date`, `end_date`, `is_current`, `company_name`, `job_title`, `job_description`, `company_location`, `created_at`, `updated_at`) VALUES
+(1, 1, '2024-10-28', '2025-02-26', 0, 'IBMCHR', 'HE', 'sffd', 'Rajshahi', '2025-03-10 16:54:57', '2025-03-10 16:54:57');
 
 -- --------------------------------------------------------
 
@@ -1693,7 +1700,7 @@ ALTER TABLE `student_education`
 -- AUTO_INCREMENT for table `student_employments`
 --
 ALTER TABLE `student_employments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `student_skills`
