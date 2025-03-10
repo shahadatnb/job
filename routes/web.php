@@ -101,7 +101,6 @@ Route::group(['prefix'=>'student','middleware'=>'auth:student'], function(){
 Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth'], function(){  
 
     Route::get('/home', [AdminController::class,'home'])->name('home');
-    Route::post('/branchSelect', [AdminController::class,'branchSelect'])->name('branchSelect');
     Route::get('/', [AdminController::class,'index'])->name('dashboard');
     Route::get('/profile', [UsersController::class,'profile'])->name('profile');
     Route::get('/editProfile', [UsersController::class,'editProfile'])->name('editProfile');
@@ -109,6 +108,9 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
     Route::post('/chengePassword', [UsersController::class,'chengePassword'])->name('chengePassword');
 
     //Route::resource('unit', UnitController::class);
+    Route::get('/students/destroy/{student}', [StudentController::class,'destroy'])->name('student.destroy');
+    Route::get('/students/{student}', [StudentController::class,'show'])->name('student.show');
+    Route::get('/students', [StudentController::class,'students'])->name('student.index');
 });
 Route::get('/childLocation', [LocationController::class,'childLocation'])->name('childLocation');
 

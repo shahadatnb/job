@@ -29,6 +29,12 @@ class StudentController extends Controller
         return view('frontend.pages.dashboard', compact('student', 'districts', 'upazilas', 'exams'));
     }
 
+    public function students(){
+        $data = [];
+        $students = Student::paginate(50);
+        return view('admin.students.index', compact('students', 'data'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */

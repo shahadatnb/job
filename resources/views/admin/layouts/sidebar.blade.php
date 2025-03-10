@@ -52,7 +52,7 @@
               <p>Student <i class="right fas fa-angle-left"></i> </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item has-treeview {{ (request()->routeIs('student.setup.*')) ? 'menu-open' : '' }}">
+              {{-- <li class="nav-item has-treeview {{ (request()->routeIs('student.setup.*')) ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link {{ (request()->routeIs('student.setup.*')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-tools"></i>
                   <p>
@@ -61,15 +61,14 @@
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  {{-- <li class="nav-item"><a href="{{ route("student.setup.academicYear.index") }}" class="nav-link {{ (request()->routeIs('student.setup.academicYear.*')) ? ' active' : '' }}">
+                  <li class="nav-item"><a href="{{ route("student.setup.academicYear.index") }}" class="nav-link {{ (request()->routeIs('student.setup.academicYear.*')) ? ' active' : '' }}">
                     <i class="far fa-circle nav-icon"></i> <p>{{__('Academic Year') }}</p></a>
-                  </li> --}}
-                  
+                  </li>                  
                 </ul>
-              </li>
-              {{-- <li class="nav-item"><a href="{{ route("student.student.index") }}" class="nav-link {{ (request()->routeIs('student.student.*')) ? ' active' : '' }}">
-                <i class="far fa-user nav-icon"></i> <p>{{__('Student List') }}</p></a>
               </li> --}}
+              <li class="nav-item"><a href="{{ route("student.index") }}" class="nav-link {{ (request()->routeIs('student.*')) ? ' active' : '' }}">
+                <i class="far fa-user nav-icon"></i> <p>{{__('Student List') }}</p></a>
+              </li>
               
             </ul>
           </li>
@@ -154,9 +153,6 @@
             <ul class="nav nav-treeview">
               <li class="nav-item"><a href="{{ route('users.index') }}" class="nav-link {{ (request()->routeIs('users.*')) ? ' active' : '' }}">
                 <i class="far fa-circle nav-icon"></i> Users</a>
-              </li>
-              <li class="nav-item"><a href="{{ route('branch.index') }}" class="nav-link {{ (request()->routeIs('branch.*')) ? ' active' : '' }}">
-                <i class="far fa-circle nav-icon"></i> Branch</a>
               </li>
               <li class="nav-item"><a href="{{ route('location.index') }}" class="nav-link {{ (request()->routeIs('location.*')) ? ' active' : '' }}">
                 <i class="far fa-circle nav-icon"></i> Location</a>

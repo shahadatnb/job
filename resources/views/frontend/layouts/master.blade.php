@@ -79,7 +79,7 @@
 				@auth('student')
                 <a href="{{route('student.profile')}}" class="btn btn-primary rounded-0 py-4 px-lg-5">Profile</a>
                 <a class="btn btn-primary rounded-0 py-4 px-lg-5" href="{{ route('student.logout') }}" onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">Register</a>
+                                        document.getElementById('logout-form').submit();">Logout</a>
 				@endauth
 				<form id="logout-form" action="{{ route('student.logout') }}" method="POST" style="display: none;">
 					@csrf
