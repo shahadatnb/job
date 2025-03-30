@@ -9,9 +9,12 @@ use App\Models\StudentEducation;
 use App\Models\StudentEmployment;
 use App\Models\StudentCertification;
 use App\Models\StudentTraining;
-use App\Models\StudentSkill;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+//use Image;
+use Intervention\Image\Laravel\Facades\Image;
+//use Storage;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -25,8 +28,13 @@ class StudentController extends Controller
         }else{
             $upazilas = [];
         }
+        if($student->permanent_district_id){
+            $permanent_upazilas = Location::where('parent_id', $student->permanent_district_id)->pluck('name', 'id');
+        }else{
+            $permanent_upazilas = [];
+        }
         $exams = EduLevel::where('is_active', 1)->get();//->pluck('name', 'id');
-        return view('frontend.pages.dashboard', compact('student', 'districts', 'upazilas', 'exams'));
+        return view('frontend.pages.dashboard', compact('student', 'districts', 'upazilas', 'permanent_upazilas', 'exams'));
     }
 
     public function students(){
@@ -67,7 +75,71 @@ class StudentController extends Controller
         }else{
             $upazilas = [];
         }
-        return view('frontend.pages.profile_edit', compact('user', 'districts', 'upazilas'));
+        if($user->permanent_district_id){
+            $permanent_upazilas = Location::where('parent_id', $user->permanent_district_id)->pluck('name', 'id');
+        }else{
+            $permanent_upazilas = [];
+        }
+        return view('frontend.pages.profile_edit', compact('user', 'districts', 'upazilas', 'permanent_upazilas'));
+    }
+
+    public function updateAddress(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'village' => 'required|string|max:50',
+            'post_office' => 'required|string|max:50',
+            'post_code' => 'nullable|numeric',
+            'district_id' => 'required',
+            'upazila_id' => 'required',
+            'permanent_village' => 'required|string|max:50',
+            'permanent_post_office' => 'required|string|max:50',
+            'permanent_post_code' => 'nullable|numeric',
+            'permanent_district_id' => 'required',
+            'permanent_upazila_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()]);
+        }
+
+        $student = auth('student')->user();
+        $student->village = $request->village;
+        $student->post_office = $request->post_office;
+        $student->post_code = $request->post_code;
+        $student->district_id = $request->district_id;
+        $student->upazila_id = $request->upazila_id;
+        $student->permanent_village = $request->permanent_village;
+        $student->permanent_post_office = $request->permanent_post_office;
+        $student->permanent_post_code = $request->permanent_post_code;
+        $student->permanent_district_id = $request->permanent_district_id;
+        $student->permanent_upazila_id = $request->permanent_upazila_id;
+        $student->save();
+        return response()->json(['status' => true,'message' => 'Address updated successfully']);
+    }
+
+    public function updatePhoto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'photo' => 'required|image|mimes:jpeg,png,jpg',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()]);
+        }
+
+        $student = auth('student')->user();
+        $image = $request->file('photo');
+        if ($image) {
+            Storage::delete('public/'.$student->photo);
+            $imgFile  = Image::read($request->photo)->resize(300, 300, function ($constraint) {
+                $constraint->aspectRatio();
+            })->toJpeg(80);
+            $file_name = 'ex_student/'.time() .'.jpg';
+            Storage::disk('public')->put($file_name, $imgFile);
+            $student->photo = $file_name;
+        }
+        $student->save();
+        return response()->json(['status' => true, 'photo' => asset('storage/'.$student->photo)]);
     }
 
     public function updateProfile(Request $request)
@@ -92,12 +164,12 @@ class StudentController extends Controller
             'post_code' => 'required|numeric',
             'district_id' => 'required',
             'upazila_id' => 'required',
-            'parmanent_village' => 'required|string|max:50',
-            'parmanent_ward' => 'required|numeric',
-            'parmanent_post_office' => 'required|string|max:50',
-            'parmanent_post_code' => 'required|numeric',
-            'parmanent_district_id' => 'required',
-            'parmanent_upazila_id' => 'required',
+            'permanent_village' => 'required|string|max:50',
+            'permanent_ward' => 'required|numeric',
+            'permanent_post_office' => 'required|string|max:50',
+            'permanent_post_code' => 'required|numeric',
+            'permanent_district_id' => 'required',
+            'permanent_upazila_id' => 'required',
         ]);
         */
         $validator = Validator::make($request->all(), [
@@ -131,11 +203,11 @@ class StudentController extends Controller
         $user->post_code = $request->post_code;
         $user->district_id = $request->district_id;
         $user->upazila_id = $request->upazila_id;
-        $user->parmanent_village = $request->parmanent_village;
-        $user->parmanent_post_office = $request->parmanent_post_office;
-        $user->parmanent_post_code = $request->parmanent_post_code;
-        $user->parmanent_district_id = $request->parmanent_district_id;
-        $user->parmanent_upazila_id = $request->parmanent_upazila_id;
+        $user->permanent_village = $request->permanent_village;
+        $user->permanent_post_office = $request->permanent_post_office;
+        $user->permanent_post_code = $request->permanent_post_code;
+        $user->permanent_district_id = $request->permanent_district_id;
+        $user->permanent_upazila_id = $request->permanent_upazila_id;
         */
         $user->save();
         return response()->json(['status' => true, 'type'=> 'save', 'student'=> $user, 'message' => 'Education saved successfully']);

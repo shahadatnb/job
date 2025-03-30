@@ -44,7 +44,7 @@ class ExStudentController extends Controller
             'session' => 'required',
             'passing_year' => 'required|numeric|digits:4',
             'job_information' => 'required|string',
-            'photo' => 'required|image|mimes:jpeg,png,jpg|max:200',
+            'photo' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         $exStudent = new ExStudent();

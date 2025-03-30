@@ -3,11 +3,16 @@
 @section('css')
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+<style type="text/css">
+    .form-group {
+        margin-bottom: 5px;
+    }
+</style>
 @endsection
 @section('content')
 <!-- Start Schedule Area -->
 <div class="container">
-    <div class="card">
+    <div class="card mt-4">
         <div class="card-header">
             <h4>Ex Student Entry Form</h4>
         </div>
@@ -107,12 +112,12 @@
             });
         });
 
-        $('#parmanent_district_id').change(function(){
+        $('#permanent_district_id').change(function(){
           $.get('{{ route('childLocation') }}', {
                 option: $(this).val()
             },
             function(data) {
-                var subcat = $('#parmanent_upazila_id');
+                var subcat = $('#permanent_upazila_id');
                 subcat.empty();
                 subcat.append("<option value=''>-----</option>");
                 $.each(data, function(index, element) {

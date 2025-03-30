@@ -1,5 +1,31 @@
 @extends('frontend.layouts.master')
 @section('title','Dashboard')
+@section('css')
+<style type="text/css">
+	#photoPreview {
+		width: 150px;
+		height: auto;
+	}
+
+	.badge.bg-primary {
+		display: inline;
+		font-size: 14px;
+		border-radius: 6px;
+		padding-right: 2px;
+	}
+
+	.deleteSkill {
+		color: #fff;
+		background: red;
+		padding: 2px 5px;
+		border-radius: 15px;
+		margin: auto 2px 7px 5px;
+		cursor: pointer;
+		font-size: 10px;
+	}
+
+</style>
+@endsection
 @section('content')
 <!-- Start Schedule Area -->
 <div class="row">
@@ -27,58 +53,118 @@
                         <button class="nav-link active" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#nav-basic" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Basic</button>
                         <button class="nav-link" id="nav-education-tab" data-bs-toggle="tab" data-bs-target="#nav-education" type="button" role="tab" aria-controls="nav-education" aria-selected="false">Education/Training</button>
                         <button class="nav-link" id="nav-employment-tab" data-bs-toggle="tab" data-bs-target="#nav-employment" type="button" role="tab" aria-controls="nav-employment" aria-selected="false">Employment</button>
-                        <button class="nav-link" id="nav-others-tab" data-bs-toggle="tab" data-bs-target="#nav-others" type="button" role="tab" aria-controls="nav-others" aria-selected="false">Others</button>
+                        <button class="nav-link" id="nav-others-tab" data-bs-toggle="tab" data-bs-target="#nav-others" type="button" role="tab" aria-controls="nav-others" aria-selected="false">Skills</button>
                     </div>
                 </nav>
                 <div class="tab-content p-3 border bg-light" id="nav-profile">
                     <div class="tab-pane fade active show" id="nav-basic" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <table class="table table-sm">
-													<tbody id="basicTable">
-														<tr>
-															<th colspan="2" class="text-right"><button class="btn btn-primary" id="btnBasicModal">Edit</button></th>
-														</tr>
-                            <tr>
-                                <th>Name</th>
-                                <td id="profile_name">{{ $student->name }}</td>
-                            </tr>
-                            <tr>
-                                <th>Father Name</th>
-                                <td id="profile_father_name">{{ $student->father_name }}</td>
-                            </tr>
-                            <tr>
-                                <th>Mother Name</th>
-                                <td id="profile_mother_name">{{ $student->mother_name }}</td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td id="profile_email">{{ $student->email }}</td>
-                            </tr>
-                            <tr>
-                                <th>Phone</th>
-                                <td id="profile_phone">{{ $student->phone }}</td>
-                            </tr>
-                            <tr>
-                                <th>NID</th>
-                                <td id="profile_nid">{{ $student->nid }}</td>
-                            </tr>
-                            <tr>
-                                <th>Date of Birth</th>
-                                <td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($student->date_of_birth)) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Gender</th>
-                                <td id="profile_gender">{{ $student->gender }}</td>
-                            </tr>
-                            <tr>
-                                <th>Religion</th>
-                                <td id="profile_religion">{{ $student->religion }}</td>
-                            </tr>
-                            <tr>
-                                <th>Blood Group</th>
-                                <td id="profile_blood_group">{{ $student->blood_group }}</td>
-                            </tr>
-													</tbody>
-                        </table>
+											<div class="row">
+													<div class="col-12 col-md-6 col-lg-6">
+														<div class="d-flex justify-content-between">
+															<h2 class="d-inline-block">Basic Information</h2>
+															<button class="btn btn-sm btn-primary" id="btnBasicModal">Edit</button>
+														</div>
+														<table class="table table-sm">
+															<tbody id="basicTable">
+																<tr>
+																		<th>Name</th>
+																		<td id="profile_name">{{ $student->name }}</td>
+																</tr>
+																<tr>
+																		<th>Father Name</th>
+																		<td id="profile_father_name">{{ $student->father_name }}</td>
+																</tr>
+																<tr>
+																		<th>Mother Name</th>
+																		<td id="profile_mother_name">{{ $student->mother_name }}</td>
+																</tr>
+																<tr>
+																		<th>Email</th>
+																		<td id="profile_email">{{ $student->email }}</td>
+																</tr>
+																<tr>
+																		<th>Phone</th>
+																		<td id="profile_phone">{{ $student->phone }}</td>
+																</tr>
+																<tr>
+																		<th>NID</th>
+																		<td id="profile_nid">{{ $student->nid }}</td>
+																</tr>
+																<tr>
+																		<th>Date of Birth</th>
+																		<td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($student->date_of_birth)) }}</td>
+																</tr>
+																<tr>
+																		<th>Gender</th>
+																		<td id="profile_gender">{{ $student->gender }}</td>
+																</tr>
+																<tr>
+																		<th>Religion</th>
+																		<td id="profile_religion">{{ $student->religion }}</td>
+																</tr>
+																<tr>
+																		<th>Blood Group</th>
+																		<td id="profile_blood_group">{{ $student->blood_group }}</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+													<div class="col-12 col-md-6 col-lg-6">
+														<div id="errorMsgPhoto"></div>
+														<img id="photoPreview" src="{{asset('/storage/'.$student->photo)}}" alt="" class="img-thumbnail" width="300 px">
+														<br>
+														<form action="{{route('student.photo.update')}}" method="POST" enctype="multipart/form-data">
+															@csrf
+															<label for="photo">Change Photo</label>
+															<input type="file" name="photo" class="" id="photo">
+														</form>
+													</div>
+											</div>
+											<div id="errorMsgAddress"></div>
+											{!! Form::model($student, ['route'=>['student.address.update', $student], 'method'=>'POST', 'id' => 'updateAddress']) !!}
+											<div class="row">
+													<div class="col-12 col-md-6 col-lg-6">
+														<h3>Present Address</h3>
+														<div class="form-group">
+															{{ Form::label('village', 'Village') }}
+															{{ Form::text('village', null, ['class' => 'form-control']) }}
+														</div>
+														<div class="form-group">
+															{{ Form::label('post_office', 'Post Office') }}
+															{{ Form::text('post_office', null, ['class' => 'form-control']) }}
+														</div>
+														<div class="form-group">
+															{{ Form::label('district_id', 'District') }}
+															{{ Form::select('district_id', $districts, null, ['class' => 'form-control', 'placeholder' => 'Select District']) }}
+														</div>
+														<div class="form-group">
+															{{ Form::label('upazila_id', 'Thana/Upazila') }}
+															{{ Form::select('upazila_id', $upazilas, null, ['class' => 'form-control', 'placeholder' => 'Select Thana/Upazila']) }}
+														</div>
+													</div>
+													<div class="col-12 col-md-6 col-lg-6">
+														<h3>Permanent Address</h3>
+														<div class="form-group">
+															{{ Form::label('permanent_village', 'Permanent Village') }}
+															{{ Form::text('permanent_village', null, ['class' => 'form-control']) }}
+														</div>
+														<div class="form-group">
+															{{ Form::label('permanent_post_office', 'Permanent Post Office') }}
+															{{ Form::text('permanent_post_office', null, ['class' => 'form-control']) }}
+														</div>
+														<div class="form-group">
+															{{ Form::label('permanent_district_id', 'Permanent District') }}
+															{{ Form::select('permanent_district_id', $districts, null, ['class' => 'form-control', 'placeholder' => 'Select District']) }}
+														</div>
+														<div class="form-group">
+															{{ Form::label('permanent_upazila_id', 'Permanent Thana/Upazila') }}
+															{{ Form::select('permanent_upazila_id', $permanent_upazilas, null, ['class' => 'form-control', 'placeholder' => 'Select Thana/Upazila']) }}
+														</div>
+													</div>
+													{{ Form::hidden('id', $student->id) }}
+													{{ Form::button('Update Address', ['type' => 'submit', 'class' => 'btn btn-primary']) }}
+											</div>
+											{{ Form::close() }}
                     </div>
                     <div class="tab-pane fade" id="nav-education" role="tabpanel" aria-labelledby="nav-education-tab">
                         <h2>Academic Summary</h2>
@@ -174,7 +260,18 @@
 												<button class="btn btn-primary" id="btnEmploymentModal">New Entry</button>
                     </div>
                     <div class="tab-pane fade" id="nav-others" role="tabpanel" aria-labelledby="nav-others-tab">
-                        
+												<h2>Skills</h2>
+												<div id="skillTable" class="mb-3">
+													@foreach($student->skills as $skill)
+													<span data-id="{{ $skill->id }}" class="badge bg-primary">{{ $skill->skill }} <a class="deleteSkill" data-id="{{ $skill->id }}">X</a></span>
+													@endforeach
+												</div>
+												<div class="input-group">
+                        	<input type="text" name="skill" id="skill" class="form-control">
+													<div class="input-group-append">
+															<button class="btn btn-primary" id="addSkill">Add</button>
+													</div>
+												</div>
                     </div>
                 </div>
             </div>
@@ -186,7 +283,7 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="basicModalLabel">New Entry</h5>
+					<h5 class="modal-title" id="basicModalLabel">Basic Information</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -459,12 +556,12 @@
             });
         });
 
-        $('#parmanent_district_id').change(function(){
+        $('#permanent_district_id').change(function(){
           $.get('{{ route('childLocation') }}', {
                 option: $(this).val()
             },
             function(data) {
-                var subcat = $('#parmanent_upazila_id');
+                var subcat = $('#permanent_upazila_id');
                 subcat.empty();
                 subcat.append("<option value=''>-----</option>");
                 $.each(data, function(index, element) {
@@ -831,6 +928,109 @@
 						console.log(data);
 						if(data.status == true){
 							$("#employmentTable").find('tr[data-id="'+id+'"]').remove();
+						}
+					}
+				});
+			}
+		});
+
+		$("#photo").change(function(){
+			var photo = this.files[0];
+			let formData = new FormData();			
+			//const blob = new Blob([metadata], { type: 'application/json' });
+			//formData.append('metadata', blob);
+			formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+			formData.append('photo', photo);
+			$.ajax({
+				url: "{{route('student.photo.update')}}",
+				method: 'POST',
+				data: formData,
+				contentType: false,
+				processData: false,
+				success: function(data){
+					console.log(data.errors);
+					//$('#photoPreview').html(data);
+					if(data.status == true){
+						$("#photoPreview").attr('src', data.photo);
+					}else{
+						if(data.message){
+								$("#errorMsgPhoto").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+							}
+						data.errors.photo.forEach(function(element){
+							$("#errorMsgPhoto").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+						});
+					}
+				}
+			})
+		});
+
+		$("#updateAddress").submit(function(e){
+			e.preventDefault();
+			var formData = $(this).serialize();
+			let url = $(this).attr('action');
+			$("#errorMsgAddress").empty();
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: formData,
+				success: function(data){
+					console.log(data);
+					if(data.status == true){
+						//$("#addressModal").modal('hide');
+						$("#errorMsgAddress").append(`<div class="alert alert-success"><strong>Success: </strong>${data.message}</div>`);
+					}else{
+						if(data.message){
+								$("#errorMsgAddress").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+							}
+						data.errors.forEach(function(element){
+							$("#errorMsgAddress").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+						});
+					}
+				}
+			})
+		})
+
+		$("#addSkill").click(function(){
+			var skill = $("#skill").val();
+			let formData = new FormData();
+			formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+			formData.append('skill', skill);
+			$.ajax({
+				url: "{{route('student.skill.store')}}",
+				method: 'POST',
+				data: formData,
+				contentType: false,
+				processData: false,
+				success: function(data){
+					console.log(data);
+					//$('#photoPreview').html(data);
+					if(data.status == true){
+						$("#skill").val('');
+						$("#skillTable").append(
+							`<span data-id="${data.skill.id}" class="badge bg-primary">${data.skill.skill }<a class="deleteSkill" data-id="${data.skill.id}">X</a></span>`
+						);
+					}else{
+						if(data.message){
+								$("#errorMsgSkill").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+							}
+						data.errors.skill.forEach(function(element){
+							$("#errorMsgSkill").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+						})
+					}
+				}
+			})
+		});
+
+		$("#skillTable").on('click', '.deleteSkill', function(){
+			if(confirm("Are you sure?")){
+				var id = $(this).data('id');
+				$.ajax({
+					url: "{{route('student.skill.destroy')}}?id=" + id,
+					method: 'GET',
+					success: function(data){
+						console.log(data);
+						if(data.status == true){
+							$("#skillTable").find('span[data-id="'+id+'"]').remove();
 						}
 					}
 				});

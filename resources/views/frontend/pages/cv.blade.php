@@ -1,9 +1,13 @@
 @extends('frontend.layouts.master')
-@section('title','Dashboard')
+@section('title','CV of '.$student->name)
+@section('css')
+<style type="text/css">
+</style>
+@endsection
 @section('content')
 <!-- Start Schedule Area -->
 <div class="row">
-    <div class="col-12 col-md-3 col-lg-3 mt-3">
+    <div class="col-12 col-md-3 col-lg-3 mt-3 d-print-none">
         <div class="card">
             <div class="card-header">
                 <h4>Dashboard</h4>
@@ -18,62 +22,30 @@
     </div>
     <div class="col-12 col-md-9 col-lg-9 mt-3">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-print-none">
                 {{-- <h2 class="text-center">Curriculum Vitae</h2> --}}
               <div class="card-tools">
                 <button class="btn btn-sm btn-primary" id="download_cv"><i class="far fa-file-pdf"></i> Download</button>
+                <button class="btn btn-sm btn-primary" onclick="window.print()" id="print_cv"><i class="fas fa-print"></i> Print</button>
               </div>
-                  </div>
-                  <div class="card-body" id="content-to-pdf">
+            </div>
+            <div class="card-body d-print-block" id="content-to-pdf">
               <h2 class="text-center">Curriculum Vitae</h2>
-              <table class="table table-sm">
-                <tbody id="basicTable">
-                  <tr>
-                    <th>Name</th>
-                    <td id="profile_name">{{ $student->name }}</td>
-                  </tr>
-                  <tr>
-                    <th>Father Name</th>
-                    <td id="profile_father_name">{{ $student->father_name }}</td>
-                  </tr>
-                  <tr>
-                    <th>Mother Name</th>
-                    <td id="profile_mother_name">{{ $student->mother_name }}</td>
-                  </tr>
-                  <tr>
-                    <th>Email</th>
-                    <td id="profile_email">{{ $student->email }}</td>
-                  </tr>
-                  <tr>
-                    <th>Phone</th>
-                    <td id="profile_phone">{{ $student->phone }}</td>
-                  </tr>
-                  <tr>
-                    <th>NID</th>
-                    <td id="profile_nid">{{ $student->nid }}</td>
-                  </tr>
-                  <tr>
-                    <th>Date of Birth</th>
-                    <td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($student->date_of_birth)) }}</td>
-                  </tr>
-                  <tr>
-                    <th>Gender</th>
-                    <td id="profile_gender">{{ $student->gender }}</td>
-                  </tr>
-                  <tr>
-                    <th>Religion</th>
-                    <td id="profile_religion">{{ $student->religion }}</td>
-                  </tr>
-                  <tr>
-                    <th>Blood Group</th>
-                    <td id="profile_blood_group">{{ $student->blood_group }}</td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <h2>Experience</h2>
-              <table class="table table-sm">
-                <thead>
+              <div class="d-flex justify-content-between">
+                <div class="">
+                  <h2 class="mb-0">{{ $student->name }}</h2>
+                  <p class="mb-0">{{ $student->village }}, {{ $student->post_office }}, {{ $student->upazila ? $student->upazila->name : '' }}, {{ $student->district? $student->district->name : '' }}</p>
+                  <p class="mb-0">{{ $student->phone }}</p>
+                  <p>{{ $student->email }}</p>
+                </div>
+                <div class="">
+									<img id="photoPreview" src="{{asset('/storage/'.$student->photo)}}" alt="" class="img-thumbnail" width="150 px">
+                </div>
+              </div>             
+              @if($student->employments->count() > 0)
+              <h4>Experience</h4>
+              <table class="table table-sm ">
+                <thead class="table-light">
                   <tr>
                       <th>Job Title</th>
                       <th>Company</th>
@@ -94,10 +66,10 @@
                   @endforeach
                 </tbody>
               </table>
-
-              <h2>Academic Summary</h2>
+              @endif
+              <h4>Academic Summary</h4>
               <table class="table table-sm">
-                <thead>
+                <thead class="table-light">
                   <tr>
                       <th>Exam</th>
                       <th>Group</th>
@@ -119,9 +91,10 @@
                 </tbody>
               </table>
 
-              <h2>Training Summary</h2>
+              @if($student->trainings->count() > 0)
+              <h4>Training Summary</h4>
               <table class="table table-sm">
-                <thead>
+                <thead class="table-light">
                   <tr>
                       <th>Title</th>
                       <th>Topics Covered</th>
@@ -144,7 +117,86 @@
                   @endforeach
                 </tbody>
               </table>
-
+              @endif
+              @if($student->skills->count() > 0)
+              <h4>Skills</h4>
+              <p>
+                @foreach($student->skills as $skill)
+                {{ $skill->skill }}, 
+                @endforeach
+              </p>
+              @endif
+              <h4>Basic Information</h4>
+              <table class="table table-sm">
+                <tbody id="basicTable">
+                  <tr>
+                    <th>Father Name</th>
+                    <td id="profile_father_name">{{ $student->father_name }}</td>
+                  </tr>
+                  <tr>
+                    <th>Mother Name</th>
+                    <td id="profile_mother_name">{{ $student->mother_name }}</td>
+                  </tr>
+                  <tr>
+                    <th>NID</th>
+                    <td id="profile_nid">{{ $student->nid }}</td>
+                  </tr>
+                  <tr>
+                    <th>Date of Birth</th>
+                    <td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($student->date_of_birth)) }}</td>
+                  </tr>
+                  <tr>
+                    <th>Gender</th>
+                    <td id="profile_gender">{{ $student->gender }}</td>
+                  </tr>
+                  <tr>
+                    <th>Religion</th>
+                    <td id="profile_religion">{{ $student->religion }}</td>
+                  </tr>
+                  <tr>
+                    <th>Blood Group</th>
+                    <td id="profile_blood_group">{{ $student->blood_group }}</td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">Present Address</th>
+                  </tr>
+                  <tr>
+                    <th>Village</th>
+                    <td>{{ $student->village }}</td>
+                  </tr>
+                  <tr>
+                    <th>Post Office</th>
+                    <td>{{ $student->post_office }}</td>
+                  </tr>
+                  <tr>
+                    <th>Upazila</th>
+                    <td>{{ $student->upazila ? $student->upazila->name : '' }}</td>
+                  </tr>
+                  <tr>
+                    <th>District</th>
+                    <td>{{ $student->district ? $student->district->name : '' }}</td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">Permanent Address:</th>
+                  </tr>
+                  <tr>
+                    <th>Village</th>
+                    <td>{{ $student->permanent_village }}</td>
+                  </tr>
+                  <tr>
+                    <th>Post Office</th>
+                    <td>{{ $student->permanent_post_office }}</td>
+                  </tr>
+                  <tr>
+                    <th>Upazila</th>
+                    <td>{{ $student->upazilaPermanent ? $student->upazilaPermanent->name : '' }}</td>
+                  </tr>
+                  <tr>
+                    <th>District</th>
+                    <td>{{ $student->districtPermanent ? $student->districtPermanent->name : '' }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
         </div>
     </div>
@@ -162,14 +214,34 @@
         var element = document.getElementById('content-to-pdf');
         var opt = {
           margin:       .3,
-          filename:     'curriculum-vitae.pdf',
+          filename:     'cv of {{ $student->name }}.pdf',
           image:        { type: 'jpeg', quality: 0.98 },
           html2canvas:  { scale: 2 },
-          jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+          jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
+          //pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
         // New Promise-based usage:
         html2pdf().set(opt).from(element).save();
     });
+
+    function PrintElem(elem){	
+      //PrintElem('#content-to-pdf')
+       //Popup($(elem).html());
+    }
+
+   function Popup(data) {
+       var mywindow = window.open('', 'print_details', 'height=562,width=795');
+       mywindow.document.write('<html><head><title>print_details</title>');
+      mywindow.document.write(`<link rel="stylesheet" href="{{asset('/assets/frontend')}}/css/bootstrap.min.css">`);
+      // mywindow.document.write('<style> table.print_slip tbody td {border:1px solid #ccc; }</style>');
+       mywindow.document.write('</head><body >');
+       mywindow.document.write(data);
+       mywindow.document.write('</body></html>');
+       mywindow.document.close();
+       mywindow.print();
+       mywindow.close();
+       return true;
+   }
 </script>
 @endsection

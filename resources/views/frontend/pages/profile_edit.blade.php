@@ -212,66 +212,66 @@
                 <tr>
                   <th>Holding</th>
                   <td>
-                    {!! Form::text('parmanent_holding', $user->parmanent_holding, ['class' => 'form-control', 'placeholder' => 'Holding']) !!}
+                    {!! Form::text('permanent_holding', $user->permanent_holding, ['class' => 'form-control', 'placeholder' => 'Holding']) !!}
                   </td>
                   <td>
-                    {!! Form::text('parmanent_holding_bn', $user->parmanent_holding_bn, ['class' => 'form-control', 'placeholder' => 'Holding']) !!}
+                    {!! Form::text('permanent_holding_bn', $user->permanent_holding_bn, ['class' => 'form-control', 'placeholder' => 'Holding']) !!}
                   </td>
                 </tr>
                 <tr>
                     <th>Road</th>
                     <td>
-                      {!! Form::text('parmanent_road', $user->parmanent_road, ['class' => 'form-control', 'placeholder' => 'Road']) !!}
+                      {!! Form::text('permanent_road', $user->permanent_road, ['class' => 'form-control', 'placeholder' => 'Road']) !!}
                     </td>
                     <td>
-                      {!! Form::text('parmanent_road_bn', $user->parmanent_road_bn, ['class' => 'form-control', 'placeholder' => 'Road']) !!}
+                      {!! Form::text('permanent_road_bn', $user->permanent_road_bn, ['class' => 'form-control', 'placeholder' => 'Road']) !!}
                     </td>
                 </tr>
                 <tr>
                     <th>Village</th>
                     <td>
-                      {!! Form::text('parmanent_village', $user->parmanent_village, ['class' => 'form-control', 'placeholder' => 'Village']) !!}
+                      {!! Form::text('permanent_village', $user->permanent_village, ['class' => 'form-control', 'placeholder' => 'Village']) !!}
                     </td>
                     <td>
-                      {!! Form::text('parmanent_village_bn', $user->parmanent_village_bn, ['class' => 'form-control', 'placeholder' => 'Village']) !!}
+                      {!! Form::text('permanent_village_bn', $user->permanent_village_bn, ['class' => 'form-control', 'placeholder' => 'Village']) !!}
                     </td>
                 </tr>
                 <tr>
                     <th>Ward</th>
                     <td>
-                      {!! Form::text('parmanent_ward', $user->parmanent_ward, ['class' => 'form-control', 'placeholder' => 'Ward']) !!}
+                      {!! Form::text('permanent_ward', $user->permanent_ward, ['class' => 'form-control', 'placeholder' => 'Ward']) !!}
                     </td>
                     <td>
-                      {!! Form::text('parmanent_ward_bn', $user->parmanent_ward_bn, ['class' => 'form-control', 'placeholder' => 'Ward']) !!}
+                      {!! Form::text('permanent_ward_bn', $user->permanent_ward_bn, ['class' => 'form-control', 'placeholder' => 'Ward']) !!}
                     </td>
                 </tr>
                 <tr>
                     <th>Post Office</th>
                     <td>
-                      {!! Form::text('parmanent_post_office', $user->parmanent_post_office, ['class' => 'form-control', 'placeholder' => 'Post Office']) !!}
+                      {!! Form::text('permanent_post_office', $user->permanent_post_office, ['class' => 'form-control', 'placeholder' => 'Post Office']) !!}
                     </td>
                     <td>
-                      {!! Form::text('parmanent_post_office_bn', $user->parmanent_post_office_bn, ['class' => 'form-control', 'placeholder' => 'Post Office']) !!}
+                      {!! Form::text('permanent_post_office_bn', $user->permanent_post_office_bn, ['class' => 'form-control', 'placeholder' => 'Post Office']) !!}
                     </td>
                 </tr>
                 <tr>
                     <th>Post Code</th>
                     <td>
-                      {!! Form::text('parmanent_post_code', $user->parmanent_post_code, ['class' => 'form-control', 'placeholder' => 'Post Code']) !!}
+                      {!! Form::text('permanent_post_code', $user->permanent_post_code, ['class' => 'form-control', 'placeholder' => 'Post Code']) !!}
                     </td>
                     <td></td>
                 </tr>
                 <tr>
                     <th>District</th>
                     <td>
-                      {!! Form::select('parmanent_district_id', $districts, $user->parmanent_district_id, ['class' => 'form-control select2','id'=>'parmanent_district_id', 'placeholder' => 'District']) !!}
+                      {!! Form::select('permanent_district_id', $districts, $user->permanent_district_id, ['class' => 'form-control select2','id'=>'permanent_district_id', 'placeholder' => 'District']) !!}
                     </td>
                     <td></td>
                 </tr>
                 <tr>
                     <th>Upazilla</th>
                     <td>
-                      {!! Form::select('parmanent_upazila_id', $upazilas, $user->parmanent_upazila_id, ['class' => 'form-control select2','id'=>'parmanent_upazila_id', 'placeholder' => 'Upazila']) !!}
+                      {!! Form::select('permanent_upazila_id', $upazilas, $user->permanent_upazila_id, ['class' => 'form-control select2','id'=>'permanent_upazila_id', 'placeholder' => 'Upazila']) !!}
                     </td>
                     <td></td>
                 </tr>
@@ -323,12 +323,12 @@
             });
         });
 
-        $('#parmanent_district_id').change(function(){
+        $('#permanent_district_id').change(function(){
           $.get('{{ route('childLocation') }}', {
                 option: $(this).val()
             },
             function(data) {
-                var subcat = $('#parmanent_upazila_id');
+                var subcat = $('#permanent_upazila_id');
                 subcat.empty();
                 subcat.append("<option value=''>-----</option>");
                 $.each(data, function(index, element) {

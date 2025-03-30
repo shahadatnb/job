@@ -68,6 +68,8 @@ Route::group(['prefix'=>'student','middleware'=>'auth:student'], function(){
     Route::get('/editProfile', [StudentController::class,'editProfile'])->name('student.editProfile');
     Route::post('/updateProfile', [StudentController::class,'updateProfile'])->name('student.updateProfile');
     Route::post('/chengePassword', [StudentController::class,'chengePassword'])->name('student.chengePassword');
+    Route::post('/updatePhoto', [StudentController::class,'updatePhoto'])->name('student.photo.update');
+    Route::post('/updateAddress', [StudentController::class,'updateAddress'])->name('student.address.update');
     Route::get('/view_cv', [StudentController::class,'view_cv'])->name('student.view_cv');
 
     Route::get('/application/create', [ApplicationController::class,'create'])->name('student.application.create');
@@ -97,9 +99,8 @@ Route::group(['prefix'=>'student','middleware'=>'auth:student'], function(){
     Route::get('training_destroy', [TrainingController::class, 'destroy'])->name('student.training.destroy');
 
     Route::post('skill_store', [SkillConrtoller::class, 'store'])->name('student.skill.store');
-    Route::get('skill_edit', [SkillConrtoller::class, 'edit'])->name('student.skill.edit');
-    Route::post('skill_update', [SkillConrtoller::class, 'update'])->name('student.skill.update');
     Route::get('skill_destroy', [SkillConrtoller::class, 'destroy'])->name('student.skill.destroy');
+    Route::get('skill_list', [SkillConrtoller::class, 'list'])->name('student.skill.list');
 });
 
 Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth'], function(){  

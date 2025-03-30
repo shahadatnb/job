@@ -36,14 +36,14 @@ class Student extends Authenticatable
     {
         return $this->belongsTo(Location::class, 'district_id');
     }
-    public function upazilaParmanent()
+    public function upazilaPermanent()
     {
-        return $this->belongsTo(Location::class, 'parmanent_upazilla_id');
+        return $this->belongsTo(Location::class, 'permanent_upazila_id');
     }
 
-    public function districtParmanent()
+    public function districtPermanent()
     {
-        return $this->belongsTo(Location::class, 'parmanent_district_id');
+        return $this->belongsTo(Location::class, 'permanent_district_id');
     }
 
     public function educations()

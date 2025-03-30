@@ -150,43 +150,43 @@
                 </tr>
                 <tr>
                   <th>Holding</th>
-                  <td>{{ $user->parmanent_holding }}</td>
-                  <td>{{ $user->parmanent_holding_bn }}</td>
+                  <td>{{ $user->permanent_holding }}</td>
+                  <td>{{ $user->permanent_holding_bn }}</td>
                 </tr>
                 <tr>
                     <th>Road</th>
-                    <td>{{ $user->parmanent_road }}</td>
-                    <td>{{ $user->parmanent_road_bn }}</td>
+                    <td>{{ $user->permanent_road }}</td>
+                    <td>{{ $user->permanent_road_bn }}</td>
                 </tr>
                 <tr>
                     <th>Village</th>
-                    <td>{{ $user->parmanent_village }}</td>
-                    <td>{{ $user->parmanent_village_bn }}</td>
+                    <td>{{ $user->permanent_village }}</td>
+                    <td>{{ $user->permanent_village_bn }}</td>
                 </tr>
                 <tr>
                     <th>Ward</th>
-                    <td>{{ $user->parmanent_ward }}</td>
-                    <td>{{ $user->parmanent_ward_bn }}</td>
+                    <td>{{ $user->permanent_ward }}</td>
+                    <td>{{ $user->permanent_ward_bn }}</td>
                 </tr>
                 <tr>
                     <th>Post Office</th>
-                    <td>{{ $user->parmanent_post_office }}</td>
-                    <td>{{ $user->parmanent_post_office_bn }}</td>
+                    <td>{{ $user->permanent_post_office }}</td>
+                    <td>{{ $user->permanent_post_office_bn }}</td>
                 </tr>
                 <tr>
                     <th>Post Code</th>
-                    <td>{{ $user->parmanent_post_code }}</td>
-                    <td>{{ $user->parmanent_post_code_bn }}</td>
+                    <td>{{ $user->permanent_post_code }}</td>
+                    <td>{{ $user->permanent_post_code_bn }}</td>
                 </tr>
                 <tr>
                     <th>Upazilla</th>
-                    <td>{{ $user->upazilaParmanent ? $user->upazilaParmanent->name : '' }}</td>
-                    <td>{{ $user->upazilaParmanent ? $user->upazilaParmanent->name_bn : '' }}</td>
+                    <td>{{ $user->upazilaPermanent ? $user->upazilaPermanent->name : '' }}</td>
+                    <td>{{ $user->upazilaPermanent ? $user->upazilaPermanent->name_bn : '' }}</td>
                 </tr>
                 <tr>
                     <th>District</th>
-                    <td>{{ $user->districtParmanent ? $user->districtParmanent->name : '' }}</td>
-                    <td>{{ $user->districtParmanent ? $user->districtParmanent->name_bn : '' }}</td>
+                    <td>{{ $user->districtPermanent ? $user->districtPermanent->name : '' }}</td>
+                    <td>{{ $user->districtPaermanent ? $user->districtPermanent->name_bn : '' }}</td>
                 </tr>
             </table>
             </div>

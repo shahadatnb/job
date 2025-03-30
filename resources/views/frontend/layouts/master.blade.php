@@ -3,7 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <title>JobEntry - Job Portal Website</title>
+    <title>
+        @if(View::hasSection('title'))
+            @yield('title')
+      @else
+      {{-- {{ config('app.name', 'Laravel') }} --}}
+      JobEntry - Job Portal Website
+      @endif
+    </title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -11,7 +18,7 @@
     {{-- <meta name="description" content="{{ config('settings.metaDescription', '') }}"> --}}
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,7 +51,7 @@
 
 
         <!-- Navbar Start -->
-        <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0 d-print-none">
             <a href="index.html" class="navbar-brand d-flex align-items-center text-center py-0 px-4 px-lg-5">
                 <h1 class="m-0 text-primary">KPI Job Portal</h1>
             </a>
@@ -94,7 +101,7 @@
         
 
         <!-- Footer Start -->
-        <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn d-print-none" data-wow-delay="0.1s">
             <div class="container py-5">
                 <div class="row g-5">
                     <div class="col-lg-3 col-md-6">
@@ -160,7 +167,7 @@
 
 
         <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top  d-print-none"><i class="bi bi-arrow-up"></i></a>
     </div>
 
     <!-- JavaScript Libraries -->
