@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 10, 2025 at 05:03 PM
+-- Generation Time: Mar 30, 2025 at 09:11 AM
 -- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- PHP Version: 8.2.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -94,6 +94,35 @@ CREATE TABLE `edu_levels` (
 INSERT INTO `edu_levels` (`id`, `name`, `is_diploma`, `serial`, `is_active`, `created_at`, `updated_at`) VALUES
 (1, 'SSC/Equivalent', 0, 1, 1, NULL, NULL),
 (2, 'Diploma', 1, 2, 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ex_students`
+--
+
+CREATE TABLE `ex_students` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `department_id` bigint UNSIGNED NOT NULL,
+  `roll_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `registration_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `session` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `passing_year` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `job_information` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mobile` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `photo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ex_students`
+--
+
+INSERT INTO `ex_students` (`id`, `name`, `department_id`, `roll_number`, `registration_number`, `session`, `passing_year`, `job_information`, `email`, `mobile`, `photo`, `created_at`, `updated_at`) VALUES
+(1, 'Shahadat Hosain', 4, '123456', '123456789', '2004-2005', '2008', 'Engineer', 'shahadat@asiancoder.com', '01757839516', 'ex_student/1743270205.jpg', '2025-03-29 17:43:25', '2025-03-29 17:43:25');
 
 -- --------------------------------------------------------
 
@@ -851,7 +880,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (161, '2025_03_08_215216_create_student_employments_table', 46),
 (162, '2025_03_08_215310_create_student_trainings_table', 46),
 (163, '2025_03_08_215320_create_student_skills_table', 46),
-(164, '2025_03_08_221457_create_student_certifications_table', 46);
+(164, '2025_03_08_221457_create_student_certifications_table', 46),
+(165, '2025_03_29_193658_create_ex_students_table', 47);
 
 -- --------------------------------------------------------
 
@@ -1127,11 +1157,12 @@ CREATE TABLE `students` (
   `post_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `upazila_id` int UNSIGNED DEFAULT NULL,
   `district_id` int UNSIGNED DEFAULT NULL,
-  `parmanent_village` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `parmanent_post_office` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `parmanent_post_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `parmanent_upazila_id` int UNSIGNED DEFAULT NULL,
-  `parmanent_district_id` int UNSIGNED DEFAULT NULL,
+  `permanent_village` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `permanent_post_office` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `permanent_post_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `permanent_upazila_id` int UNSIGNED DEFAULT NULL,
+  `permanent_district_id` int UNSIGNED DEFAULT NULL,
+  `photo` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1140,8 +1171,8 @@ CREATE TABLE `students` (
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `name`, `name_bn`, `email`, `email_verified_at`, `password`, `remember_token`, `father_name`, `mother_name`, `nid`, `phone`, `date_of_birth`, `gender`, `religion`, `blood_group`, `village`, `post_office`, `post_code`, `upazila_id`, `district_id`, `parmanent_village`, `parmanent_post_office`, `parmanent_post_code`, `parmanent_upazila_id`, `parmanent_district_id`, `created_at`, `updated_at`) VALUES
-(1, 'Shahadat Hosain', 'শাহাদাত হোসেন', 'shahadat@asiancoder.com', NULL, '$2y$12$z.oXPirU29HjY6MEPnxzQekGLoSvP3zjNTQ/ECamtXbLGmRT7xv2.', NULL, 'Mostafa Kamal', 'Sazida Begum', '123456', '01757839516', '01-12-2024', 'male', 'islam', 'AB+', 'Kecuatoil', 'Khorkhori', '6204', 545, 391, NULL, NULL, NULL, NULL, NULL, '2025-01-24 05:47:21', '2025-03-10 02:31:04');
+INSERT INTO `students` (`id`, `name`, `name_bn`, `email`, `email_verified_at`, `password`, `remember_token`, `father_name`, `mother_name`, `nid`, `phone`, `date_of_birth`, `gender`, `religion`, `blood_group`, `village`, `post_office`, `post_code`, `upazila_id`, `district_id`, `permanent_village`, `permanent_post_office`, `permanent_post_code`, `permanent_upazila_id`, `permanent_district_id`, `photo`, `created_at`, `updated_at`) VALUES
+(1, 'Shahadat Hosain', 'শাহাদাত হোসেন', 'shahadat@asiancoder.com', NULL, '$2y$12$z.oXPirU29HjY6MEPnxzQekGLoSvP3zjNTQ/ECamtXbLGmRT7xv2.', NULL, 'Mostafa Kamal', 'Sazida Begum', '123456', '01757839516', '01-12-2024', 'male', 'islam', 'AB+', 'Kecuatoil', 'Khorkhori', NULL, 545, 391, 'Kecuatoil', 'Khorkhori', NULL, 545, 391, 'ex_student/1743306588.jpg', '2025-01-24 05:47:21', '2025-03-30 08:43:39');
 
 -- --------------------------------------------------------
 
@@ -1228,6 +1259,16 @@ CREATE TABLE `student_skills` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `student_skills`
+--
+
+INSERT INTO `student_skills` (`id`, `student_id`, `skill`, `created_at`, `updated_at`) VALUES
+(2, 1, 'css', '2025-03-30 05:49:24', '2025-03-30 05:49:24'),
+(4, 1, 'HTML', '2025-03-30 05:50:02', '2025-03-30 05:50:02'),
+(5, 1, 'PHP', '2025-03-30 05:50:17', '2025-03-30 05:50:17'),
+(6, 1, 'Laravel', '2025-03-30 05:50:35', '2025-03-30 05:50:35');
 
 -- --------------------------------------------------------
 
@@ -1374,6 +1415,12 @@ ALTER TABLE `edu_groups`
 -- Indexes for table `edu_levels`
 --
 ALTER TABLE `edu_levels`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ex_students`
+--
+ALTER TABLE `ex_students`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1595,6 +1642,12 @@ ALTER TABLE `edu_levels`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `ex_students`
+--
+ALTER TABLE `ex_students`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -1628,7 +1681,7 @@ ALTER TABLE `menu_items`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=166;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1706,7 +1759,7 @@ ALTER TABLE `student_employments`
 -- AUTO_INCREMENT for table `student_skills`
 --
 ALTER TABLE `student_skills`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `student_trainings`

@@ -134,7 +134,7 @@ class StudentController extends Controller
             $imgFile  = Image::read($request->photo)->resize(300, 300, function ($constraint) {
                 $constraint->aspectRatio();
             })->toJpeg(80);
-            $file_name = 'ex_student/'.time() .'.jpg';
+            $file_name = 'student/'.time() .'.jpg';
             Storage::disk('public')->put($file_name, $imgFile);
             $student->photo = $file_name;
         }
