@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 30, 2025 at 09:11 AM
+-- Generation Time: Apr 17, 2025 at 01:15 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.28
 
@@ -20,6 +20,39 @@ SET time_zone = "+00:00";
 --
 -- Database: `laravel_job`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `companies`
+--
+
+CREATE TABLE `companies` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `logo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint UNSIGNED DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `designations`
+--
+
+CREATE TABLE `designations` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `serial` tinyint UNSIGNED DEFAULT '0',
+  `status` tinyint UNSIGNED DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -138,6 +171,33 @@ CREATE TABLE `failed_jobs` (
   `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `company_id` bigint UNSIGNED DEFAULT NULL,
+  `designation_id` bigint UNSIGNED DEFAULT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `responsibility` text COLLATE utf8mb4_unicode_ci,
+  `qualifications` text COLLATE utf8mb4_unicode_ci,
+  `location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `vacancy` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `job_nature` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `education_level_id` bigint UNSIGNED DEFAULT NULL,
+  `age_limit` smallint UNSIGNED DEFAULT NULL COMMENT 'Age Limit in Year',
+  `last_date` date DEFAULT NULL COMMENT 'Date Line',
+  `salary` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nagotiable` tinyint UNSIGNED DEFAULT '0',
+  `status` tinyint UNSIGNED DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -881,7 +941,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (162, '2025_03_08_215310_create_student_trainings_table', 46),
 (163, '2025_03_08_215320_create_student_skills_table', 46),
 (164, '2025_03_08_221457_create_student_certifications_table', 46),
-(165, '2025_03_29_193658_create_ex_students_table', 47);
+(165, '2025_03_29_193658_create_ex_students_table', 47),
+(166, '2025_04_17_185857_create_designations_table', 48),
+(167, '2025_04_17_185933_create_companies_table', 48),
+(168, '2025_04_17_193557_create_jobs_table', 48);
 
 -- --------------------------------------------------------
 
@@ -1398,6 +1461,18 @@ INSERT INTO `user_branches` (`id`, `branch_id`, `user_id`) VALUES
 --
 
 --
+-- Indexes for table `companies`
+--
+ALTER TABLE `companies`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `designations`
+--
+ALTER TABLE `designations`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `edu_boards`
 --
 ALTER TABLE `edu_boards`
@@ -1429,6 +1504,12 @@ ALTER TABLE `ex_students`
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `languages`
@@ -1624,6 +1705,18 @@ ALTER TABLE `user_branches`
 --
 
 --
+-- AUTO_INCREMENT for table `companies`
+--
+ALTER TABLE `companies`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `designations`
+--
+ALTER TABLE `designations`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `edu_boards`
 --
 ALTER TABLE `edu_boards`
@@ -1654,6 +1747,12 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `languages`
 --
 ALTER TABLE `languages`
@@ -1681,7 +1780,7 @@ ALTER TABLE `menu_items`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=166;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
 
 --
 -- AUTO_INCREMENT for table `permissions`
