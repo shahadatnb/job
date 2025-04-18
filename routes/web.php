@@ -26,7 +26,8 @@ use App\Http\Controllers\SMS\SMSController;
 
 use App\Http\Controllers\TaxonomyController;
 use App\Http\Controllers\PostsController;
-use App\Models\ExStudent;
+use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\JobController;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,7 +117,8 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
     Route::get('/students/destroy/{student}', [StudentController::class,'destroy'])->name('student.destroy');
     Route::get('/students/{student}', [StudentController::class,'show'])->name('student.show');
     Route::get('/students', [StudentController::class,'students'])->name('student.index');
-    Route::resource('exStudent', ExStudentController::class)->except('store','create');
+    Route::resource('designation', DesignationController::class);
+    Route::resource('job', JobController::class);
 });
 Route::get('/childLocation', [LocationController::class,'childLocation'])->name('childLocation');
 

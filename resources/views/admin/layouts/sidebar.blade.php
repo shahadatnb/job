@@ -46,10 +46,16 @@
               <p>Dashboard</p>
             </a>
           </li>          
-          <li class="nav-item has-treeview {{ (request()->routeIs('student.*','exStudent.*')) ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ (request()->routeIs('student.*','exStudent.*')) ? 'active' : '' }}">
+          <li class="nav-item">
+            <a href="{{ route("job.index") }}" class="nav-link {{ (request()->routeIs('job.*')) ? ' active' : '' }}">
+              <i class="nav-icon fas fa-briefcase"></i>
+              <p>Job list</p>
+            </a>
+          </li>          
+          <li class="nav-item has-treeview {{ (request()->routeIs('student.*','designation.*')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ (request()->routeIs('student.*','designation.*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-restroom"></i>
-              <p>Student <i class="right fas fa-angle-left"></i> </p>
+              <p>CV Management <i class="right fas fa-angle-left"></i> </p>
             </a>
             <ul class="nav nav-treeview">
               {{-- <li class="nav-item has-treeview {{ (request()->routeIs('student.setup.*')) ? 'menu-open' : '' }}">
@@ -67,10 +73,10 @@
                 </ul>
               </li> --}}
               <li class="nav-item"><a href="{{ route("student.index") }}" class="nav-link {{ (request()->routeIs('student.*')) ? ' active' : '' }}">
-                <i class="far fa-user nav-icon"></i> <p>{{__('Student List') }}</p></a>
+                <i class="far fa-user nav-icon"></i> <p>{{__('CV List') }}</p></a>
               </li>
-              <li class="nav-item"><a href="{{ route("exStudent.index") }}" class="nav-link {{ (request()->routeIs('exStudent.*')) ? ' active' : '' }}">
-                <i class="far fa-user nav-icon"></i> <p>{{__('Ex-Student List') }}</p></a>
+              <li class="nav-item"><a href="{{ route("designation.index") }}" class="nav-link {{ (request()->routeIs('designation.*')) ? ' active' : '' }}">
+                <i class="far fa-user nav-icon"></i> <p>{{__('Designation List') }}</p></a>
               </li>
               
             </ul>

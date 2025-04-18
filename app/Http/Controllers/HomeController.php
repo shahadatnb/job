@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
-use App\Models\Branch;
+use App\Models\Job;
 
 class HomeController extends Controller
 {
     public function homepage(){
-        return view('frontend.pages.index');
+        $jobs = Job::where('status', 1)->latest()->paginate(50);
+        return view('frontend.pages.index',compact('jobs'));
         //return redirect()->route('login');
     }
 

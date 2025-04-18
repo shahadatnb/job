@@ -12,7 +12,9 @@ class DesignationController extends Controller
      */
     public function index()
     {
-        //
+        $designations = Designation::all();
+
+        return view('admin.designation.index', ['designations' => $designations]);
     }
 
     /**
@@ -20,7 +22,7 @@ class DesignationController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.designation.createOrEdit');
     }
 
     /**
@@ -28,7 +30,18 @@ class DesignationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+        
+        $designation = new Designation();
+        $designation->name = $request->name;
+        $designation->serial = $request->serial;
+        $designation->save();
+
+        session()->flash('success','Successfully Save');
+
+        return redirect()->route('designation.index');
     }
 
     /**
@@ -44,7 +57,7 @@ class DesignationController extends Controller
      */
     public function edit(Designation $designation)
     {
-        //
+        return view('admin.designation.createOrEdit', ['designation' => $designation]);
     }
 
     /**
@@ -52,7 +65,18 @@ class DesignationController extends Controller
      */
     public function update(Request $request, Designation $designation)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+        
+        $designation->name = $request->name;
+        $designation->serial = $request->serial;
+        $designation->status = $request->status;
+        $designation->save();
+
+        session()->flash('success','Successfully Save');
+
+        return redirect()->route('designation.index');
     }
 
     /**
@@ -60,6 +84,8 @@ class DesignationController extends Controller
      */
     public function destroy(Designation $designation)
     {
-        //
+        $designation->delete();
+        session()->flash('success','Successfully Deleted');
+        return redirect()->route('designation.index');
     }
 }
