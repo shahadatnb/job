@@ -52,7 +52,7 @@
 
         <!-- Navbar Start -->
         <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0 d-print-none">
-            <a href="index.html" class="navbar-brand d-flex align-items-center text-center py-0 px-4 px-lg-5">
+            <a href="{{ route('/') }}" class="navbar-brand d-flex align-items-center text-center py-0 px-4 px-lg-5">
                 <h1 class="m-0 text-primary">Job Portal</h1>
             </a>
             <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -85,7 +85,7 @@
                 <a href="{{route('student.register')}}" class="btn btn-primary rounded-0 py-4 px-lg-5">Register</a>
 				@endguest
 				@auth('student')
-                <a href="{{route('student.profile')}}" class="btn btn-primary rounded-0 py-4 px-lg-5">Profile</a>
+                <a href="{{route('student.dashboard')}}" class="btn btn-primary rounded-0 py-4 px-lg-5">Profile</a>
                 <a class="btn btn-primary rounded-0 py-4 px-lg-5" href="{{ route('student.logout') }}" onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">Logout</a>
 				@endauth

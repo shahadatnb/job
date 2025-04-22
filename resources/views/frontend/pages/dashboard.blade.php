@@ -39,6 +39,8 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group list-group-item"><a href="{{route('student.dashboard')}}">Dashboard</a></li>
                     <li class="list-group list-group-item"><a href="{{route('student.view_cv')}}">View CV</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('/')}}">Apply Now</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('student.applied_jobs')}}">Applied Jobs</a></li>
                 </ul>
             </div>
         </div>
@@ -187,7 +189,7 @@
                                 <td>{{ $edu->group->name }}</td>
                                 <td>{{ $edu->board->name }}</td>
                                 <td>{{ $edu->passing_year }}</td>    
-                                <td>{{ $edu->gpa }}</td>
+                                <td>{{ $edu->result }}</td>
 																<td>
 																	<button class="btn btn-sm btn-primary editAcademic" data-id="{{ $edu->id }}">Edit</button>
 																	<button class="btn btn-sm btn-danger deleteAcademic" data-id="{{ $edu->id }}">Delete</button>
@@ -347,6 +349,7 @@
 								<option value="O-">O-</option>
 								<option value="AB+">AB+</option>
 								<option value="AB-">AB-</option>
+								<option value="Unknown">Unknown</option>
 							</select>
 						</div>
 						<div class="form-group">
@@ -395,10 +398,10 @@
                     <input type="text" name="passing_year" id="passing_year" class="form-control">
                 </div>
                 <div class="form-group">
-										<input name = "result_type" type = "radio" value = "gpa" checked> GPA
-										<input name = "result_type" type = "radio" value = "percentage"> Division
-                    <input type="text" name="gpa" id="gpa" class="form-control">
-										<select name="gpa" id="division" class="form-control d-none">
+										<input name = "result_type" type = "radio" id="gpa" value = "gpa" checked> GPA
+										<input name = "result_type" type = "radio" id="division" value = "division"> Division
+                    <input type="text" name="result_gpa" id="result_gpa" class="form-control">
+										<select name="result_division" id="result_division" class="form-control d-none">
 											<option value="">Select Division</option>
 											<option value="1st">1st</option>
 											<option value="2nd">2nd</option>
@@ -406,7 +409,7 @@
 										</select>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary mt-3">Save</button>
             </form>
         </div>
       </div>
@@ -547,17 +550,7 @@
 				//format: 'DD/MM/YYYY'
 				format: 'YYYY-MM-DD'
 		});
-
-		$('input[name="result_type"]').on('change', function() {
-			var value = $(this).val();
-			if (value == 'gpa') {
-				$('#gpa').removeClass('d-none');
-				$('#division').addClass('d-none');
-			} else {
-				$('#gpa').addClass('d-none');
-				$('#division').removeClass('d-none');
-			}
-		});
+		
 
         $('.select2').select2();
         $('.select2-multi').select2();
@@ -656,9 +649,23 @@
 				// EDUCATION
 
         $('#newAcademicModal').click(function() {
+						$('#eduForm')[0].reset();
+						$("input[name='result_type']").trigger('change');
+						$("#errorMsg").empty();
             $('#eduForm').attr('action', "{{route('student.education.store')}}");
             $('#newEduModal').modal('show');
         });
+
+				$('input[name="result_type"]').on('change', function() {
+					var value = $("input[name='result_type']:checked").val();
+					if (value == 'gpa' || value == '') {
+						$('#result_gpa').removeClass('d-none');
+						$('#result_division').addClass('d-none');
+					} else {
+						$('#result_gpa').addClass('d-none');
+						$('#result_division').removeClass('d-none');
+					}
+				});
     
         $('#eduForm').submit(function(e) {
             e.preventDefault();
@@ -678,7 +685,7 @@
 													<td>${data.education.board_name}</td>
 													<td>${data.education.group_name}</td>
 													<td>${data.education.passing_year}</td>
-													<td>${data.education.gpa}</td>
+													<td>${data.education.result}</td>
 													<td>
 														<button class="btn btn-sm btn-primary editAcademic" data-id="${data.education.id}">Edit</button>
 														<button class="btn btn-sm btn-danger deleteAcademic" data-id="${data.education.id}">Delete</button>
@@ -694,9 +701,8 @@
 												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
 												.find('td').eq(3).html(data.education.passing_year);
 												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
-												.find('td').eq(4).html(data.education.gpa);
+												.find('td').eq(4).html(data.education.result);
 											}
-                        $('#eduForm')[0].reset();
                         $('#newEduModal').modal('hide');
                     }else{
                         //console.log(data);
@@ -712,6 +718,8 @@
         });
 
 		$("#nav-education").on('click', '.editAcademic', function(){
+			$('#eduForm')[0].reset();
+			$("#errorMsg").empty();
 			var id = $(this).data('id');
 			$.ajax({
 				url: "{{route('student.education.edit')}}?id=" + id,
@@ -734,7 +742,15 @@
 					$("#edu_group_id").val(data.education.edu_group_id);
 					$("#edu_board_id").val(data.education.edu_board_id);
 					$("#passing_year").val(data.education.passing_year);
-					$("#gpa").val(data.education.gpa);
+					//console.log(data.education.result_type);
+					if(data.education.result_type == 'gpa'){
+						$("#gpa").prop('checked', true);
+						$("#result_gpa").val(data.education.result);
+					} else {
+						$("#division").prop('checked', true);
+						$("#result_division").val(data.education.result).change();
+					}
+					$("input[name='result_type']").change();
 					$('#newEduModal').modal('show');
 				}
 			});

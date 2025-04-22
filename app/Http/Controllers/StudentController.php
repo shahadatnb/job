@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EduLevel;
 use App\Models\Student;
 use App\Models\Location;
+use App\Models\JobApplication;
 use App\Models\StudentEducation;
 use App\Models\StudentEmployment;
 use App\Models\StudentCertification;
@@ -216,7 +217,11 @@ class StudentController extends Controller
         //return redirect()->route('student.profile');
     }
 
-    
+    public function applied_jobs()
+    {
+        $applied_jobs = JobApplication::where('student_id', auth('student')->user()->id)->with('job')->latest()->get();
+        return view('frontend.pages.applied_jobs', compact('applied_jobs'));
+    }
 
     public function destroy(Student $student)
     {

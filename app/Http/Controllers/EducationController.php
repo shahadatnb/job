@@ -25,18 +25,27 @@ class EducationController extends Controller
             'edu_group_id' => 'required',
             'edu_board_id' => 'required',
             'passing_year' => 'required',
-            'gpa' => 'required',
+            'result_type' => 'required',
+            'result_gpa' => 'nullable|required_if:result_type,gpa|numeric|max:5',
+            'result_division' => 'required_if:result_type,division',
+        ],[
+            'result_gpa.required_if' => 'GPA is required',
+            'result_division.required_if' => 'Division is required',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
+
+        $result = $request->result_type == 'gpa' ? $request->result_gpa : $request->result_division;
+
         $edu = new StudentEducation();
         $edu->student_id = auth('student')->user()->id;
         $edu->edu_level_id = $request->edu_level_id;
         $edu->edu_group_id = $request->edu_group_id;
         $edu->edu_board_id = $request->edu_board_id;
         $edu->passing_year = $request->passing_year;
-        $edu->gpa = $request->gpa;
+        $edu->result_type = $request->result_type;
+        $edu->result = $result;
         $edu->save();
         
         $education = StudentEducation::find($edu->id);

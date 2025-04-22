@@ -17,7 +17,7 @@ use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\EmploymentController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\SkillConrtoller;
-use App\Http\Controllers\ExStudentController;
+use App\Http\Controllers\JobApplicationController;
 
 use App\Http\Controllers\SMS\SmsContactController;
 use App\Http\Controllers\SMS\SmsLogController;
@@ -47,8 +47,7 @@ Route::get('ac_config', function()
 });
 
 Route::get('/', [HomeController::class,'homepage'])->name('/');
-Route::get('/ex-student-create', [ExStudentController::class,'create'])->name('ex-student.create');
-Route::post('/ex-student-store', [ExStudentController::class,'store'])->name('ex-student.store');
+Route::post('/job_apply', [JobApplicationController::class,'apply'])->name('job.apply');
 
 Route::prefix(config('app.admin_prefix','admin'))->group(function() {
     //Auth::routes(['register' => false]);//['verify'=> false]
@@ -72,11 +71,7 @@ Route::group(['prefix'=>'student','middleware'=>'auth:student'], function(){
     Route::post('/updatePhoto', [StudentController::class,'updatePhoto'])->name('student.photo.update');
     Route::post('/updateAddress', [StudentController::class,'updateAddress'])->name('student.address.update');
     Route::get('/view_cv', [StudentController::class,'view_cv'])->name('student.view_cv');
-
-    Route::get('/application/create', [ApplicationController::class,'create'])->name('student.application.create');
-    Route::post('/application/store', [ApplicationController::class,'store'])->name('student.application.store');
-    Route::get('/application', [ApplicationController::class,'index'])->name('student.application.index');
-    //Route::resource('unit', UnitController::class);
+    Route::get('/applied_jobs', [StudentController::class,'applied_jobs'])->name('student.applied_jobs');
 
     Route::get('get_edu_group', [EducationController::class, 'edu_group'])->name('student.education.group');
     Route::post('education_store', [EducationController::class, 'store'])->name('student.education.store');

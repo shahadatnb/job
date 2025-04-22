@@ -19,7 +19,7 @@
                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                     <div class="d-flex mb-3">
                         <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                        <a class="btn btn-primary" href="">Apply Now</a>
+                        <a class="btn btn-primary apply_now" data-job_id="{{ $job->id }}" data-post="{{ $job->designation? $job->designation->name : '' }}"  href="javascript:void(0)">Apply Now</a>
                     </div>
                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Date Line: {{ date('d-m-Y', strtotime($job->last_date)) }}</small>
                 </div>
@@ -51,9 +51,70 @@
 </div>
 <!-- Jobs End -->
 
+<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <form action="{{ route('job.apply') }}" id="applyForm" method="POST">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Apply Now</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    @csrf
+                    <input type="hidden" name="job_id" id="job_id">
+                    <p class="text-center post_name"></p>
+                    <div id="errorMsg"></div>
+                    <div class="form-group">
+                        <label for="name">Expected Salary</label>
+                        <input type="text" class="form-control" name="expected_salary" id="expected_salary" required>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" id="applyBtn" class="btn btn-primary">Apply Now</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 
 @section('js')
+<script>
+    $(document).on('click', '.apply_now', function () {
+        let job_id = $(this).data('job_id');
+        let post = $(this).data('post');
+        $('.post_name').text(post);
+        $('#job_id').val(job_id);
+        $('#applyModal').modal('show');
+    });
 
+    $("#applyForm").submit(function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        let url = $(this).attr('action');
+        $("#errorMsg").empty();
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: formData,
+            success: function (data) {
+                if (data.status == true) {
+                    $("#applyModal").modal('hide');
+                    location.href = "{{route('student.applied_jobs')}}";
+                }else {
+                    //$("#errorMsg").html(data.error);
+                    if(data.message){
+                            $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+                        }
+                    data.errors.forEach(function(element){
+                        $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+                    });
+                }
+            }
+        });
+    })
+</script>
 @endsection

@@ -1,2 +1,6 @@
 ALTER TABLE `students` ADD `photo` VARCHAR(150) NULL DEFAULT NULL AFTER `parmanent_district_id`; 
 ALTER TABLE `students` CHANGE `parmanent_village` `permanent_village` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `parmanent_post_office` `permanent_post_office` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `parmanent_post_code` `permanent_post_code` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `parmanent_upazila_id` `permanent_upazila_id` INT UNSIGNED NULL DEFAULT NULL, CHANGE `parmanent_district_id` `permanent_district_id` INT UNSIGNED NULL DEFAULT NULL; 
+
+
+ALTER TABLE `student_education` ADD `result_type` ENUM('gpa','division') NULL DEFAULT NULL AFTER `passing_year`; 
+ALTER TABLE `student_education` CHANGE `gpa` `result` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
