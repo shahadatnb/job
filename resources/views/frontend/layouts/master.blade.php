@@ -122,10 +122,10 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <h5 class="text-white mb-4">Contact</h5>
-                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Mir Mosharaf Hossain Rd, Kushtia</p>
-                        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>02477783104</p>
-                        <p class="mb-2"><i class="fa fa-envelope me-3"></i>kushtiapoly.27040@gmail.com</p>
-                        <p class="mb-2"><i class="fa fa-globe me-3"></i>https://kushtia.polytech.gov.bd</p>
+                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>86 (New), 726/A (Old), Satmasjid Road, Dhanmondi, Dhaka-1209</p>
+                        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>01755697173-6</p>
+                        <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@fazlulhaquehospital.com</p>
+                        <p class="mb-2"><i class="fa fa-globe me-3"></i>https://fazlulhaquehospital.com</p>
                         <div class="d-flex pt-2">
                             <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
                             <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
@@ -149,7 +149,7 @@
                         <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                             &copy; <a class="border-bottom" href="#">{{ config('app.name', 'Laravel') }}</a>, All Right Reserved. 						
 							
-							Designed By <a class="border-bottom" href="https://asiancoder.com">Asian Coder</a>
+							Designed By <a class="border-bottom" href="https://pontit.com">Pondit.com</a>
                         </div>
                         <div class="col-md-6 text-center text-md-end">
                             <div class="footer-menu">

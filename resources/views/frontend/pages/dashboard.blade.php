@@ -1,6 +1,7 @@
 @extends('frontend.layouts.master')
 @section('title','Dashboard')
 @section('css')
+<style src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"></style>
 <style type="text/css">
 	#photoPreview {
 		width: 150px;
@@ -295,7 +296,7 @@
 							<input type="text" name="name" id="name" class="form-control">
 						</div>
 						<div class="form-group">
-							<label for="father_name"></label>
+							<label for="father_name">Father Name</label>
 							<input type="text" name="father_name" id="father_name" class="form-control">
 						</div>
 						<div class="form-group">
@@ -394,8 +395,15 @@
                     <input type="text" name="passing_year" id="passing_year" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="gpa">GPA</label>
+										<input name = "result_type" type = "radio" value = "gpa" checked> GPA
+										<input name = "result_type" type = "radio" value = "percentage"> Division
                     <input type="text" name="gpa" id="gpa" class="form-control">
+										<select name="gpa" id="division" class="form-control d-none">
+											<option value="">Select Division</option>
+											<option value="1st">1st</option>
+											<option value="2nd">2nd</option>
+											<option value="3rd">3rd</option>
+										</select>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Save</button>
@@ -528,8 +536,8 @@
 
 // basic
 		$('#date_of_birth').datetimepicker({
-				//format: 'DD/MM/YYYY'
-				format: 'YYYY-MM-DD'
+				format: 'DD-MM-YYYY'
+				//format: 'YYYY-MM-DD'
 		});
 		$('#start_date').datetimepicker({
 				//format: 'DD/MM/YYYY'
@@ -539,6 +547,18 @@
 				//format: 'DD/MM/YYYY'
 				format: 'YYYY-MM-DD'
 		});
+
+		$('input[name="result_type"]').on('change', function() {
+			var value = $(this).val();
+			if (value == 'gpa') {
+				$('#gpa').removeClass('d-none');
+				$('#division').addClass('d-none');
+			} else {
+				$('#gpa').addClass('d-none');
+				$('#division').removeClass('d-none');
+			}
+		});
+
         $('.select2').select2();
         $('.select2-multi').select2();
 
@@ -681,7 +701,7 @@
                     }else{
                         //console.log(data);
                         if(data.message){
-                            $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+                            $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);														
                         }
                             data.errors.forEach(function(element){
                             $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
@@ -978,6 +998,7 @@
 					if(data.status == true){
 						//$("#addressModal").modal('hide');
 						$("#errorMsgAddress").append(`<div class="alert alert-success"><strong>Success: </strong>${data.message}</div>`);
+						$('#nav-education-tab').tab('show');
 					}else{
 						if(data.message){
 								$("#errorMsgAddress").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
