@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class EduBoard extends Model
 {
     use HasFactory;
+
+    public function edu_level()
+    {
+        return $this->belongsTo(EduLevel::class, 'edu_level_id');
+    }
 }

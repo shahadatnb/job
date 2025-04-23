@@ -18,6 +18,8 @@ use App\Http\Controllers\EmploymentController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\SkillConrtoller;
 use App\Http\Controllers\JobApplicationController;
+use App\Http\Controllers\EduBoardController;
+use App\Http\Controllers\EduGroupController;
 
 use App\Http\Controllers\SMS\SmsContactController;
 use App\Http\Controllers\SMS\SmsLogController;
@@ -114,6 +116,8 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
     Route::get('/students', [StudentController::class,'students'])->name('student.index');
     Route::resource('designation', DesignationController::class);
     Route::resource('job', JobController::class);
+    Route::resource('eduBoard', EduBoardController::class);
+    Route::resource('eduGroup', EduGroupController::class);
 });
 Route::get('/childLocation', [LocationController::class,'childLocation'])->name('childLocation');
 
