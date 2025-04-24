@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\JobApplication;
+use App\Models\Designation;
 use App\Models\Job;
 
 class JobApplicationController extends Controller
@@ -38,5 +39,25 @@ class JobApplicationController extends Controller
         $job_application->expected_salary = $request->expected_salary;
         $job_application->save();
         return response()->json(['status' => true, 'message' => 'Job application submitted successfully']);
+    }
+
+    
+    public function application(Request $request)
+    {
+        $data = ['dasignation_id'=>''];
+        $job_data = Job::where('status', 1)->get();
+        $jobs = [];
+        foreach ($job_data as $job) {
+            $jobs[$job->id] = $job->designation? $job->designation->name : '';
+        }
+        $applied_jobs = JobApplication::with('job')->latest();
+        if(!empty($request->designation_id)) {
+            $data['designation_id'] = $request->designation_id;
+            $applied_jobs = $applied_jobs->whereHas('job', function ($query) use ($request) {
+                $query->where('designation_id', $request->designation_id);
+            });
+        }
+        $applied_jobs = $applied_jobs->paginate(50);
+        return view('admin.job.applied_jobs', compact('applied_jobs', 'data', 'jobs'));
     }
 }

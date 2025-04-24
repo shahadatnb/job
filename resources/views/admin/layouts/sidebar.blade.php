@@ -47,19 +47,25 @@
             </a>
           </li>          
           <li class="nav-item">
-            <a href="{{ route("job.index") }}" class="nav-link {{ (request()->routeIs('job.*')) ? ' active' : '' }}">
+            <a href="{{ route("job.index") }}" class="nav-link {{ (request()->routeIs('job.index','job.create','job.edit')) ? ' active' : '' }}">
               <i class="nav-icon fas fa-briefcase"></i>
               <p>Job list</p>
             </a>
           </li>          
-          <li class="nav-item has-treeview {{ (request()->routeIs('student.*','designation.*')) ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ (request()->routeIs('student.*','designation.*')) ? 'active' : '' }}">
+          <li class="nav-item">
+            <a href="{{ route("job.application") }}" class="nav-link {{ (request()->routeIs('job.application')) ? ' active' : '' }}">
+              <i class="nav-icon fas fa-briefcase"></i>
+              <p>Applied list</p>
+            </a>
+          </li>          
+          <li class="nav-item has-treeview {{ (request()->routeIs('student.*','designation.*','eduBoard.*','eduGroup.*')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ (request()->routeIs('student.*','designation.*','eduBoard.*','eduGroup.*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-restroom"></i>
               <p>CV Management <i class="right fas fa-angle-left"></i> </p>
             </a>
             <ul class="nav nav-treeview">
-              {{-- <li class="nav-item has-treeview {{ (request()->routeIs('student.setup.*')) ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ (request()->routeIs('student.setup.*')) ? 'active' : '' }}">
+              <li class="nav-item has-treeview {{ (request()->routeIs('eduBoard.*','eduGroup.*','designation.*')) ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ (request()->routeIs('eduBoard.*','eduGroup.*','designation.*')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-tools"></i>
                   <p>
                     Setting
@@ -67,16 +73,19 @@
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <li class="nav-item"><a href="{{ route("student.setup.academicYear.index") }}" class="nav-link {{ (request()->routeIs('student.setup.academicYear.*')) ? ' active' : '' }}">
-                    <i class="far fa-circle nav-icon"></i> <p>{{__('Academic Year') }}</p></a>
+                  <li class="nav-item"><a href="{{ route("eduBoard.index") }}" class="nav-link {{ (request()->routeIs('eduBoard.*')) ? ' active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i> <p>{{__('Education Board') }}</p></a>
                   </li>                  
+                  <li class="nav-item"><a href="{{ route("eduGroup.index") }}" class="nav-link {{ (request()->routeIs('eduGroup.*')) ? ' active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i> <p>{{__('Education Group') }}</p></a>
+                  </li>
+                  <li class="nav-item"><a href="{{ route("designation.index") }}" class="nav-link {{ (request()->routeIs('designation.*')) ? ' active' : '' }}">
+                    <i class="far fa-user nav-icon"></i> <p>{{__('Designation List') }}</p></a>
+                  </li>
                 </ul>
-              </li> --}}
+              </li>
               <li class="nav-item"><a href="{{ route("student.index") }}" class="nav-link {{ (request()->routeIs('student.*')) ? ' active' : '' }}">
                 <i class="far fa-user nav-icon"></i> <p>{{__('CV List') }}</p></a>
-              </li>
-              <li class="nav-item"><a href="{{ route("designation.index") }}" class="nav-link {{ (request()->routeIs('designation.*')) ? ' active' : '' }}">
-                <i class="far fa-user nav-icon"></i> <p>{{__('Designation List') }}</p></a>
               </li>
               
             </ul>

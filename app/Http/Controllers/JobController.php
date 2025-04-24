@@ -17,10 +17,7 @@ class JobController extends Controller
         $jobs = Job::latest()->paginate(50);
         return view('admin.job.index', compact('designations', 'jobs'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
         $designations = Designation::where('status', 1)->pluck('name', 'id');

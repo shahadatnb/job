@@ -2,6 +2,7 @@
 @section('title',"Job")
 @section('css')
 <link href="//cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+<style src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"></style>
 @endsection
 @section('content')
 <!-- Default box -->
@@ -55,7 +56,7 @@
             </div>
             <div class="form-group">
               {!! Form::label('last_date', __('Last Date'),['class'=>'']) !!}
-              {!! Form::date('last_date',null,['class'=>'form-control','placeholder'=> __('Last Date')]) !!}
+              {!! Form::text('last_date',null,['class'=>'form-control datetimepicker-input', 'data-toggle'=>"datetimepicker", 'data-target'=>"#datetimepicker5", 'placeholder'=> __('Last Date')]) !!}
             </div>
             <div class="form-group">
               {!! Form::label('age_limit', __('Age Limit'),['class'=>'']) !!}
@@ -80,9 +81,17 @@
 @section('js')
 {{-- <script src="{{ asset('assets/admin/plugins/summernote/summernote-bs4.min.js') }}"> </script> --}}
 <script src="//cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+<script src="{{ asset('assets/admin/plugins/moment/moment.min.js') }}"> </script>
+<!-- Tempusdominus -->
+<script src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"> </script>
     <script>
         $(document).ready(function(){
           $('.textarea').summernote();
+
+          $('#last_date').datetimepicker({
+              //format: 'DD/MM/YYYY'
+              format: 'YYYY-MM-DD'
+          });
         });
     </script>
 @endsection

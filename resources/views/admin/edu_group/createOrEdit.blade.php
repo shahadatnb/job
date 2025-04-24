@@ -1,20 +1,20 @@
 @extends('admin.layouts.layout')
-@section('title',"Designation")
+@section('title',"Edu Group")
 @section('content')
 <!-- Default box -->
 <div class="card card-outline card-info">
     <div class="card-header">
-        <h3 class="card-title">{{__('Designation')}}</h3>
+        <h3 class="card-title">{{__('Edu Group')}}</h3>
         <div class="card-tools">
-          <a href="{{route('designation.index')}}" class="btn btn-sm btn-info"><i class="fas fa-arrow-alt-circle-left"></i> Back</a>
+          <a href="{{route('eduGroup.index')}}" class="btn btn-sm btn-info"><i class="fas fa-arrow-alt-circle-left"></i> Back</a>
         </div>
     </div>
     <div class="card-body">
       @include('admin.layouts._message')
-      @if (request()->routeIs('designation.edit'))
-        {!! Form::model($designation, array('route'=>['designation.update',$designation],'method'=>'PUT','files' => true)) !!}
+      @if (request()->routeIs('eduGroup.edit'))
+        {!! Form::model($eduGroup, array('route'=>['eduGroup.update',$eduGroup],'method'=>'PUT','files' => true)) !!}
       @else
-        {!! Form::open(array('route'=>['designation.store'],'files' => true)) !!}
+        {!! Form::open(array('route'=>['eduGroup.store'],'files' => true)) !!}
       @endif
         <div class="row">
           <div class="col-6">
@@ -25,10 +25,16 @@
           </div>
           <div class="col-3">
             <div class="form-group">
+              {!! Form::label('edu_level_id', __('Edu Level'),['class'=>'']) !!}
+              {!! Form::select('edu_level_id',$exams,null,['class'=>'form-control','placeholder'=> __('Edu Level')]) !!}
+            </div>
+          </div>         
+          {{-- <div class="col-3">
+            <div class="form-group">
               {!! Form::label('serial', __('Serial'),['class'=>'']) !!}
               {!! Form::number('serial',null,['class'=>'form-control','placeholder'=> __('Serial')]) !!}
             </div>
-          </div>         
+          </div>--}}
           <div class="col-3">
             @if (request()->routeIs('designation.edit'))
             <div class="form-group">

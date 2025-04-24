@@ -114,8 +114,9 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
     Route::get('/students/destroy/{student}', [StudentController::class,'destroy'])->name('student.destroy');
     Route::get('/students/{student}', [StudentController::class,'show'])->name('student.show');
     Route::get('/students', [StudentController::class,'students'])->name('student.index');
-    Route::resource('designation', DesignationController::class);
+    Route::get('/job/application', [JobApplicationController::class,'application'])->name('job.application');
     Route::resource('job', JobController::class);
+    Route::resource('designation', DesignationController::class);
     Route::resource('eduBoard', EduBoardController::class);
     Route::resource('eduGroup', EduGroupController::class);
 });

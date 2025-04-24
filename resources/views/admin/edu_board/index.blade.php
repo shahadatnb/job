@@ -14,7 +14,7 @@
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table id="example1" class="table table-bordered table-striped">
+        <table id="example1" class="table table-sm table-bordered table-striped">
             <thead>
             <tr>
               <th>ID</th>
@@ -25,12 +25,12 @@
             </tr>
             </thead>
             <tbody>
-                @foreach ($designations as $item)
+                @foreach ($eduBoards as $item)
                 <tr>
                     <td>{{$item->id}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->edu_level? $item->edu_level->name : ''}}</td>
-                    <td>{{$item->status}}</td>
+                    <td>{{$item->is_active?'Active':'Inactive'}}</td>
                     <td>
                       <div class="btn-group btn-group-sm">
                         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -65,12 +65,13 @@
 <!-- /.card -->
 @endsection
 @section('js')
-<script src="{{asset('/assets/admin')}}/plugins/datatables/datatables.min.js"></script>
+<script src="{{asset('/assets/admin')}}/plugins/datatables/jquery.dataTables.min.js"></script>
 <script>
     $(function () {
       $("#example1").DataTable({
         "responsive": true,
         "autoWidth": false,
+        "paging": false,
       });
       $('#example2').DataTable({
         "paging": true,
