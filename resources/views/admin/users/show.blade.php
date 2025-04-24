@@ -56,16 +56,5 @@
             </div>
             {!! Form::close() !!}
         </div>
-        <div class="card-body">
-            <h5 class="card-title">Assign Branch</h5>
-            {!! Form::model($user,['route'=>['user.assignBranch',$user->id],'method'=>'post','class'=>'input-group input-group-sm']) !!}
-            <div class="input-group">    
-                {{ Form::select('branches[]',$branches,null,['class'=>'form-control select2','multiple'=>'multiple']) }}
-                <span class="input-group-btn">
-                <button type="submit" class="btn btn-info">Assign</button>
-                </span>
-            </div>
-            {!! Form::close() !!}
-        </div>
     </div>    
 @endsection

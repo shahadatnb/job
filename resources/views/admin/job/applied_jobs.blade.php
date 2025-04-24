@@ -7,7 +7,7 @@
 <!-- Default box -->
 <div class="card">
     <div class="card-header">
-      {!! Form::model($data,['route' => 'student.index','method'=>'get','class'=>'d-print-none row']) !!}
+      {!! Form::model($data,['route' => 'job.application','method'=>'get','class'=>'d-print-none row']) !!}
       <div class="col-6 col-md-3">
         {!! Form::select('dasignation_id',$jobs,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Designation')]) !!}
       </div>

@@ -107,7 +107,7 @@
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 3.0.5
     </div>
-    <strong>Developed By <a href="//shahadat.asiancoder.com">Shahadat Hosain</a>.</strong>
+    <strong>Developed By <a href="//pondit.com">Pondit.com</a>.</strong>
   </footer>
 
   <!-- Control Sidebar -->

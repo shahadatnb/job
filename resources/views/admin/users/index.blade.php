@@ -6,11 +6,11 @@
     <div class="col-md-6">
         <h2>This is user List</h2>
     </div>
-    @cannot('isManager')
+    {{-- @cannot('isManager') --}}
     <div class="col-md-6">
         <a href="{{route('users.create')}}" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Create New User</a>
     </div>
-    @endcannot
+    {{-- @endcannot --}}
 </div>
 
 

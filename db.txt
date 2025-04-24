@@ -4,3 +4,6 @@ ALTER TABLE `students` CHANGE `parmanent_village` `permanent_village` VARCHAR(25
 
 ALTER TABLE `student_education` ADD `result_type` ENUM('gpa','division') NULL DEFAULT NULL AFTER `passing_year`; 
 ALTER TABLE `student_education` CHANGE `gpa` `result` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+ALTER TABLE `student_education` CHANGE `edu_board_id` `edu_board_id` BIGINT UNSIGNED NULL DEFAULT NULL; 
+ALTER TABLE `student_education` ADD `university` VARCHAR(255) NULL DEFAULT NULL AFTER `edu_board_id`; 

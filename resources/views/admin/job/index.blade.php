@@ -18,6 +18,7 @@
             <thead>
             <tr>
               <th>ID</th>
+              <th>Title</th>
               <th>Designation</th>
               <th>Status</th>
               <th>Action</th>
@@ -27,6 +28,7 @@
                 @foreach ($jobs as $item)
                 <tr>
                     <td>{{$item->id}}</td>
+                    <td>{{$item->title}}</td>
                     <td>{{$item->designation?$item->designation->name:''}}</td>
                     <td>{{$item->status}}</td>
                     <td>

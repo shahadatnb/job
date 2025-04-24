@@ -47,7 +47,7 @@ class UsersController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'username' => 'nullable|unique:users|max:25',
-            'Designation' => 'required|max:255',
+            'Designation' => 'nullable|max:255',
             'mobile' => 'required|max:255',
             'email' => 'required|unique:users|email|max:255',
             'password' => 'required|between:8,255|confirmed',
@@ -82,8 +82,7 @@ class UsersController extends Controller
     public function show(User $user)
     {
         $permissions = Permission::orderBy('id', 'desc')->pluck('name','id')->toArray();
-        $branches = Branch::orderBy('id', 'desc')->pluck('name','id')->toArray();
-        return view('admin.users.show', ['user'=>$user,'permissions'=>$permissions,'branches'=>$branches]);
+        return view('admin.users.show', ['user'=>$user,'permissions'=>$permissions]);
     }
 
     public function assignPermission (Request $request, User $user){
@@ -103,6 +102,7 @@ class UsersController extends Controller
     {
         $get_roles = Role::get();
         $roles = [];
+        $rolePermissions = null;
         foreach ($get_roles as $role) {
             $roles[$role->id] = $role->name;
         }
@@ -136,7 +136,7 @@ class UsersController extends Controller
         //validate the fields
         $request->validate([
             'name' => 'required|max:255',
-            'Designation' => 'required|max:255',
+            'Designation' => 'nullable|max:255',
             'mobile' => 'required|max:255',
             'username' => [
                 'nullable','alpha_dash','max:30',

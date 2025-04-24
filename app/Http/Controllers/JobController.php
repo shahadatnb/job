@@ -30,13 +30,15 @@ class JobController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'designation_id' => 'required',
+            'title' => 'required',
+            'designation_id' => 'nullable',
             'description' => 'required',
             'responsibility' => 'required',
             'qualifications' => 'required',
         ]);
 
         $job = new Job();
+        $job->title = $request->title;
         $job->designation_id = $request->designation_id;
         $job->description = $request->description;
         $job->responsibility = $request->responsibility;

@@ -84,6 +84,10 @@
 @section('js')
 <script>
     $(document).on('click', '.apply_now', function () {
+        let check_login = "{{ auth()->check() ? '1' : '0' }}";
+        if(check_login == 0){
+            location.href = "{{ route('login') }}";
+        }
         let job_id = $(this).data('job_id');
         let post = $(this).data('post');
         $('.post_name').text(post);

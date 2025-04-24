@@ -187,7 +187,7 @@
                             <tr data-id="{{ $edu->id }}">
                                 <td>{{ $edu->exam->name }}</td>
                                 <td>{{ $edu->group->name }}</td>
-                                <td>{{ $edu->board->name }}</td>
+                                <td>{{ $edu->board ? $edu->board->name : $edu->university }}</td>
                                 <td>{{ $edu->passing_year }}</td>    
                                 <td>{{ $edu->result }}</td>
 																<td>
@@ -388,10 +388,11 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="edu_board_id">Board</label>
+                    <label for="edu_board_id">Board/University</label>
                     <select name="edu_board_id" id="edu_board_id" class="form-control">
                         <option value="">Select Board</option>
                     </select>
+					          <input type="text" name="university" id="university" class="form-control d-none">
                 </div>
                 <div class="form-group">
                     <label for="passing_year">Passing Year</label>
@@ -519,8 +520,7 @@
                 url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
                 method: 'GET',
                 success: function(data) {
-                    console.log(data);
-                    
+                    console.log(data);                    
                     if(data.status == true){
                         $('#edu_group_id').empty();
                         $('#edu_group_id').append('<option value="">Select Group</option>');
@@ -528,10 +528,24 @@
                             $('#edu_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
                         });
                         $('#edu_board_id').empty();
-                        $('#edu_board_id').append('<option value="">Select Board</option>');
-                        $.each(data.boards, function(index, value) {
-                            $('#edu_board_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });                        
+                        //$('#university').val('');
+                        if(data.boards.length > 0){
+
+                          $('#edu_board_id').removeClass('d-none');
+                          $('#university').addClass('d-none');
+                          $('#university').attr('required', false);
+                          $('#edu_board_id').attr('required', true);
+
+                          $('#edu_board_id').append('<option value="">Select Board</option>');
+                          $.each(data.boards, function(index, value) {
+                              $('#edu_board_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                          });
+                        }else{
+                          $('#edu_board_id').addClass('d-none');
+                          $('#university').removeClass('d-none');
+                          $('#university').attr('required', true);
+                          $('#edu_board_id').attr('required', false);
+                        }
                     }
                 }
             });
@@ -735,10 +749,23 @@
 								$('#edu_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
 						});
 						$('#edu_board_id').empty();
-						$('#edu_board_id').append('<option value="">Select Board</option>');
-						$.each(data.boards, function(index, value) {
-								$('#edu_board_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-						}); 
+            if(data.boards.length > 0){
+              $('#edu_board_id').removeClass('d-none');
+              $('#university').addClass('d-none');
+              $('#university').attr('required', false);
+              $('#edu_board_id').attr('required', true);
+
+              $('#edu_board_id').append('<option value="">Select Board</option>');
+              $.each(data.boards, function(index, value) {
+                  $('#edu_board_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+              }); 
+            }else{
+              $('#edu_board_id').addClass('d-none');
+              $('#university').removeClass('d-none');
+              $('#university').attr('required', true);
+              $('#edu_board_id').attr('required', false);
+            }
+						
 					$("#edu_group_id").val(data.education.edu_group_id);
 					$("#edu_board_id").val(data.education.edu_board_id);
 					$("#passing_year").val(data.education.passing_year);
