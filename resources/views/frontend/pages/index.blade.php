@@ -10,7 +10,7 @@
                 <div class="col-sm-12 col-md-8 d-flex align-items-center">
                     {{-- <img class="flex-shrink-0 img-fluid border rounded" src="{{asset('/assets/frontend')}}/img/com-logo-1.jpg" alt="" style="width: 80px; height: 80px;"> --}}
                     <div class="text-start ps-4">
-                        <h5 class="mb-3">{{$job->designation? $job->designation->name : ''}}</h5>
+                        <h5 class="mb-3">{{$job->title}}</h5>
                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $job->location }}</span>
                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>{{ $job->job_nature }}</span>
                         <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>{{ $job->salary }}</span>
@@ -84,9 +84,9 @@
 @section('js')
 <script>
     $(document).on('click', '.apply_now', function () {
-        let check_login = "{{ auth()->check() ? '1' : '0' }}";
+        let check_login = "{{ auth('student')->check() ? '1' : '0' }}";
         if(check_login == 0){
-            location.href = "{{ route('login') }}";
+            location.href = "{{ route('student.login') }}";
         }
         let job_id = $(this).data('job_id');
         let post = $(this).data('post');

@@ -49,7 +49,7 @@
           <li class="nav-item">
             <a href="{{ route("job.index") }}" class="nav-link {{ (request()->routeIs('job.index','job.create','job.edit')) ? ' active' : '' }}">
               <i class="nav-icon fas fa-briefcase"></i>
-              <p>Job list</p>
+              <p>Circular list</p>
             </a>
           </li>          
           <li class="nav-item">

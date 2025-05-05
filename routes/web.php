@@ -50,6 +50,7 @@ Route::get('ac_config', function()
 
 Route::get('/', [HomeController::class,'homepage'])->name('/');
 Route::post('/job_apply', [JobApplicationController::class,'apply'])->name('job.apply');
+Route::get('student/get_edu_group', [EducationController::class, 'edu_group'])->name('student.education.group');
 
 Route::prefix(config('app.admin_prefix','admin'))->group(function() {
     //Auth::routes(['register' => false]);//['verify'=> false]
@@ -75,7 +76,6 @@ Route::group(['prefix'=>'student','middleware'=>'auth:student'], function(){
     Route::get('/view_cv', [StudentController::class,'view_cv'])->name('student.view_cv');
     Route::get('/applied_jobs', [StudentController::class,'applied_jobs'])->name('student.applied_jobs');
 
-    Route::get('get_edu_group', [EducationController::class, 'edu_group'])->name('student.education.group');
     Route::post('education_store', [EducationController::class, 'store'])->name('student.education.store');
     Route::get('education_edit', [EducationController::class, 'edit'])->name('student.education.edit');
     Route::post('education_update', [EducationController::class, 'update'])->name('student.education.update');

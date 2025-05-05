@@ -19,7 +19,7 @@ class EmploymentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
         $student = auth('student')->user();
@@ -46,7 +46,7 @@ class EmploymentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
         $student_employment = StudentEmployment::find($request->id);

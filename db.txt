@@ -7,3 +7,12 @@ ALTER TABLE `student_education` CHANGE `gpa` `result` VARCHAR(255) CHARACTER SET
 
 ALTER TABLE `student_education` CHANGE `edu_board_id` `edu_board_id` BIGINT UNSIGNED NULL DEFAULT NULL; 
 ALTER TABLE `student_education` ADD `university` VARCHAR(255) NULL DEFAULT NULL AFTER `edu_board_id`; 
+
+ALTER TABLE `jobs` CHANGE `age_limit` `age_min` SMALLINT UNSIGNED NULL DEFAULT NULL COMMENT 'Age Limit in Year'; 
+ALTER TABLE `jobs` ADD `age_max` SMALLINT UNSIGNED NULL DEFAULT NULL AFTER `age_min`; 
+ALTER TABLE `jobs` ADD `gender` ENUM('Male','Female','Any') NULL DEFAULT NULL AFTER `age_max`; 
+ALTER TABLE `students` CHANGE `gender` `gender` ENUM('Male','Female','Other') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
+ALTER TABLE `jobs` ADD `edu_level_id` BIGINT UNSIGNED NULL DEFAULT NULL AFTER `gender`, ADD `edu_group_any` TINYINT UNSIGNED NULL DEFAULT '0' AFTER `edu_level_id`; 
+ALTER TABLE `jobs` ADD `edu_group_ids` JSON NULL DEFAULT NULL AFTER `edu_group_any`; 
+ALTER TABLE `jobs` CHANGE `description` `requirements` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
+ALTER TABLE `jobs` CHANGE `qualifications` `compensation_other_benefits` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 

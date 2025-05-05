@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 22, 2025 at 02:12 PM
+-- Generation Time: May 05, 2025 at 04:57 PM
 -- Server version: 8.0.30
--- PHP Version: 8.2.28
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -83,7 +83,8 @@ CREATE TABLE `edu_boards` (
 
 INSERT INTO `edu_boards` (`id`, `edu_level_id`, `name`, `is_active`, `created_at`, `updated_at`) VALUES
 (1, 1, 'BTEB', 1, NULL, NULL),
-(2, 2, 'BTEB', 1, NULL, NULL);
+(2, 2, 'BTEB', 1, NULL, NULL),
+(3, 1, 'Dhaka', NULL, '2025-04-24 01:05:39', '2025-04-24 01:06:08');
 
 -- --------------------------------------------------------
 
@@ -105,12 +106,13 @@ CREATE TABLE `edu_groups` (
 --
 
 INSERT INTO `edu_groups` (`id`, `edu_level_id`, `name`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Scince', 1, NULL, NULL),
+(1, 1, 'Scince', NULL, NULL, '2025-04-24 02:06:42'),
 (2, 1, 'Arts', 1, NULL, NULL),
 (3, 1, 'Commerce', 1, NULL, NULL),
 (4, 2, 'Computer Science', 1, NULL, NULL),
 (5, 2, 'Electrical', 1, NULL, NULL),
-(6, 2, 'Electronics', 1, NULL, NULL);
+(6, 2, 'Electronics', 1, NULL, NULL),
+(7, 3, 'Computer Science', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -134,7 +136,8 @@ CREATE TABLE `edu_levels` (
 
 INSERT INTO `edu_levels` (`id`, `name`, `is_diploma`, `serial`, `is_active`, `created_at`, `updated_at`) VALUES
 (1, 'SSC/Equivalent', 0, 1, 1, NULL, NULL),
-(2, 'Diploma', 1, 2, 1, NULL, NULL);
+(2, 'Diploma', 1, 2, 1, NULL, NULL),
+(3, 'Hon', NULL, 3, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -192,14 +195,19 @@ CREATE TABLE `jobs` (
   `company_id` bigint UNSIGNED DEFAULT NULL,
   `designation_id` bigint UNSIGNED DEFAULT NULL,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `requirements` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `responsibility` text COLLATE utf8mb4_unicode_ci,
-  `qualifications` text COLLATE utf8mb4_unicode_ci,
+  `compensation_other_benefits` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `vacancy` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `job_nature` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `education_level_id` bigint UNSIGNED DEFAULT NULL,
-  `age_limit` smallint UNSIGNED DEFAULT NULL COMMENT 'Age Limit in Year',
+  `age_min` smallint UNSIGNED DEFAULT NULL COMMENT 'Age Limit in Year',
+  `age_max` smallint UNSIGNED DEFAULT NULL,
+  `gender` enum('Male','Female','Any') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `edu_level_id` bigint UNSIGNED DEFAULT NULL,
+  `edu_group_any` tinyint UNSIGNED DEFAULT '0',
+  `edu_group_ids` json DEFAULT NULL,
   `last_date` date DEFAULT NULL COMMENT 'Date Line',
   `salary` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nagotiable` tinyint UNSIGNED DEFAULT '0',
@@ -212,8 +220,8 @@ CREATE TABLE `jobs` (
 -- Dumping data for table `jobs`
 --
 
-INSERT INTO `jobs` (`id`, `company_id`, `designation_id`, `title`, `description`, `responsibility`, `qualifications`, `location`, `vacancy`, `job_nature`, `education_level_id`, `age_limit`, `last_date`, `salary`, `nagotiable`, `status`, `created_at`, `updated_at`) VALUES
-(1, NULL, 1, NULL, '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Dolor justo tempor duo ipsum accusam rebum gubergren erat. Elitr stet dolor vero clita labore gubergren. Kasd sed ipsum elitr clita rebum ut sea diam tempor. Sadipscing nonumy vero labore invidunt dolor sed, eirmod dolore amet aliquyam consetetur lorem, amet elitr clita et sed consetetur dolore accusam. Vero kasd nonumy justo rebum stet. Ipsum amet sed lorem sea magna. Rebum vero dolores dolores elitr vero dolores magna, stet sea sadipscing stet et. Est voluptua et sanctus at sanctus erat vero sed sed, amet duo no diam clita rebum duo, accusam tempor takimata clita stet nonumy rebum est invidunt stet, dolor.</p><p><br></p>', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Magna et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed lorem stet voluptua sit sit at stet consetetur, takimata at diam kasd gubergren elitr dolor</p><ul class=\"list-unstyled\" style=\"box-sizing: border-box; padding-left: 0px; margin-top: 0px; margin-bottom: 1rem; list-style: none; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Dolor justo tempor duo ipsum accusam</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Elitr stet dolor vero clita labore gubergren</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Rebum vero dolores dolores elitr</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Est voluptua et sanctus at sanctus erat</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Diam diam stet erat no est est</li></ul><p><br></p>', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Magna\r\n et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed \r\nlorem stet voluptua sit sit at stet consetetur, takimata at diam kasd \r\ngubergren elitr dolor</p><ul class=\"list-unstyled\" style=\"box-sizing: border-box; padding-left: 0px; margin-top: 0px; margin-bottom: 1rem; list-style: none; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Dolor justo tempor duo ipsum accusam</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Elitr stet dolor vero clita labore gubergren</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Rebum vero dolores dolores elitr</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Est voluptua et sanctus at sanctus erat</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Diam diam stet erat no est est</li></ul><p><br></p>', NULL, '5', 'Full Time', NULL, 35, '2025-04-18', '25000', 1, 1, '2025-04-17 14:20:44', '2025-04-17 14:20:44');
+INSERT INTO `jobs` (`id`, `company_id`, `designation_id`, `title`, `requirements`, `responsibility`, `compensation_other_benefits`, `location`, `vacancy`, `job_nature`, `education_level_id`, `age_min`, `age_max`, `gender`, `edu_level_id`, `edu_group_any`, `edu_group_ids`, `last_date`, `salary`, `nagotiable`, `status`, `created_at`, `updated_at`) VALUES
+(1, NULL, 1, 'Marketing Manager', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Dolor justo tempor duo ipsum accusam rebum gubergren erat. Elitr stet dolor vero clita labore gubergren. Kasd sed ipsum elitr clita rebum ut sea diam tempor. Sadipscing nonumy vero labore invidunt dolor sed, eirmod dolore amet aliquyam consetetur lorem, amet elitr clita et sed consetetur dolore accusam. Vero kasd nonumy justo rebum stet. Ipsum amet sed lorem sea magna. Rebum vero dolores dolores elitr vero dolores magna, stet sea sadipscing stet et. Est voluptua et sanctus at sanctus erat vero sed sed, amet duo no diam clita rebum duo, accusam tempor takimata clita stet nonumy rebum est invidunt stet, dolor.</p><p><br></p>', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Magna et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed lorem stet voluptua sit sit at stet consetetur, takimata at diam kasd gubergren elitr dolor</p><ul class=\"list-unstyled\" style=\"box-sizing: border-box; padding-left: 0px; margin-top: 0px; margin-bottom: 1rem; list-style: none; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Dolor justo tempor duo ipsum accusam</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Elitr stet dolor vero clita labore gubergren</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Rebum vero dolores dolores elitr</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Est voluptua et sanctus at sanctus erat</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Diam diam stet erat no est est</li></ul><p><br></p>', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Magna\r\n et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed \r\nlorem stet voluptua sit sit at stet consetetur, takimata at diam kasd \r\ngubergren elitr dolor</p><ul class=\"list-unstyled\" style=\"box-sizing: border-box; padding-left: 0px; margin-top: 0px; margin-bottom: 1rem; list-style: none; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Dolor justo tempor duo ipsum accusam</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Elitr stet dolor vero clita labore gubergren</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Rebum vero dolores dolores elitr</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Est voluptua et sanctus at sanctus erat</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Diam diam stet erat no est est</li></ul><p><br></p>', NULL, '5', 'Full Time', NULL, 35, 40, 'Male', 2, 1, '[\"4\", \"5\"]', '2025-05-22', '25000', 1, 1, '2025-04-17 14:20:44', '2025-05-05 16:01:33');
 
 -- --------------------------------------------------------
 
@@ -1252,7 +1260,7 @@ CREATE TABLE `students` (
   `nid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date_of_birth` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `gender` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gender` enum('Male','Female','Other') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `religion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `blood_group` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `village` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -1275,8 +1283,8 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `name`, `name_bn`, `email`, `email_verified_at`, `password`, `remember_token`, `father_name`, `mother_name`, `nid`, `phone`, `date_of_birth`, `gender`, `religion`, `blood_group`, `village`, `post_office`, `post_code`, `upazila_id`, `district_id`, `permanent_village`, `permanent_post_office`, `permanent_post_code`, `permanent_upazila_id`, `permanent_district_id`, `photo`, `created_at`, `updated_at`) VALUES
-(1, 'Shahadat Hosain', 'শাহাদাত হোসেন', 'shahadat@asiancoder.com', NULL, '$2y$12$z.oXPirU29HjY6MEPnxzQekGLoSvP3zjNTQ/ECamtXbLGmRT7xv2.', NULL, 'Mostafa Kamal', 'Sazida Begum', '123456', '01757839516', '01-12-2024', 'male', 'islam', 'AB+', 'Kecuatoil', 'Khorkhori', NULL, 545, 391, 'Kecuatoil', 'Khorkhori', NULL, 545, 391, 'ex_student/1743306588.jpg', '2025-01-24 05:47:21', '2025-03-30 08:43:39'),
-(2, 'Md. Saddam Hossoin Majumder', NULL, 'saddamhossoin@gmail.com', NULL, '$2y$12$Bfn7fleTDe1fMIwD6splAOetWeUDKTYl.V.31IwJREKBFdpEOlfJ6', NULL, 'Abdur Rob', 'Sayra Begum Maya', '19851315069212138', '01833582121', '1985-11-05', 'male', 'islam', 'A-', '75/A/A Gangchil Apartment', 'Tejgaoun', NULL, 429, 348, 'Majumder Villa, Utichgava', 'Rahima Nagar', NULL, 600, 344, 'student/1745253790.jpg', '2025-04-21 16:34:07', '2025-04-21 16:47:07');
+(1, 'Shahadat Hosain', 'শাহাদাত হোসেন', 'shahadat@asiancoder.com', NULL, '$2y$12$z.oXPirU29HjY6MEPnxzQekGLoSvP3zjNTQ/ECamtXbLGmRT7xv2.', NULL, 'Mostafa Kamal', 'Sazida Begum', '123456', '01757839516', '2022-06-26', 'Male', 'islam', 'AB+', 'Kecuatoil', 'Khorkhori', NULL, 545, 391, 'Kecuatoil', 'Khorkhori', NULL, 545, 391, 'ex_student/1743306588.jpg', '2025-01-24 05:47:21', '2025-05-05 16:45:23'),
+(2, 'Md. Saddam Hossoin Majumder', NULL, 'saddamhossoin@gmail.com', NULL, '$2y$12$Bfn7fleTDe1fMIwD6splAOetWeUDKTYl.V.31IwJREKBFdpEOlfJ6', NULL, 'Abdur Rob', 'Sayra Begum Maya', '19851315069212138', '01833582121', '1985-11-05', 'Male', 'islam', 'A-', '75/A/A Gangchil Apartment', 'Tejgaoun', NULL, 429, 348, 'Majumder Villa, Utichgava', 'Rahima Nagar', NULL, 600, 344, 'student/1745253790.jpg', '2025-04-21 16:34:07', '2025-04-21 16:47:07');
 
 -- --------------------------------------------------------
 
@@ -1307,7 +1315,8 @@ CREATE TABLE `student_education` (
   `student_id` bigint UNSIGNED NOT NULL,
   `edu_level_id` bigint UNSIGNED NOT NULL,
   `edu_group_id` bigint UNSIGNED NOT NULL,
-  `edu_board_id` bigint UNSIGNED NOT NULL,
+  `edu_board_id` bigint UNSIGNED DEFAULT NULL,
+  `university` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `roll_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `reg_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `passing_year` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -1321,10 +1330,11 @@ CREATE TABLE `student_education` (
 -- Dumping data for table `student_education`
 --
 
-INSERT INTO `student_education` (`id`, `student_id`, `edu_level_id`, `edu_group_id`, `edu_board_id`, `roll_no`, `reg_no`, `passing_year`, `result_type`, `result`, `created_at`, `updated_at`) VALUES
-(8, 1, 1, 2, 1, NULL, NULL, '2004', 'gpa', '3.25', '2025-03-09 18:06:49', '2025-03-09 18:06:49'),
-(9, 2, 1, 1, 1, NULL, NULL, '2000', 'gpa', '4', '2025-04-21 16:49:17', '2025-04-21 16:49:17'),
-(10, 1, 2, 4, 2, NULL, NULL, '2008', 'division', '2nd', '2025-04-22 11:19:56', '2025-04-22 11:19:56');
+INSERT INTO `student_education` (`id`, `student_id`, `edu_level_id`, `edu_group_id`, `edu_board_id`, `university`, `roll_no`, `reg_no`, `passing_year`, `result_type`, `result`, `created_at`, `updated_at`) VALUES
+(8, 1, 1, 2, 1, NULL, NULL, NULL, '2004', 'gpa', '3.25', '2025-03-09 18:06:49', '2025-03-09 18:06:49'),
+(9, 2, 1, 1, 1, NULL, NULL, NULL, '2000', 'gpa', '4', '2025-04-21 16:49:17', '2025-04-21 16:49:17'),
+(10, 1, 2, 4, 2, NULL, NULL, NULL, '2008', 'division', '2nd', '2025-04-22 11:19:56', '2025-04-22 11:19:56'),
+(11, 1, 3, 7, NULL, 'RSTU', NULL, NULL, '2018', 'gpa', '3.33', '2025-04-24 11:20:43', '2025-04-24 11:20:43');
 
 -- --------------------------------------------------------
 
@@ -1450,7 +1460,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `username`, `mobile`, `Designation`, `email`, `banned_till`, `email_verified_at`, `password`, `remember_token`, `photo`, `created_at`, `updated_at`) VALUES
 (1, 'Shahadat Hosain', 'shahadat', '01757839516', 'IT Engineer', 'shahadat@asiancoder.com', NULL, NULL, '$2y$10$MA6Q/mISlCRrdduJ8HHT0uOziOlXSUZrm04emRs6zKI3LoJzrrrHS', NULL, NULL, '2020-10-31 19:51:35', '2024-11-24 15:21:33'),
-(6, 'Nawdapara School', NULL, NULL, NULL, 'ns@gmail.com', NULL, NULL, '$2y$10$PV3A9DFiGcarj1NgdN.S3ulxW0nGHd8a4eWZVicz2xdSe32PHjFXO', NULL, NULL, '2024-11-25 11:22:01', '2024-11-25 11:22:01');
+(6, 'Nawdapara School', NULL, '01912624881', 'Manager', 'ns@gmail.com', NULL, NULL, '$2y$10$PV3A9DFiGcarj1NgdN.S3ulxW0nGHd8a4eWZVicz2xdSe32PHjFXO', NULL, NULL, '2024-11-25 11:22:01', '2025-04-24 13:27:46');
 
 -- --------------------------------------------------------
 
@@ -1480,7 +1490,8 @@ CREATE TABLE `users_roles` (
 --
 
 INSERT INTO `users_roles` (`id`, `user_id`, `role_id`) VALUES
-(1, 1, 1);
+(1, 1, 1),
+(13, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -1772,19 +1783,19 @@ ALTER TABLE `designations`
 -- AUTO_INCREMENT for table `edu_boards`
 --
 ALTER TABLE `edu_boards`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `edu_groups`
 --
 ALTER TABLE `edu_groups`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `edu_levels`
 --
 ALTER TABLE `edu_levels`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `ex_students`
@@ -1904,7 +1915,7 @@ ALTER TABLE `student_certifications`
 -- AUTO_INCREMENT for table `student_education`
 --
 ALTER TABLE `student_education`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `student_employments`
@@ -1940,7 +1951,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users_roles`
 --
 ALTER TABLE `users_roles`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `user_branches`

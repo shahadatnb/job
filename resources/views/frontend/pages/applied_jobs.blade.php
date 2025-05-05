@@ -41,7 +41,7 @@
 						@foreach ($applied_jobs as $item)
 						<tr>
 							<td>{{$item->id}}</td>
-							<td>{{$item->job->designation?$item->job->designation->name:''}}</td>
+							<td>{{$item->job->title }}</td>
 							<td>{{$item->expected_salary}}</td>
 							{{-- <td>{{$item->status}}</td> --}}
 							<td>{{prettyDate($item->created_at)}}</td>

@@ -9,7 +9,7 @@
     <div class="card-header">
       {!! Form::model($data,['route' => 'job.application','method'=>'get','class'=>'d-print-none row']) !!}
       <div class="col-6 col-md-3">
-        {!! Form::select('dasignation_id',$jobs,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Designation')]) !!}
+        {!! Form::select('job_id',$jobs,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Job Title')]) !!}
       </div>
       {{-- <div class="col-3 col-md-2">
         {!! Form::text('email',null,['class'=>'form-control form-control-sm','placeholder'=> __('Email')]) !!}
@@ -40,7 +40,7 @@
                 @foreach ($applied_jobs as $item)
                 <tr>
                     <td>{{$item->id}}</td>
-                    <td>{{$item->job->designation?$item->job->designation->name:''}}</td>
+                    <td>{{$item->job->title }}</td>
                     <td>{{$item->expected_salary}}</td>
                     <td>
                       <div class="btn-group btn-group-sm">

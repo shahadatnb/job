@@ -10,6 +10,7 @@ use App\Models\StudentEducation;
 use App\Models\StudentEmployment;
 use App\Models\StudentCertification;
 use App\Models\StudentTraining;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 //use Image;
@@ -192,7 +193,7 @@ class StudentController extends Controller
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->nid = $request->nid;
-        $user->date_of_birth = $request->date_of_birth;
+        $user->date_of_birth = Carbon::parse($request->date_of_birth)->format('Y-m-d'); // $request->date_of_birth;
         $user->gender = $request->gender;
         $user->religion = $request->religion;
         $user->blood_group = $request->blood_group;

@@ -324,9 +324,9 @@
 						<div class="form-group">
 							<label for="gender">Gender</label>
 							<select name="gender" id="gender" class="form-control">
-								<option value="male">Male</option>
-								<option value="female">Female</option>
-								<option value="other">Other</option>
+								<option value="Male">Male</option>
+								<option value="Female">Female</option>
+								<option value="Other">Other</option>
 							</select>
 						</div>
 						<div class="form-group">
@@ -476,7 +476,7 @@
 										<input type="text" name="company_name" id="company_name" class="form-control">
 								</div>
 								<div class="form-group">
-										<label for="job_title">Job Title</label>
+										<label for="job_title">Job Title/Designation</label>
 										<input type="text" name="job_title" id="job_title" class="form-control">
 								</div>
 								<div class="form-group">

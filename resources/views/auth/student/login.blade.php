@@ -52,8 +52,8 @@
         <a href="{{ route('password.request') }}">I forgot my password</a>
       </p>
       @endif
-      {{-- <p class="mb-0">
-        <a href="register.html" class="text-center">Register a new membership</a>
-      </p> --}}
+      <p class="mb-0">
+        <a href="{{ route('student.register') }}" class="text-center">Register a new membership</a>
+      </p>
 <!-- /.login-box -->
 </x-guest-layout>

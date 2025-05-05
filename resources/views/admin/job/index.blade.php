@@ -1,5 +1,5 @@
 @extends('admin.layouts.layout')
-@section('title',"Job")
+@section('title',"Circulars")
 @section('css')
 <link rel="stylesheet" href="{{asset('/assets/admin')}}/plugins/datatables/datatables.min.css">
 @endsection
@@ -7,7 +7,7 @@
 <!-- Default box -->
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Job List</h3>
+        <h3 class="card-title">Circular List</h3>
         <div class="card-tools">
           <a class="btn btn-primary" href="{{ route('job.create')}}">New Item</a>
         </div>

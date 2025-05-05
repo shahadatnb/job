@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="{{ asset('assets/admin/css/adminlte.min.css')}}">
 </head>
 <body class="hold-transition login-page">
-    <div class="login-box"> 
+    <div class=""> 
         <div class="login-logo">
           <a href="{{ url('/') }}">{{ config('app.name', 'Laravel') }}</a>
         </div>

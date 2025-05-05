@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Models\EduLevel;
+use App\Models\EduGroup;
 use App\Models\Designation;
 use Illuminate\Http\Request;
 
@@ -20,8 +22,10 @@ class JobController extends Controller
     
     public function create()
     {
+        $exams = EduLevel::where('is_active', 1)->pluck('name', 'id');
         $designations = Designation::where('status', 1)->pluck('name', 'id');
-        return view('admin.job.createOrEdit', compact('designations'));
+        $eduGroups = [];
+        return view('admin.job.createOrEdit', compact('designations', 'exams', 'eduGroups'));
     }
 
     /**
@@ -32,21 +36,30 @@ class JobController extends Controller
         $request->validate([
             'title' => 'required',
             'designation_id' => 'nullable',
-            'description' => 'required',
+            'requirements' => 'required',
             'responsibility' => 'required',
             'qualifications' => 'required',
+            'age_min' => 'required',
+            'age_max' => 'required',
+            'gender' => 'required',
+            'edu_level_id' => 'required',
         ]);
 
         $job = new Job();
         $job->title = $request->title;
         $job->designation_id = $request->designation_id;
-        $job->description = $request->description;
+        $job->requirements = $request->requirements;
         $job->responsibility = $request->responsibility;
-        $job->qualifications = $request->qualifications;
+        $job->compensation_other_benefits = $request->compensation_other_benefits;
         $job->vacancy = $request->vacancy;
         $job->job_nature = $request->job_nature;
         $job->last_date = $request->last_date;
-        $job->age_limit = $request->age_limit;
+        $job->age_min = $request->age_min;
+        $job->age_max = $request->age_max;
+        $job->gender = $request->gender;
+        $job->edu_level_id = $request->edu_level_id;
+        $job->edu_group_any = $request->edu_group_any;
+        $job->edu_group_ids = json_encode($request->edu_group_ids);
         $job->salary = $request->salary;
         $job->nagotiable = $request->nagotiable;
         $job->status = 1;
@@ -70,8 +83,17 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
+        $exams = EduLevel::where('is_active', 1)->pluck('name', 'id');
+        if($job->edu_level_id != ''){            
+            $eduGroups = EduGroup::where('edu_level_id', 2)->pluck('name', 'id')->toArray();
+        }else{
+            $eduGroups = [];
+        }
+
+        $job->edu_group_ids = json_decode($job->edu_group_ids, true);
+
         $designations = Designation::where('status', 1)->pluck('name', 'id');
-        return view('admin.job.createOrEdit', compact('job', 'designations'));
+        return view('admin.job.createOrEdit', compact('job', 'designations', 'exams', 'eduGroups'));
     }
 
     /**
@@ -80,20 +102,33 @@ class JobController extends Controller
     public function update(Request $request, Job $job)
     {
         $request->validate([
-            'designation_id' => 'required',
-            'description' => 'required',
+            'title' => 'required',
+            'designation_id' => 'nullable',
+            'requirements' => 'required',
             'responsibility' => 'required',
-            'qualifications' => 'required',
+            'compensation_other_benefits' => 'required',
+            'age_min' => 'required',
+            'age_max' => 'required',
+            'gender' => 'required',
+            'edu_level_id' => 'required',
         ]);
 
+        //dd(json_encode($request->edu_group_ids));
+
+        $job->title = $request->title;
         $job->designation_id = $request->designation_id;
-        $job->description = $request->description;
+        $job->requirements = $request->requirements;
         $job->responsibility = $request->responsibility;
-        $job->qualifications = $request->qualifications;
+        $job->compensation_other_benefits = $request->compensation_other_benefits;
         $job->vacancy = $request->vacancy;
         $job->job_nature = $request->job_nature;
         $job->last_date = $request->last_date;
-        $job->age_limit = $request->age_limit;
+        $job->age_min = $request->age_min;
+        $job->age_max = $request->age_max;
+        $job->gender = $request->gender;
+        $job->edu_level_id = $request->edu_level_id;
+        $job->edu_group_any = $request->edu_group_any;
+        $job->edu_group_ids = json_encode($request->edu_group_ids);
         $job->salary = $request->salary;
         $job->nagotiable = $request->nagotiable;
         $job->status = $request->status;
