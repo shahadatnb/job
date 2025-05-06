@@ -53,6 +53,7 @@ class JobController extends Controller
         $job->compensation_other_benefits = $request->compensation_other_benefits;
         $job->vacancy = $request->vacancy;
         $job->job_nature = $request->job_nature;
+        $job->location = $request->location;
         $job->last_date = $request->last_date;
         $job->age_min = $request->age_min;
         $job->age_max = $request->age_max;
@@ -121,6 +122,7 @@ class JobController extends Controller
         $job->responsibility = $request->responsibility;
         $job->compensation_other_benefits = $request->compensation_other_benefits;
         $job->vacancy = $request->vacancy;
+        $job->location = $request->location;
         $job->job_nature = $request->job_nature;
         $job->last_date = $request->last_date;
         $job->age_min = $request->age_min;

@@ -30,7 +30,7 @@
 
     <!-- Libraries Stylesheet -->
     <link href="{{asset('/assets/frontend')}}/lib/animate/animate.min.css" rel="stylesheet">
-    <link href="{{asset('/assets/frontend')}}/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    {{-- <link href="{{asset('/assets/frontend')}}/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> --}}
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{asset('/assets/frontend')}}/css/bootstrap.min.css" rel="stylesheet">
@@ -176,7 +176,7 @@
     <script src="{{asset('/assets/frontend')}}/lib/wow/wow.min.js"></script>
     <script src="{{asset('/assets/frontend')}}/lib/easing/easing.min.js"></script>
     <script src="{{asset('/assets/frontend')}}/lib/waypoints/waypoints.min.js"></script>
-    <script src="{{asset('/assets/frontend')}}/lib/owlcarousel/owl.carousel.min.js"></script>
+    {{-- <script src="{{asset('/assets/frontend')}}/lib/owlcarousel/owl.carousel.min.js"></script> --}}
 	@yield('js')
     <!-- Template Javascript -->
     <script src="{{asset('/assets/frontend')}}/js/main.js"></script>

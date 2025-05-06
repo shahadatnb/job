@@ -10,16 +10,16 @@
                 <div class="col-sm-12 col-md-8 d-flex align-items-center">
                     {{-- <img class="flex-shrink-0 img-fluid border rounded" src="{{asset('/assets/frontend')}}/img/com-logo-1.jpg" alt="" style="width: 80px; height: 80px;"> --}}
                     <div class="text-start ps-4">
-                        <h5 class="mb-3">{{$job->title}}</h5>
+                        <h5 class="mb-3"><a href="{{ route('job.job_detail', $job->id) }}">{{$job->title}}</a></h5>
                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $job->location }}</span>
                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>{{ $job->job_nature }}</span>
-                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>{{ $job->salary }}</span>
+                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>{{ $job->nagotiable == 1 ? 'Nagotiable' : $job->salary }}</span>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                     <div class="d-flex mb-3">
-                        <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
-                        <a class="btn btn-primary apply_now" data-job_id="{{ $job->id }}" data-post="{{ $job->designation? $job->designation->name : '' }}"  href="javascript:void(0)">Apply Now</a>
+                        <a class="btn btn-primary" href="{{ route('job.job_detail', $job->id) }}">Detail</a>
+                        {{-- <a class="btn btn-primary apply_now" data-job_id="{{ $job->id }}" data-post="{{ $job->title }}"  href="javascript:void(0)">Apply Now</a> --}}
                     </div>
                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Date Line: {{ date('d-m-Y', strtotime($job->last_date)) }}</small>
                 </div>
@@ -51,32 +51,7 @@
 </div>
 <!-- Jobs End -->
 
-<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <form action="{{ route('job.apply') }}" id="applyForm" method="POST">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Apply Now</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                    @csrf
-                    <input type="hidden" name="job_id" id="job_id">
-                    <p class="text-center post_name"></p>
-                    <div id="errorMsg"></div>
-                    <div class="form-group">
-                        <label for="name">Expected Salary</label>
-                        <input type="text" class="form-control" name="expected_salary" id="expected_salary" required>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" id="applyBtn" class="btn btn-primary">Apply Now</button>
-            </div>
-        </form>
-        </div>
-    </div>
-</div>
+
 
 @endsection
 

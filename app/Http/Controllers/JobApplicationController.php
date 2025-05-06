@@ -78,6 +78,14 @@ class JobApplicationController extends Controller
         return response()->json(['status' => true, 'message' => 'Job application submitted successfully']);
     }
 
+    public function job_detail($id)
+    {
+        $job = Job::find($id);
+        if(!$job) {
+            abort(404);
+        }
+        return view('frontend.pages.job_detail', compact('job'));
+    }
     
     public function application(Request $request)
     {

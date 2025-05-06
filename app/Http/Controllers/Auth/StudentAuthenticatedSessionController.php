@@ -28,7 +28,10 @@ class StudentAuthenticatedSessionController extends Controller
         $request->student_authenticate();
 
         $request->session()->regenerate();
-
+        
+        if ($request->has('redirect')) {
+            return redirect($request->input('redirect'));
+        }
         return redirect()->route('student.dashboard');
     }
 

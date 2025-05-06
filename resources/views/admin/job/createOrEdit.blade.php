@@ -2,7 +2,7 @@
 @section('title',"Circular Add/Edit")
 @section('css')
 <link href="//cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-<style src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"></style>
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 @endsection
 @section('content')
 <!-- Default box -->
@@ -59,8 +59,12 @@
               {!! Form::text('job_nature',null,['class'=>'form-control','placeholder'=> __('Job Nature')]) !!}
             </div>
             <div class="form-group">
+              {!! Form::label('location', __('Job Location'),['class'=>'']) !!}
+              {!! Form::text('location',null,['class'=>'form-control','placeholder'=> __('Job Location')]) !!}
+            </div>
+            <div class="form-group">
               {!! Form::label('last_date', __('Last Apply Date').' *',['class'=>'']) !!}
-              {!! Form::text('last_date',null,['class'=>'form-control datetimepicker-input', 'data-toggle'=>"datetimepicker", 'data-target'=>"#datetimepicker5", 'placeholder'=> __('Last Date')]) !!}
+              {!! Form::text('last_date',null,['class'=>'form-control datetimepicker-input', 'data-toggle'=>"datetimepicker", 'data-target'=>"#last_date", 'placeholder'=> __('Last Date')]) !!}
             </div>
             <div class="form-group">
               {!! Form::label('age_min', __('Age Min').' *',['class'=>'']) !!}
@@ -82,7 +86,7 @@
             </div>
             <div class="form-group">
               {!! Form::label('edu_group_ids', __('Education Group'),['class'=>'']) !!}
-              {!! Form::select('edu_group_ids[]',$eduGroups,null,['class'=>'form-control select2','multiple'=>true]) !!}
+              {!! Form::select('edu_group_ids[]',$eduGroups,null,['class'=>'form-control select2','id'=>'edu_group_ids','multiple'=>true]) !!}
             </div>
             <div class="form-group">
               {!! Form::label('salary', __('Salary'),['class'=>'']) !!}

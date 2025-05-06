@@ -1,7 +1,7 @@
 @extends('frontend.layouts.master')
 @section('title','Dashboard')
 @section('css')
-<style src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"></style>
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 <style type="text/css">
 	#photoPreview {
 		width: 150px;
@@ -319,7 +319,7 @@
 						</div>
 						<div class="form-group">
 							<label for="date_of_birth">Date of Birth</label>
-							{!! Form::text('date_of_birth', $student->date_of_birth, ['class' => 'form-control datetimepicker-input','id'=>'date_of_birth', 'data-toggle'=>"datetimepicker", 'data-target'=>"#datetimepicker5", 'placeholder' => 'YYYY-MM-DD', 'required']) !!}
+							{!! Form::text('date_of_birth', date('d-m-Y', strtotime($student->date_of_birth)), ['class' => 'form-control datetimepicker-input','id'=>'date_of_birth', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date_of_birth", 'placeholder' => 'YYYY-MM-DD', 'required'=>true]) !!}
 						</div>
 						<div class="form-group">
 							<label for="gender">Gender</label>
@@ -549,7 +549,7 @@
                     }
                 }
             });
-        });
+					});
 
 // basic
 		$('#date_of_birth').datetimepicker({
@@ -558,11 +558,11 @@
 		});
 		$('#start_date').datetimepicker({
 				//format: 'DD/MM/YYYY'
-				format: 'YYYY-MM-DD'
+				format: 'DD-MM-YYYY'
 		});
 		$('#end_date').datetimepicker({
 				//format: 'DD/MM/YYYY'
-				format: 'YYYY-MM-DD'
+				format: 'DD-MM-YYYY'
 		});
 		
 
@@ -642,7 +642,7 @@
 								$("#profile_email").text(data.student.email);
 								$("#profile_phone").text(data.student.phone);
 								$("#profile_nid").text(data.student.nid);
-								$("#profile_date_of_birth").text(data.student.date_of_birth);
+								$("#profile_date_of_birth").text( moment(data.student.date_of_birth).format('DD-MM-YYYY'));
 								$("#profile_gender").text(data.student.gender);
 								$("#profile_religion").text(data.student.religion);
 								$("#profile_blood_group").text(data.student.blood_group);

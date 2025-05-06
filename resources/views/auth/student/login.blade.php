@@ -2,13 +2,16 @@
     <p class="login-box-msg">Sign in to start your session</p>
     <form method="POST" action="{{ route('student.login') }}">
         @csrf
+        @if (isset(request()->redirect))
+            <input type="hidden" name="redirect" value="{{ request()->redirect }}">
+        @endif
         <div class="input-group mb-3">
             <input type="email" class="form-control" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="Email">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
               </div>
-            </div>
+            </div> <br>
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
         <div class="input-group mb-3">

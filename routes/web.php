@@ -49,6 +49,7 @@ Route::get('ac_config', function()
 });
 
 Route::get('/', [HomeController::class,'homepage'])->name('/');
+Route::get('/job_detail/{id}', [JobApplicationController::class,'job_detail'])->name('job.job_detail');
 Route::post('/job_apply', [JobApplicationController::class,'apply'])->name('job.apply');
 Route::get('student/get_edu_group', [EducationController::class, 'edu_group'])->name('student.education.group');
 
