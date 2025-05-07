@@ -53,12 +53,17 @@ class EmploymentController extends Controller
         $student_employment = StudentEmployment::find($request->id);
         $student_employment->company_name = $request->company_name;
         $student_employment->job_title = $request->job_title;
-        $student_employment->start_date = $request->start_date;
-        $student_employment->end_date = $request->end_date;
+        $student_employment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
+        $student_employment->end_date = Carbon::parse($request->end_date)->format('Y-m-d');// $request->end_date;
         $student_employment->job_description = $request->job_description;
         $student_employment->company_location = $request->company_location;
         $student_employment->save();
         return response()->json(['status' => true, 'type'=> 'update', 'employment'=> $student_employment, 'message' => 'Education updated successfully']);
+    }
+
+    public function edit(Request $request){
+        $student_employment = StudentEmployment::find($request->id);
+        return response()->json(['status' => true, 'type'=> 'edit', 'employment'=> $student_employment]);
     }
 
     public function destroy(Request $request){

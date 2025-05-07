@@ -71,25 +71,35 @@ class EducationController extends Controller
         $validator = Validator::make($request->all(), [
             'edu_level_id' => 'required',
             'edu_group_id' => 'required',
-            'edu_board_id' => 'required',
+            'edu_board_id' => 'nullable',
+            'university' => 'nullable',
             'passing_year' => 'required',
-            'gpa' => 'required',
+            'result_type' => 'required',
+            'result_gpa' => 'nullable|required_if:result_type,gpa|numeric|max:5',
+            'result_division' => 'required_if:result_type,division',
+        ],[
+            'result_gpa.required_if' => 'GPA is required',
+            'result_division.required_if' => 'Division is required',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
+
+        $result = $request->result_type == 'gpa' ? $request->result_gpa : $request->result_division;
         $edu = StudentEducation::find($request->id);
         $edu->edu_level_id = $request->edu_level_id;
         $edu->edu_group_id = $request->edu_group_id;
         $edu->edu_board_id = $request->edu_board_id;
+        $edu->university = $request->university;
         $edu->passing_year = $request->passing_year;
-        $edu->gpa = $request->gpa;
+        $edu->result_type = $request->result_type;
+        $edu->result = $result;
         $edu->save();
         
         $education = StudentEducation::find($edu->id);
-        $education->exam_name = $education->exam->name;
-        $education->board_name = $education->board->name;
-        $education->group_name = $education->group->name;   
+        $education->exam_name = $education->exam? $education->exam->name : '';
+        $education->board_name = $education->board? $education->board->name : $education->university;
+        $education->group_name = $education->group? $education->group->name : '';  
 
         return response()->json(['status' => true, 'type'=> 'update', 'education'=> $education, 'message' => 'Education updated successfully']);
     }

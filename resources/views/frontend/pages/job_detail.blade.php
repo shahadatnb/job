@@ -103,21 +103,26 @@
 
 
 @section('js')
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 <script>
     $(document).on('click', '.apply_now', function () {
+        $.LoadingOverlay("show");
         let check_login = "{{ auth('student')->check() ? '1' : '0' }}";
         if(check_login == 0){
             location.href = "{{ route('student.login', ['redirect' => url()->current()]) }}";
+        }else{
+            let job_id = $(this).data('job_id');
+            let post = $(this).data('post');
+            $('.post_name').text(post);
+            $('#job_id').val(job_id);
+            $('#applyModal').modal('show');
         }
-        let job_id = $(this).data('job_id');
-        let post = $(this).data('post');
-        $('.post_name').text(post);
-        $('#job_id').val(job_id);
-        $('#applyModal').modal('show');
+        $.LoadingOverlay("hide");
     });
 
     $("#applyForm").submit(function(e) {
         e.preventDefault();
+        $.LoadingOverlay("show");
         var formData = $(this).serialize();
         let url = $(this).attr('action');
         $("#errorMsg").empty();
@@ -140,6 +145,7 @@
                 }
             }
         });
+        $.LoadingOverlay("hide");
     })
 </script>
 @endsection

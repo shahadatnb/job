@@ -176,7 +176,7 @@
                             <tr>
                                 <th>Exam</th>
                                 <th>Group</th>
-                                <th>Board</th>
+                                <th>Board/University</th>
                                 <th>Year</th>
                                 <th>Result</th>
                                 <th>Action</th>
@@ -509,12 +509,14 @@
 @section('js')
 <script src="{{ asset('assets/admin/plugins/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/moment/moment.min.js') }}"> </script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 <!-- Tempusdominus -->
 <script src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"> </script>
 
 <script>
     $(document).ready(function() {
         $('#edu_level_id').change(function() {
+						$.LoadingOverlay("show");
             var edu_level_id = $(this).val();
             $.ajax({
                 url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
@@ -549,6 +551,7 @@
                     }
                 }
             });
+						$.LoadingOverlay("hide");
 					});
 
 // basic
@@ -626,6 +629,7 @@
 
 				$('#basicForm').submit(function(e) {
 					e.preventDefault();
+					$.LoadingOverlay("show");
 					var formData = $(this).serialize();
 					let url = $(this).attr('action');
 					$("#errorMsgBasic").empty();
@@ -657,6 +661,7 @@
 							}
 						}
 					});
+					$.LoadingOverlay("hide");
 				});
 
 
@@ -683,6 +688,7 @@
     
         $('#eduForm').submit(function(e) {
             e.preventDefault();
+						$.LoadingOverlay("show");
             var formData = $(this).serialize();
             let url = $(this).attr('action');
             $("#errorMsg").empty();
@@ -709,9 +715,9 @@
 												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
 												.find('td').eq(0).html(data.education.exam_name);
 												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
-												.find('td').eq(1).html(data.education.board_name);
+												.find('td').eq(1).html(data.education.group_name);
 												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
-												.find('td').eq(2).html(data.education.group_name);
+												.find('td').eq(2).html(data.education.board_name);
 												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
 												.find('td').eq(3).html(data.education.passing_year);
 												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
@@ -729,17 +735,19 @@
                     }
                 }
             });
+					$.LoadingOverlay("hide");
         });
 
 		$("#nav-education").on('click', '.editAcademic', function(){
 			$('#eduForm')[0].reset();
+			$.LoadingOverlay("show");
 			$("#errorMsg").empty();
 			var id = $(this).data('id');
 			$.ajax({
 				url: "{{route('student.education.edit')}}?id=" + id,
 				method: 'GET',
 				success: function(data){
-					console.log(data);
+					//console.log(data);
 					$("#eduForm").attr('action', "{{route('student.education.update')}}?id=" + id);
 					$("#edu_level_id").val(data.education.edu_level_id);
 					//$('#edu_level_id').trigger('change');
@@ -768,6 +776,7 @@
 						
 					$("#edu_group_id").val(data.education.edu_group_id);
 					$("#edu_board_id").val(data.education.edu_board_id);
+					$("#university").val(data.education.university);
 					$("#passing_year").val(data.education.passing_year);
 					//console.log(data.education.result_type);
 					if(data.education.result_type == 'gpa'){
@@ -781,6 +790,7 @@
 					$('#newEduModal').modal('show');
 				}
 			});
+			$.LoadingOverlay("hide");
 		});
 
 		$("#nav-education").on('click', '.deleteAcademic', function(){
@@ -807,6 +817,7 @@
 		})
 		$('#trainingForm').submit(function(e) {
 			e.preventDefault();
+			$.LoadingOverlay("show");
 			var formData = $(this).serialize();
 			let url = $(this).attr('action');
 			$("#errorMsgTraining").empty();
@@ -859,6 +870,7 @@
 					}
 				}
 			});
+			$.LoadingOverlay("hide");
 		});
 
 		$("#nav-education").on('click', '.editTraining', function(){
@@ -867,7 +879,7 @@
 				url: "{{route('student.training.edit')}}?id=" + id,
 				method: 'GET',
 				success: function(data){
-					console.log(data);
+					//console.log(data);
 					$("#trainingForm").attr('action', "{{route('student.training.update')}}?id=" + id);
 					$("#training_title").val(data.training.training_title);
 					$("#topics_covered").val(data.training.topics_covered);
@@ -905,6 +917,7 @@
 
 		$('#employmentForm').submit(function(e) {
 			e.preventDefault();
+			$.LoadingOverlay("show");
 			var formData = $(this).serialize();
 			let url = $(this).attr('action');
 			$("#errorMsgEmployment").empty();
@@ -913,7 +926,7 @@
 				method: 'POST',
 				data: formData,
 				success: function(data) {
-					console.log(data);
+					//console.log(data);
 					if(data.status == true){
 						$('#newEmploymentModal').modal('hide');
 						$('#employmentForm')[0].reset();
@@ -934,17 +947,17 @@
 							
 						}else{
 							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							.find('td').eq(0).html(data.employment.employment_title);
+							.find('td').eq(0).html(data.employment.job_title);
 							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
 							.find('td').eq(1).html(data.employment.company_name);
 							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							.find('td').eq(5).html(data.employment.job_title);
+							.find('td').eq(2).html(data.employment.job_description);
 							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							.find('td').eq(6).html(data.employment.start_date);
+							.find('td').eq(3).html(moment(data.employment.start_date).format('DD-MM-YYYY')); //data.employment.start_date);
 							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							.find('td').eq(7).html(data.employment.end_date);
-							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							.find('td').eq(8).html(data.employment.description);
+							.find('td').eq(4).html(moment(data.employment.end_date).format('DD-MM-YYYY'));
+							// $("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
+							// .find('td').eq(8).html(data.employment.job_description);
 						}
 					}else{
 						//console.log(data);
@@ -957,9 +970,11 @@
 					}
 				}
 			});
+			$.LoadingOverlay("hide");
 		});
 
 		$("#nav-employment").on('click', '.editEmployment', function(){
+			$.LoadingOverlay("show");
 			var id = $(this).data('id');
 			$.ajax({
 				url: "{{route('student.experience.edit')}}?id=" + id,
@@ -973,12 +988,13 @@
 					$("#company_phone").val(data.employment.company_phone);
 					$("#company_email").val(data.employment.company_email);
 					$("#job_title").val(data.employment.job_title);
-					$("#start_date").val(data.employment.start_date);
-					$("#end_date").val(data.employment.end_date);
-					$("#description").val(data.employment.description);
+					$("#start_date").val( moment(data.employment.start_date).format('DD-MM-YYYY') ); // data.employment.start_date);
+					$("#end_date").val( moment(data.employment.end_date).format('DD-MM-YYYY') );
+					$("#job_description").val(data.employment.job_description);
 					$('#newEmploymentModal').modal('show');
 				}
 			});
+			$.LoadingOverlay("hide");
 		});
 
 		$("#nav-employment").on('click', '.deleteEmployment', function(){
@@ -998,6 +1014,7 @@
 		});
 
 		$("#photo").change(function(){
+			$.LoadingOverlay("show");
 			var photo = this.files[0];
 			let formData = new FormData();			
 			//const blob = new Blob([metadata], { type: 'application/json' });
@@ -1025,10 +1042,12 @@
 					}
 				}
 			})
+			$.LoadingOverlay("hide");
 		});
 
 		$("#updateAddress").submit(function(e){
 			e.preventDefault();
+			$.LoadingOverlay("show");
 			var formData = $(this).serialize();
 			let url = $(this).attr('action');
 			$("#errorMsgAddress").empty();
@@ -1052,9 +1071,11 @@
 					}
 				}
 			})
+			$.LoadingOverlay("hide");
 		})
 
 		$("#addSkill").click(function(){
+			$.LoadingOverlay("show");
 			var skill = $("#skill").val();
 			let formData = new FormData();
 			formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
@@ -1083,6 +1104,7 @@
 					}
 				}
 			})
+			$.LoadingOverlay("hide");
 		});
 
 		$("#skillTable").on('click', '.deleteSkill', function(){
