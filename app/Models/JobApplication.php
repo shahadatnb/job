@@ -13,4 +13,14 @@ class JobApplication extends Model
     {
         return $this->belongsTo(Job::class);
     }
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function application_status()
+    {
+        return $this->belongsTo(ApplicationStatus::class, 'status');
+    }
 }

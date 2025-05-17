@@ -39,7 +39,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group list-group-item"><a href="{{route('student.dashboard')}}">Dashboard</a></li>
                     <li class="list-group list-group-item"><a href="{{route('student.view_cv')}}">View CV</a></li>
-                    <li class="list-group list-group-item"><a href="{{route('/')}}">Apply Now</a></li>
+                    <li class="list-group list-group-item"><a href="{{Session::has('job_info')?route('job.job_detail',Session::get('job_info')['job_id']):route('/')}}">Apply Now</a></li>
                     <li class="list-group list-group-item"><a href="{{route('student.applied_jobs')}}">Applied Jobs</a></li>
                 </ul>
             </div>
@@ -48,7 +48,11 @@
     <div class="col-12 col-md-9 col-lg-9 mt-3">
         <div class="card">
             <div class="card-header">
-                <h4>Profile</h4>
+                <h4>Profile
+					@if(Session::has('job_info'))
+						|| Post Name: {{Session::get('job_info')['job_title']}}
+					@endif
+				</h4>
             </div>
             <div class="card-body">
                 <nav>

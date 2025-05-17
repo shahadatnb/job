@@ -38,11 +38,15 @@ class JobController extends Controller
             'designation_id' => 'nullable',
             'requirements' => 'required',
             'responsibility' => 'required',
-            'qualifications' => 'required',
+            'compensation_other_benefits' => 'required',
             'age_min' => 'required',
             'age_max' => 'required',
             'gender' => 'required',
             'edu_level_id' => 'required',
+            //'edu_group_ids' => 'required',
+            'edu_group_ids' => 'required_without:edu_group_any',
+        ],[
+            'edu_group_ids.required_without' => 'Please select at least one education group',
         ]);
 
         $job = new Job();
@@ -112,6 +116,10 @@ class JobController extends Controller
             'age_max' => 'required',
             'gender' => 'required',
             'edu_level_id' => 'required',
+            //'edu_group_ids' => 'required',
+            'edu_group_ids' => 'required_without:edu_group_any',
+        ],[
+            'edu_group_ids.required_without' => 'Please select at least one education group',
         ]);
 
         //dd(json_encode($request->edu_group_ids));

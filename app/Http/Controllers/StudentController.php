@@ -24,6 +24,7 @@ class StudentController extends Controller
     public function index()
     {
         $student = auth('student')->user();
+        $job_info = session()->has('job_info') ? session()->get('job_info') : [];
         $districts = Location::whereNull('parent_id')->pluck('name', 'id');
         if($student->district_id){
             $upazilas = Location::where('parent_id', $student->district_id)->pluck('name', 'id');
@@ -36,7 +37,7 @@ class StudentController extends Controller
             $permanent_upazilas = [];
         }
         $exams = EduLevel::where('is_active', 1)->get();//->pluck('name', 'id');
-        return view('frontend.pages.dashboard', compact('student', 'districts', 'upazilas', 'permanent_upazilas', 'exams'));
+        return view('frontend.pages.dashboard', compact('student', 'job_info', 'districts', 'upazilas', 'permanent_upazilas', 'exams'));
     }
 
     public function students(){

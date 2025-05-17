@@ -51,6 +51,7 @@ Route::get('ac_config', function()
 Route::get('/', [HomeController::class,'homepage'])->name('/');
 Route::get('/job_detail/{id}', [JobApplicationController::class,'job_detail'])->name('job.job_detail');
 Route::post('/job_apply', [JobApplicationController::class,'apply'])->name('job.apply');
+Route::get('/set_session', [JobApplicationController::class,'set_session'])->name('job.set_session');
 Route::get('student/get_edu_group', [EducationController::class, 'edu_group'])->name('student.education.group');
 
 Route::prefix(config('app.admin_prefix','admin'))->group(function() {
@@ -116,6 +117,7 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
     Route::get('/students/{student}', [StudentController::class,'show'])->name('student.show');
     Route::get('/students', [StudentController::class,'students'])->name('student.index');
     Route::get('/job/application', [JobApplicationController::class,'application'])->name('job.application');
+    Route::post('/job/application_status', [JobApplicationController::class,'application_status'])->name('job.application_status');
     Route::resource('job', JobController::class);
     Route::resource('designation', DesignationController::class);
     Route::resource('eduBoard', EduBoardController::class);

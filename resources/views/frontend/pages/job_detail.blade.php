@@ -109,7 +109,15 @@
         $.LoadingOverlay("show");
         let check_login = "{{ auth('student')->check() ? '1' : '0' }}";
         if(check_login == 0){
-            location.href = "{{ route('student.login', ['redirect' => url()->current()]) }}";
+            $.ajax({
+                url: "{{ route('job.set_session') }}",
+                type: "GET",
+                data: {'job_id': $(this).data('job_id'), 'job_title': $(this).data('post')},
+                success: function (data) {
+                    //console.log(data);
+                    location.href = "{{ route('student.login', ['redirect' => url()->current()]) }}";
+                }
+            })
         }else{
             let job_id = $(this).data('job_id');
             let post = $(this).data('post');
@@ -131,17 +139,20 @@
             type: "POST",
             data: formData,
             success: function (data) {
+                //console.log(data);
                 if (data.status == true) {
                     $("#applyModal").modal('hide');
                     location.href = "{{route('student.applied_jobs')}}";
                 }else {
                     //$("#errorMsg").html(data.error);
                     if(data.message){
-                            $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
-                        }
-                    data.errors.forEach(function(element){
-                        $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
-                    });
+                        $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+                    }
+                    if(data.errors){
+                        data.errors.forEach(function(element){
+                            $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+                        });
+                    }                    
                 }
             }
         });

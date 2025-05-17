@@ -28,7 +28,7 @@
             </div>
             <div class="form-group">
               {!! Form::label('designation_id', __('Designation'),['class'=>'']) !!}
-              {!! Form::select('designation_id',$designations,null,['class'=>'form-control','placeholder'=> __('Designation')]) !!}
+              {!! Form::select('designation_id',$designations,null,['class'=>'form-control select2','placeholder'=> __('Designation')]) !!}
             </div>
             <div class="form-group">
               {!! Form::label('requirements', __('Requirements'),['class'=>'']) !!}

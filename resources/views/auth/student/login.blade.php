@@ -11,9 +11,9 @@
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
               </div>
-            </div> <br>
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+            </div>
+          </div>
+          <x-input-error :messages="$errors->get('email')" class="mt-2" />
         <div class="input-group mb-3">
             <input type="password" class="form-control" name="password"
             required autocomplete="current-password" placeholder="Password">
@@ -56,7 +56,7 @@
       </p>
       @endif
       <p class="mb-0">
-        <a href="{{ route('student.register') }}" class="text-center">Register a new membership</a>
+        <a href="{{ route('student.register') }}" class="text-center btn btn-sm btn-info">Register a new applicant</a>
       </p>
 <!-- /.login-box -->
 </x-guest-layout>

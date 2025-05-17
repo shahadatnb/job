@@ -16,3 +16,7 @@ ALTER TABLE `jobs` ADD `edu_level_id` BIGINT UNSIGNED NULL DEFAULT NULL AFTER `g
 ALTER TABLE `jobs` ADD `edu_group_ids` JSON NULL DEFAULT NULL AFTER `edu_group_any`; 
 ALTER TABLE `jobs` CHANGE `description` `requirements` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
 ALTER TABLE `jobs` CHANGE `qualifications` `compensation_other_benefits` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
+
+
+ALTER TABLE `job_applications` ADD `age` VARCHAR(50) NULL DEFAULT NULL AFTER `student_id`; 
+ALTER TABLE `job_applications` ADD `remarks` VARCHAR(255) NULL DEFAULT NULL AFTER `expected_salary`; 

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\JobApplication;
-use App\Models\Designation;
+use App\Models\ApplicationStatus;
 use App\Models\Job;
 use Carbon\Carbon;
 
@@ -56,6 +56,7 @@ class JobApplicationController extends Controller
 
         // edu group limit check
         if($job->edu_group_any != 1) {
+            //dd(json_decode($job->edu_group_ids));
             if(!in_array($user->educations->where('edu_level_id', $job->edu_level_id)->first()->edu_group_id, json_decode($job->edu_group_ids))) {
                 return response()->json(['status' => false, 'message' => 'You are not eligible for this job for education group']);
             }
@@ -73,8 +74,16 @@ class JobApplicationController extends Controller
         $job_application = new JobApplication();
         $job_application->job_id = $job->id;
         $job_application->student_id = auth('student')->user()->id;
+        $job_application->age = Carbon::parse($user->date_of_birth)->diffInYears($job->last_date);
         $job_application->expected_salary = $request->expected_salary;
         $job_application->save();
+        session()->forget('job_info');
+        return response()->json(['status' => true, 'message' => 'Job application submitted successfully']);
+    }
+
+    public function set_session(Request $request)
+    {
+        $request->session()->put('job_info', ['job_id' => $request->job_id, 'job_title' => $request->job_title]);
         return response()->json(['status' => true, 'message' => 'Job application submitted successfully']);
     }
 
@@ -92,13 +101,48 @@ class JobApplicationController extends Controller
         $data = ['dasignation_id'=>''];
         $jobs = Job::where('status', 1)->pluck('title', 'id');
         $applied_jobs = JobApplication::with('job')->latest();
+        $applicationStatus = ApplicationStatus::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
         if(!empty($request->job_id)) {
             $data['job_id'] = $request->job_id;
             $applied_jobs = $applied_jobs->whereHas('job', function ($query) use ($request) {
                 $query->where('id', $request->job_id);
             });
         }
-        $applied_jobs = $applied_jobs->paginate(50);
-        return view('admin.job.applied_jobs', compact('applied_jobs', 'data', 'jobs'));
+        if(!empty($request->email)) {
+            $data['email'] = $request->email;
+            $applied_jobs = $applied_jobs->whereHas('student', function ($query) use ($request) {
+                $query->where('email', $request->email);
+            });
+        }
+        if(!empty($request->phone)) {
+            $data['phone'] = $request->phone;
+            $applied_jobs = $applied_jobs->whereHas('student', function ($query) use ($request) {
+                $query->where('phone', $request->phone);
+            });
+        }
+
+        $applied_jobs = $applied_jobs->paginate(100);
+        return view('admin.job.applied_jobs', compact('applied_jobs', 'data', 'jobs','applicationStatus'));
+    }
+
+    public function application_status(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required',
+            'candidate_ids' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
+        }
+        //dd($request->all());
+        $candidate_ids = explode(',', $request->candidate_ids);
+        // $application_ids = json_decode($request->candidate_ids, true);
+        // foreach ($application_ids as $application_id) {
+        //     JobApplication::where('id', $application_id)->update(['status' => $request->application_status_id]);
+        // }
+        JobApplication::whereIn('id', $candidate_ids)->update(['status' => $request->status]);
+        return response()->json(['status' => true, 'message' => 'Application status updated successfully']);
+        //return $request->all();
     }
 }

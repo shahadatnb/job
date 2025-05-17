@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                     <div class="d-flex mb-3">
-                        <a class="btn btn-primary" href="{{ route('job.job_detail', $job->id) }}">Detail</a>
+                        <a class="btn btn-primary" href="{{ route('job.job_detail', $job->id) }}">Apply Now</a>
                         {{-- <a class="btn btn-primary apply_now" data-job_id="{{ $job->id }}" data-post="{{ $job->title }}"  href="javascript:void(0)">Apply Now</a> --}}
                     </div>
                     <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Date Line: {{ date('d-m-Y', strtotime($job->last_date)) }}</small>
