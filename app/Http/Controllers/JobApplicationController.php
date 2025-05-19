@@ -98,7 +98,7 @@ class JobApplicationController extends Controller
     
     public function application(Request $request)
     {
-        $data = ['dasignation_id'=>''];
+        $data = ['dasignation_id'=>'','status'=>''];
         $jobs = Job::where('status', 1)->pluck('title', 'id');
         $applied_jobs = JobApplication::with('job')->latest();
         $applicationStatus = ApplicationStatus::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
@@ -119,6 +119,11 @@ class JobApplicationController extends Controller
             $applied_jobs = $applied_jobs->whereHas('student', function ($query) use ($request) {
                 $query->where('phone', $request->phone);
             });
+        }
+
+        if(!empty($request->status)) {
+            $data['status'] = $request->status;
+            $applied_jobs = $applied_jobs->where('status', $request->status);
         }
 
         $applied_jobs = $applied_jobs->paginate(100);

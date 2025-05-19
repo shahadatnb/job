@@ -8,19 +8,22 @@
 <div class="card">
     <div class="card-header">
       <div class="row">
-        <div class="col-8">
+        <div class="col-9">
           {!! Form::model($data,['route' => 'job.application','method'=>'get','class'=>'d-print-none row']) !!}
           <div class="col-6 col-md-3">
             {!! Form::select('job_id',$jobs,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Job Title')]) !!}
           </div>
-          <div class="col-6 col-md-3">
+          <div class="col-6 col-md-2">
             {!! Form::text('email',null,['class'=>'form-control form-control-sm','placeholder'=> __('Email')]) !!}
           </div>
-          <div class="col-6 col-md-3">
+          <div class="col-6 col-md-2">
             {!! Form::text('phone',null,['class'=>'form-control form-control-sm','placeholder'=> __('Phone')]) !!}
           </div>
+          <div class="col-6 col-md-2">
+            {!! Form::select('status',$applicationStatus,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Status')]) !!}
+          </div>
           <div class="col-6 col-md-3">
-            <div class="btn btn-group">
+            <div class="btn-group">
               <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-search"></i> Filter</button>
               <a class="btn btn-danger btn-sm" href="{{ route('job.application')}}"><i class="fas fa-sync"></i> Reset</a>
               {{-- <a class="btn btn-primary btn-sm" href="{{ route('student.create')}}"><i class="fas fa-plus"></i> New</a> --}}
@@ -28,7 +31,7 @@
           </div>
           {!! Form::close() !!}
         </div>
-        <div class="col-4">
+        <div class="col-3">
           {!! Form::open(['route' => 'job.application_status','class'=>'d-print-none row','id'=>'application_status']) !!}
           <div class="input-group">
             {!! Form::select('status',$applicationStatus,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Application Status')]) !!}

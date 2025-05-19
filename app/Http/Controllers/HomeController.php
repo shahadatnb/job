@@ -9,7 +9,7 @@ use App\Models\Job;
 class HomeController extends Controller
 {
     public function homepage(){
-        $jobs = Job::where('status', 1)->latest()->paginate(50);
+        $jobs = Job::where('status', 1)->whereDate('last_date', '>', date('Y-m-d'))->latest()->paginate(50);
         return view('frontend.pages.index',compact('jobs'));
         //return redirect()->route('login');
     }
