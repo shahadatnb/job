@@ -26,6 +26,7 @@
             <div class="btn-group">
               <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-search"></i> Filter</button>
               <a class="btn btn-danger btn-sm" href="{{ route('job.application')}}"><i class="fas fa-sync"></i> Reset</a>
+              <button type="button" class="btn btn-primary btn-sm" onclick="exportTableToExcel('applied_jobs')" ><i class="fas fa-file-excel"></i> Export</button>
               {{-- <a class="btn btn-primary btn-sm" href="{{ route('student.create')}}"><i class="fas fa-plus"></i> New</a> --}}
             </div>              
           </div>
@@ -139,8 +140,195 @@
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
 <script type="text/javascript" src="//cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.24/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/datatables.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script> --}}
+{{-- <script src="{{asset('/assets/admin/js/main.js')}}"></script> --}}
 <script>
+/*
+    function exportToExcel() {
+      let html = document.getElementById('applied_jobs').outerHTML;
+      let blob = new Blob([html], {type: 'application/vnd.ms-excel'});
+      let a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'export.xls';
+      a.click();
+    }
+*/
+
+async function exportTableToExcel(tableID, options = {}) {
+    // Default options
+    const defaults = {
+        filename: 'export',
+        excludeColumns: [],
+        includeBorder: true,
+        sheetName: 'Sheet1',
+        imageOptions: {
+            includeImages: true,
+            imageWidth: 100,
+            imageHeight: 100
+        }
+    };
+    const config = {...defaults, ...options};
+
+    // Get table element
+    const table = document.getElementById(tableID);
+    if (!table) {
+        console.error(`Table with ID "${tableID}" not found`);
+        return;
+    }
+
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    
+    // Clone table and process it
+    const tableClone = table.cloneNode(true);
+    document.body.appendChild(tableClone);
+    tableClone.style.visibility = 'hidden';
+    tableClone.style.position = 'absolute';
+
+    // Process images if enabled
+    if (config.imageOptions.includeImages) {
+        await processTableImages(tableClone, config.imageOptions);
+    }
+
+    // Convert table to worksheet
+    const ws = XLSX.utils.table_to_sheet(tableClone, {raw: true});
+    document.body.removeChild(tableClone);
+
+    // Process column exclusion
+    if (config.excludeColumns.length > 0) {
+        excludeColumnsFromWorksheet(ws, config.excludeColumns);
+    }
+
+    // Apply styling
+    if (config.includeBorder) {
+        applyWorksheetBorders(ws);
+    }
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, config.sheetName);
+
+    // Generate and download Excel file
+    XLSX.writeFile(wb, `${config.filename}.xlsx`);
+}
+
+async function processTableImages(table, imageOptions) {
+    const images = table.querySelectorAll('img');
+    const promises = [];
+    
+    images.forEach(img => {
+        promises.push(processImageElement(img, imageOptions));
+    });
+    
+    await Promise.all(promises);
+}
+
+async function processImageElement(img, options) {
+    try {
+        // Create canvas to handle the image
+        const canvas = document.createElement('canvas');
+        canvas.width = options.imageWidth;
+        canvas.height = options.imageHeight;
+        const ctx = canvas.getContext('2d');
+        
+        // Handle CORS
+        if (!img.crossOrigin && !img.src.startsWith('data:')) {
+            img.crossOrigin = 'Anonymous';
+        }
+        
+        // Load image
+        await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            // Force reload if already loaded
+            if (img.complete) {
+                const src = img.src;
+                img.src = '';
+                img.src = src;
+            }
+        });
+        
+        // Draw image to canvas
+        ctx.drawImage(img, 0, 0, options.imageWidth, options.imageHeight);
+        
+        // Replace img with canvas
+        const container = document.createElement('div');
+        container.appendChild(canvas);
+        img.parentNode.replaceChild(container, img);
+        
+    } catch (error) {
+        console.error('Error processing image:', error);
+        // Fallback to alt text
+        const span = document.createElement('span');
+        span.textContent = img.alt || '[IMAGE]';
+        img.parentNode.replaceChild(span, img);
+    }
+}
+
+function excludeColumnsFromWorksheet(ws, columnsToExclude) {
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    
+    for (let C = range.e.c; C >= range.s.c; --C) {
+        if (columnsToExclude.includes(C)) {
+            // Delete excluded column cells
+            for (let R = range.s.r; R <= range.e.r; ++R) {
+                delete ws[XLSX.utils.encode_cell({r: R, c: C})];
+            }
+            
+            // Shift remaining cells left
+            for (let c = C + 1; c <= range.e.c; ++c) {
+                for (let R = range.s.r; R <= range.e.r; ++R) {
+                    const cell = ws[XLSX.utils.encode_cell({r: R, c: c})];
+                    if (cell) {
+                        ws[XLSX.utils.encode_cell({r: R, c: c - 1})] = cell;
+                        delete ws[XLSX.utils.encode_cell({r: R, c: c})];
+                    }
+                }
+            }
+            range.e.c--;
+        }
+    }
+    ws['!ref'] = XLSX.utils.encode_range(range);
+}
+
+function applyWorksheetBorders(ws) {
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
+            ws[cellAddress] = ws[cellAddress] || {};
+            ws[cellAddress].s = ws[cellAddress].s || {};
+            ws[cellAddress].s.border = {
+                top: {style: "thin", color: {rgb: "000000"}},
+                bottom: {style: "thin", color: {rgb: "000000"}},
+                left: {style: "thin", color: {rgb: "000000"}},
+                right: {style: "thin", color: {rgb: "000000"}}
+            };
+            
+            // Header styling
+            if (R === range.s.r) {
+                ws[cellAddress].s.fill = {fgColor: {rgb: "F2F2F2"}};
+                ws[cellAddress].s.font = {bold: true};
+            }
+        }
+    }
+}
+
+// Usage Example:
+// exportTableToExcel('myTable', {
+//     filename: 'product_catalog',
+//     sheetName: 'Products',
+//     excludeColumns: [0], // Exclude first column
+//     imageOptions: {
+//         includeImages: true,
+//         imageWidth: 150,
+//         imageHeight: 100
+//     }
+// });
+
+
     $(function () {
 
       $(':checkbox[name=selectAll]').click (function () {
@@ -187,7 +375,7 @@
         });
         $.LoadingOverlay("hide");
       });
-
+/*
       var header = $('#report-header').html();
 		
         $('#applied_jobs').DataTable( {
@@ -251,6 +439,7 @@
             ],
             //"ordering": false,
         } );
+         */
     });
   </script>
 @endsection

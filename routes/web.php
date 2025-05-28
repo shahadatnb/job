@@ -151,7 +151,7 @@ Route::group(['prefix'=>'sms','middleware'=> ['auth']], function(){
 });
 
 
-Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth','branch']], function(){
+Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth']], function(){
     Route::post('/menuItemStore', [MenuController::class, 'menuItemStore'])->name('menuItem.store');
     Route::post('/menuItemUpdate/{id}', [MenuController::class, 'menuItemUpdate'])->name('menuItem.update');
     Route::get('/menuItemEdit/{id}', [MenuController::class,'menuItemEdit'])->name('menuItem.edit');
@@ -160,7 +160,7 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth
     
     Route::get('/siteCache', [AdminController::class, 'siteCache'])->name('siteCache');
     Route::get('/basic-settings', [AdminController::class, 'settings'])->name('settings');
-    Route::put('/saveSetting', [AdminController::class,'saveSetting'])->name('saveSetting');
+    Route::put('/saveSetting/{id}', [AdminController::class,'saveSetting'])->name('saveSetting');
 });
 
 Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth','role:superadmin,admin']], function(){

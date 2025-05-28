@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Branch;
+use App\Models\Setting;
 use App\Models\Menu;
 use App\Models\MenuItem;
 
@@ -23,73 +23,32 @@ class AdminController extends Controller
 
     public function settings()
     {
-        $this->middleware('branch');
-        $settings = Branch::where('id', session('branch')['id'])->first();
+        $settings = Setting::where('status',1)->orderBy('sl','ASC')->get();
         return view('admin.pages.settings',compact('settings'));
     }
 
-    public function saveSetting(Request $request)
+    public function saveSetting(Request $request, $id)
     {
-        $this->validate(request(),[
-            'name' => 'required',
-            'address' => 'required',
-            'contact' => 'nullable',
-            'email' => 'nullable|email',
-            'chairman_name' => 'nullable|string|max:150',
-            'chairman_email' => 'nullable|email',
-            'chairman_contact' => 'nullable',
-            'chairman_designation' => 'nullable|string|max:150',
-            //'logo' => 'nullable|mimes:jpg,jpeg,png|max:512',
-            //'favicon' => 'nullable|mimes:jpg,jpeg,png|max:100',
-            'chairman_sign' => 'nullable|mimes:jpg,jpeg,png|max:100',
-        ]);
+        $data = Setting::findOrFail($id);
+        if(isset($request->image)){
+            $request->validate([
+                'value' => 'required|mimes:jpg,jpeg,png|max:2048',
+            ]);
 
-        $branch = Branch::where('id', session('branch')['id'])->first();
-        $branch->name = $request->name;
-        $branch->website = $request->website;
-        $branch->address = $request->address;
-        $branch->contact = $request->contact;
-        $branch->email = $request->email;
-        $branch->chairman_name = $request->chairman_name;
-        $branch->chairman_email = $request->chairman_email;
-        $branch->chairman_contact = $request->chairman_contact;
-        $branch->chairman_designation = $request->chairman_designation;
-        $branch->academic_year_id = $request->academic_year_id;
-        /*
-        if(isset($request->logo)){
-            if ($branch->logo != '' && file_exists( public_path('upload\\site_file\\') . $branch->logo)) {
-                unlink(public_path('upload\\site_file\\') . $branch->logo);
+            if (file_exists( public_path('upload\\site_file\\') . $data->value)) {
+                unlink(public_path('upload\\site_file\\') . $data->value);
             }
       
-            $fileName = time().'.'.$request->logo->extension();  
+            $fileName = time().'.'.$request->value->extension();  
             $upload_path = public_path('upload/site_file');
-            $request->logo->move($upload_path, $fileName);
-            $branch->logo = $fileName;
+            $request->value->move($upload_path, $fileName);
+            $data->value = $fileName;
+            $data->save();
+        }else{
+            $data->value = $request->value ?? 0;
+            $data->save();
         }
-        
-        if(isset($request->favicon)){
-            if ($branch->favicon != '' && file_exists( public_path('upload\\site_file\\') . $branch->favicon)) {
-                unlink(public_path('upload\\site_file\\') . $branch->favicon);
-            }
-      
-            $fileName = time().'.'.$request->favicon->extension();  
-            $upload_path = public_path('upload/site_file');
-            $request->favicon->move($upload_path, $fileName);
-            $branch->favicon = $fileName;
-        }
-*/
-        if(isset($request->chairman_sign)){
-            if ($branch->chairman_sign != '' && file_exists( public_path('upload\\site_file\\') . $branch->chairman_sign)) {
-                unlink(public_path('upload\\site_file\\') . $branch->chairman_sign);
-            }
-      
-            $fileName = time().'.'.$request->chairman_sign->extension();  
-            $upload_path = public_path('upload/site_file');
-            $request->chairman_sign->move($upload_path, $fileName);
-            $branch->chairman_sign = $fileName;
-        }
-
-        $branch->save();       
+        \Artisan::call('config:cache');
 
         session()->flash('success','Setting Seved');
         return redirect()->back();

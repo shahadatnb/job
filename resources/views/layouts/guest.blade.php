@@ -16,19 +16,25 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('assets/admin/css/adminlte.min.css')}}">
 </head>
-<body class="hold-transition login-page">
-    <div class=""> 
-        <div class="login-logo">
-          <a href="{{ url('/') }}">{{ config('app.name', 'Laravel') }}</a>
+<body class="hold-transition">
+    <div class="row">
+      <div class="col-md-6 d-none d-md-block">
+        <img src="{{ asset('upload/site_file/'.config('settings.appBanner')) }}" alt="" class="img-fluid">
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="login-logo mt-3">
+          {{-- <a href="{{ url('/') }}">{{ config('app.name', 'Laravel') }}</a> --}}
+          <img src="{{ asset('upload/site_file/'.config('settings.appLogo')) }}" alt="{{ config('app.name', 'Laravel') }}" class="" style="max-height: 50px">
         </div>
         <!-- /.login-logo -->
-        <div class="card">
+        <div class="card m-3">
           <div class="card-body login-card-body">
             {{ $slot }}
         </div>
         <!-- /.login-card-body -->
+        </div>
       </div>
-    </div>
+  </div>
     <!-- jQuery -->
     <script src="{{ asset('assets/admin/plugins/jquery/jquery.min.js')}}"></script>
     <!-- Bootstrap 4 -->

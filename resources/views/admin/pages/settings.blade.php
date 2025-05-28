@@ -1,115 +1,74 @@
 @extends('admin.layouts.layout')
-@section('page_title',"Settings")
+@section('title',"Settings")
 @section('content')
 <!-- Default box -->
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Settings</h3>
         <div class="card-tools">
-          <a href="{{route('siteCache')}}" class="btn btn-primary btn-sm"> <i class="fas fa-sync"></i> Applay</a>
+        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+            <i class="fas fa-minus"></i></button>
+        <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+            <i class="fas fa-times"></i></button>
         </div>
     </div>
     <div class="card-body">
       @include('admin.layouts._message')
-      {!! Form::model($settings,['route'=>['saveSetting'],'method'=>'PUT','class'=>'form-horizontal','enctype'=>'multipart/form-data']) !!}
-      {!! Form::hidden('id',null) !!}
+      @foreach($settings as $setting)
+      {!! Form::open(['route'=>['saveSetting',$setting->id],'method'=>'PUT','class'=>'form-horizontal','enctype'=>'multipart/form-data']) !!}
+      @php  $option=json_decode($setting->field, true);  @endphp
       <div class="row">
-        <div class="col-12 col-md-6">
-          <div class="form-group">
-              {!! Form::label('name', __('Name'),['class'=>'']) !!}
-              {!! Form::text('name',null,['class'=>'form-control','requerd'=>'requerd','placeholder'=> __('Name')]) !!}
-          </div>
-        </div>
-        <div class="col-12 col-md-6">
-          <div class="form-group">
-              {!! Form::label('website', __('Website'),['class'=>'']) !!}
-              {!! Form::text('website',null,['class'=>'form-control','requerd'=>false,'placeholder'=> __('Website')]) !!}
-          </div>  
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-12">
-          <div class="form-group">
-              {!! Form::label('address', __('Address'),['class'=>'']) !!}
-              {!! Form::text('address',null,['class'=>'form-control','requerd'=>'requerd','placeholder'=> __('Address')]) !!}
-          </div>
-        </div>
-        <div class="col-12 col-md-6">
-          <div class="form-group">
-              {!! Form::label('contact', __('Contact Phone/Mobile'),['class'=>'']) !!}
-              {!! Form::text('contact',null,['class'=>'form-control','requerd'=>'requerd','placeholder'=> __('Contact Phone/Mobile')]) !!}
-          </div>
-        </div>
-        <div class="col-12 col-md-6">
-          <div class="form-group">
-            {!! Form::label('email', __('Email'),['class'=>'']) !!}
-            {!! Form::email('email',null,['class'=>'form-control','requerd'=>false,'placeholder'=> __('Email')]) !!}
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-6">
-          <div class="form-group">
-              {!! Form::label('chairman_name', __('Chairman Name'),['class'=>'']) !!}
-              {!! Form::text('chairman_name',null,['class'=>'form-control','requerd'=>false,'placeholder'=> __('Chairman')]) !!}
-          </div>
-        </div>
-        <div class="col-12 col-md-6">
-          <div class="form-group">
-            {!! Form::label('chairman_email', __('Chairman Email'),['class'=>'']) !!}
-            {!! Form::email('chairman_email',null,['class'=>'form-control','requerd'=>false,'placeholder'=> __('Chairman Email')]) !!}
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-6">
-          <div class="form-group">
-              {!! Form::label('chairman_contact', __('Chairman Contact'),['class'=>'']) !!}
-              {!! Form::text('chairman_contact',null,['class'=>'form-control','requerd'=>false,'placeholder'=> __('Chairman Contact')]) !!}
-          </div>
-        </div>
-        <div class="col-12 col-md-6">
-          <div class="form-group">
-              {!! Form::label('chairman_designation', __('Chairman Designation'),['class'=>'']) !!}
-              {!! Form::text('chairman_designation',null,['class'=>'form-control','requerd'=>false,'placeholder'=> __('Chairman Designation')]) !!}
-          </div>
-        </div>
-      </div>
-      <div class="row">
-          <div class="col-3">
-            @if($settings->logo != '')
-              <img src="{{asset('upload/site_file/'.$settings->logo)}}" alt="" width="100">
-            @endif
-            <div class="form-group">
-                {!! Form::label('logo', __('Logo'),['class'=>'']) !!}
-                {!! Form::file('logo') !!}
+        <div class="col-md-10">
+          {{ Form::label($setting->name,$setting->description) }}
+          {{-- Form::text('value',$setting->value,['class'=>'form-control','required'=>'']) --}} 
+          @if($option['type']=='email')
+              <input type="email" name="value" id="{{$setting->name}}" @if($option['required']==1) required="required" @endif value="{{$setting->value}}" class="form-control">
+
+          @elseif($option['type']=='number')
+              <input type="number" name="value" id="{{$setting->name}}" @if($option['required']==1) required="required" @endif value="{{$setting->value}}" class="form-control"> 
+
+          @elseif($option['type']=='textarea')
+              <textarea class="form-control" name="value" id="{{$setting->name}}" rows="5" @if($option['required']==1) required="required" @endif>{{$setting->value}}</textarea>
+              {{-- <textarea class="form-control @if($option['editor']=='1') textarea @endif" name="value" id="{{$setting->name}}" rows="5" @if($option['required']==1) required="required" @endif>{{$setting->value}}</textarea> --}}
+
+          @elseif($option['type']=='select')
+              <select name="value" id="{{$setting->name}}" @if($option['required']==1) required="required" @endif class="form-control">
+                <option value="{{$setting->value}}">{{$setting->value}}</option>
+                @foreach($option['options'] as $key => $value)
+                <option value="{{$key}}">{{$value}}</option>
+                @endforeach
+              </select>
+          @elseif($option['type']=='image')
+
+          <div class="row">
+            <div class="col-auto">
+              <img width="60" src="{{asset('/upload/site_file/'.$setting->value)}}" alt="">
             </div>
-          </div>
-          <div class="col-3">
-            @if($settings->favicon != '')
-              <img src="{{asset('upload/site_file/'.$settings->favicon)}}" alt="" width="100">
-            @endif
-            <div class="form-group">
-              {!! Form::label('favicon', __('Favicon'),['class'=>'']) !!}
-              {!! Form::file('favicon') !!}
+            <div class="col">
+              <div class="custom-file">
+                <input id="{{$setting->name}}" name="value" type="file" class="form-control custom-file-input">
+              <label class="custom-file-label" for="{{$setting->name}}">{{ $setting->description }}</label>
+              {!! Form::hidden('image', 1) !!}
+              </div>
             </div>
-          </div>
-          <div class="col-3">
-            @if($settings->chairman_sign != '')
-              <img src="{{asset('upload/site_file/'.$settings->chairman_sign)}}" alt="" width="100">
-            @endif
-            <div class="form-group">
-                {!! Form::label('chairman_sign', __('Chairman Signature'),['class'=>'']) !!}
-                {!! Form::file('chairman_sign') !!}
-            </div>
-          </div>
-      </div>
-      {{ Form::submit('Save',array('class'=>'btn btn-primary')) }}
-      {!! Form::close() !!}
+          </div> 
+          @elseif($option['type']=='checkbox')
+              <input type="checkbox" value="1" name="value" id="{{$setting->name}}" @if($setting->value==1) checked="checked" @endif>
+          @else
+            <input type="text" name="value" id="{{$setting->name}}" @if($option['required']==1) required="required" @endif value="{{$setting->value}}" class="form-control"> 
+          @endif
+        </div>
+        <div class="col-md-2"> 
+          {{ Form::label('submit','&nbsp;') }}
+          {{ Form::submit('Save',array('class'=>'form-control btn btn-success')) }}</div>
+        </div>
+     {!! Form::close() !!}
+     @endforeach
+     
     </div>
     <!-- /.card-body -->
     <div class="card-footer">
-        
+        Footer
     </div>
     <!-- /.card-footer-->
 </div>
