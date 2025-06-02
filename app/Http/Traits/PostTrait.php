@@ -32,28 +32,9 @@ trait PostTrait {
             'postType'  => 'slider',
             'icon'      => 'fa-image',
             'taxonomy'  => false,
-            'supports'   => array('title','image'),
-        ),
-        'teacher' => array(
-            'title'     => 'Teacher',
-            'postType'  => 'teacher',
-            'icon'      => 'fa-image',
-            'taxonomy'  => false,
             'supports'   => array('title','image','body'),
-            'postMeta'  => array(
-                array('name'=>'dasignation','title'=>'Designation','fildType'=>'text','required'=>true),
-            )
         ),
-        'stuff' => array(
-            'title'     => 'Stuff',
-            'postType'  => 'stuff',
-            'icon'      => 'fa-image',
-            'taxonomy'  => false,
-            'supports'   => array('title','image','body'),
-            'postMeta'  => array(
-                array('name'=>'dasignation','title'=>'Designation','fildType'=>'text','required'=>true),
-            )
-        )
+        
     );
 
     public function postTypeCheck($request){

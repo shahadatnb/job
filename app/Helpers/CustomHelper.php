@@ -92,14 +92,12 @@ class CustomHelper
         ];
 
         $arg = array_merge($arg,$arg1);
-        $post = Post::where('branch_id',$arg['branch_id']);
+        $post = Post::where('status',1);
         if($arg['cat']){
-            $post = Post::whereHas('taxonomy', function($q) use ($arg){
+            $post = $post->whereHas('taxonomy', function($q) use ($arg){
                 $q->whereIn('slug', $arg['cat']);
-            })->where('status',1);
-        }else{
-            $post = Post::where('status',1);
-        }        
+            });
+        }
         
         $post = $post->where('post_type',$arg['post_type'])
             ->orderBy($arg['orderBy'],$arg['orderType']);

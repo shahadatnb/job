@@ -120,7 +120,7 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
 });
 Route::get('/childLocation', [LocationController::class,'childLocation'])->name('childLocation');
 
-Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth','branch']], function(){
+Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth']], function(){
     
     
     
@@ -146,7 +146,7 @@ Route::group(['prefix'=>'sms','middleware'=> ['auth']], function(){
 });
 
 
-Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth','branch']], function(){
+Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth']], function(){
     Route::post('/menuItemStore', [MenuController::class, 'menuItemStore'])->name('menuItem.store');
     Route::post('/menuItemUpdate/{id}', [MenuController::class, 'menuItemUpdate'])->name('menuItem.update');
     Route::get('/menuItemEdit/{id}', [MenuController::class,'menuItemEdit'])->name('menuItem.edit');
