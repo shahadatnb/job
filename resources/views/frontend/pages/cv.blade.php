@@ -60,8 +60,8 @@
                       <td>{{ $exp->job_title }}</td>
                       <td>{{ $exp->company_name }}</td>
                       <td>{{ $exp->job_description }}</td>
-                      <td>{{ date('d-m-Y', strtotime($exp->from)) }}</td>
-                      <td>{{ date('d-m-Y', strtotime($exp->to)) }}</td>
+                      <td>{{ date('d-m-Y', strtotime($exp->start_date)) }}</td>
+                      <td>{{ date('d-m-Y', strtotime($exp->end_date)) }}</td>
                   </tr>
                   @endforeach
                 </tbody>
@@ -81,11 +81,11 @@
                 <tbody id="academicTable">
                   @foreach($student->educations as $edu)
                   <tr data-id="{{ $edu->id }}">
-                      <td>{{ $edu->exam->name }}</td>
-                      <td>{{ $edu->group->name }}</td>
-                      <td>{{ $edu->board->name }}</td>
+                      <td>{{ $edu->exam ? $edu->exam->name : '' }}</td>
+                      <td>{{ $edu->group ? $edu->group->name : '' }}</td>
+                      <td>{{ $edu->board ? $edu->board->name : $edu->university }}</td>
                       <td>{{ $edu->passing_year }}</td>    
-                      <td>{{ $edu->gpa }}</td>
+                      <td>{{ $edu->gpa }}{{ $edu->result_type == 'gpa' ? '/'.$edu->out_of : '' }}</td>
                   </tr>
                   @endforeach
                 </tbody>
@@ -194,6 +194,15 @@
                   <tr>
                     <th>District</th>
                     <td>{{ $student->districtPermanent ? $student->districtPermanent->name : '' }}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td align="center" class="mt-5">
+                        <div style="width: 300px">
+                            <img src="{{asset('/storage/'.$student->signature)}}" style="height: 50px;" alt="">
+                            <p class="mt-0" style="border-top: 1px solid black;">Signature</p>
+                        </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>

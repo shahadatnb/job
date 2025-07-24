@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string'],//, 'email'
             'password' => ['required', 'string'],
         ];
     }
@@ -56,11 +56,26 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        /*
         if (! Auth::guard('student')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+            */
+
+        $loginType = filter_var($this->input('email'), FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+
+        if (! Auth::guard('student')->attempt([
+            $loginType => $this->input('email'),
+            'password' => $this->input('password'),
+        ], $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
             ]);
         }
 

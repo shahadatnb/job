@@ -90,7 +90,7 @@
               
             </ul>
           </li>
-{{--           
+          
           <li class="nav-item has-treeview {{ (request()->routeIs('contact.*','smsTemplate.*','sms.*')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ (request()->routeIs('contact.*','smsTemplate.*','sms.*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-envelope"></i>
@@ -100,9 +100,9 @@
               <li class="nav-item"><a href="{{ route("smsTemplate.index") }}" class="nav-link {{ (request()->routeIs('smsTemplate.*')) ? ' active' : '' }}">
                 <i class="far fa-circle nav-icon"></i> <p>SMS Template</p></a>
               </li>
-              <li class="nav-item"><a href="{{ route("contact.index") }}" class="nav-link {{ (request()->routeIs('contact.*')) ? ' active' : '' }}">
+              {{-- <li class="nav-item"><a href="{{ route("contact.index") }}" class="nav-link {{ (request()->routeIs('contact.*')) ? ' active' : '' }}">
                 <i class="far fa-circle nav-icon"></i> <p>Phone Book</p></a>
-              </li>
+              </li> --}}
               <li class="nav-item"><a href="{{ route("sms.send") }}" class="nav-link {{ (request()->routeIs('sms.send')) ? ' active' : '' }}">
                 <i class="far fa-circle nav-icon"></i> <p>SMS Send</p></a>
               </li>
@@ -110,7 +110,7 @@
                 <i class="far fa-circle nav-icon"></i> <p>Report</p></a>
               </li>
             </ul>
-          </li> --}}
+          </li>
           
           <li class="nav-item has-treeview {{ (request()->routeIs('posts*','menu*')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">

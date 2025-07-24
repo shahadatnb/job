@@ -17,6 +17,8 @@ use Illuminate\Http\Request;
 use Intervention\Image\Laravel\Facades\Image;
 //use Storage;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
+use App\Facades\CustomHelperFacade as CustomHelper;
 
 class StudentController extends Controller
 {
@@ -36,7 +38,7 @@ class StudentController extends Controller
         }else{
             $permanent_upazilas = [];
         }
-        $exams = EduLevel::where('is_active', 1)->get();//->pluck('name', 'id');
+        $exams = EduLevel::where('is_active', 1)->orderBy('serial', 'asc')->get();//->pluck('name', 'id');
         return view('frontend.pages.dashboard', compact('student', 'job_info', 'districts', 'upazilas', 'permanent_upazilas', 'exams'));
     }
 
@@ -66,7 +68,7 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
-        return view('frontend.pages.cv', compact('student'));
+        return view('admin.students.show', compact('student'));
     }
 
     public function editProfile()
@@ -89,6 +91,13 @@ class StudentController extends Controller
     public function updateAddress(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:50',
+            'father_name' => 'required|string|max:50',
+            'mother_name' => 'required|string|max:50',
+            'email' => 'required|email|unique:students,email,' . auth('student')->user()->id,
+            'phone' => 'required|digits:11|unique:students,phone,' . auth('student')->user()->id,
+            'nid' => 'required|max:17|unique:students,nid,' . auth('student')->user()->id,
+            'date_of_birth' => 'required',
             'village' => 'required|string|max:50',
             'post_office' => 'required|string|max:50',
             'post_code' => 'nullable|numeric',
@@ -106,6 +115,17 @@ class StudentController extends Controller
         }
 
         $student = auth('student')->user();
+        $student->name = $request->name;
+        $student->email = $request->email;
+        $student->phone = $request->phone;
+        $student->nid = $request->nid;
+        $student->date_of_birth = Carbon::parse($request->date_of_birth)->format('Y-m-d'); // $request->date_of_birth;
+        $student->gender = $request->gender;
+        $student->religion = $request->religion;
+        $student->blood_group = $request->blood_group;
+        $student->father_name = $request->father_name;
+        $student->mother_name = $request->mother_name;
+
         $student->village = $request->village;
         $student->post_office = $request->post_office;
         $student->post_code = $request->post_code;
@@ -123,7 +143,7 @@ class StudentController extends Controller
     public function updatePhoto(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'photo' => 'required|image|mimes:jpeg,png,jpg',
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -133,16 +153,41 @@ class StudentController extends Controller
         $student = auth('student')->user();
         $image = $request->file('photo');
         if ($image) {
-            Storage::delete('public/'.$student->photo);
+            Storage::delete('public/photo/'.$student->photo);
             $imgFile  = Image::read($request->photo)->resize(300, 300, function ($constraint) {
                 $constraint->aspectRatio();
             })->toJpeg(80);
-            $file_name = 'student/'.time() .'.jpg';
+            $file_name = 'student/photo/'.time() .'.jpg';
             Storage::disk('public')->put($file_name, $imgFile);
             $student->photo = $file_name;
         }
         $student->save();
         return response()->json(['status' => true, 'photo' => asset('storage/'.$student->photo)]);
+    }
+
+    public function updateSignature(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'signature' => 'required|image|mimes:jpeg,png,jpg|max:40',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()]);
+        }
+
+        $student = auth('student')->user();
+        $image = $request->file('signature');
+        if ($image) {
+            Storage::delete('public/signature/'.$student->signature);
+            $imgFile  = Image::read($request->signature)->resize(300, 80, function ($constraint) {
+                $constraint->aspectRatio();
+            })->toJpeg(80);
+            $file_name = 'student/signature/'.time() .'.jpg';
+            Storage::disk('public')->put($file_name, $imgFile);
+            $student->signature = $file_name;
+        }
+        $student->save();
+        return response()->json(['status' => true, 'signature' => asset('storage/'.$student->signature)]);
     }
 
     public function updateProfile(Request $request)
@@ -213,7 +258,7 @@ class StudentController extends Controller
         $user->permanent_upazila_id = $request->permanent_upazila_id;
         */
         $user->save();
-        return response()->json(['status' => true, 'type'=> 'save', 'student'=> $user, 'message' => 'Education saved successfully']);
+        return response()->json(['status' => true, 'type'=> 'save', 'student'=> $user, 'message' => 'saved successfully']);
 
         //session()->flash('success', 'Profile updated successfully');
         //return redirect()->route('student.profile');
@@ -228,5 +273,59 @@ class StudentController extends Controller
     public function destroy(Student $student)
     {
         //
+    }
+
+    public function send_otp(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|exists:students,phone',
+        ],
+        [
+            'phone.exists' => 'Phone number does not exist.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
+        }
+
+        $student = Student::where('phone', $request->phone)->first();
+
+        if(isset($_COOKIE['otp']) && $_COOKIE['otp'] == $student->id)
+        { 
+            return response()->json(['status' => false, 'message' => 'OTP has been sent already. Please wait for 3 minutes.']);
+        }
+
+        $otp = rand(1000, 9999);
+        $student->otp = $otp;
+        $student->save();
+
+        $message = 'Your OTP is: '.$otp.'. Do not share with anyone. - '.config('app.name');
+        $contact = substr($student->phone, 0, 2) == '88' ? $student->phone : '88'.$student->phone;
+        $responsed=    CustomHelper::send_sms($contact, $message);
+        //dd($responsed);
+        setcookie('otp', $student->id, time() + (60 * 3), "/");
+        return response()->json(['status' => true, 'message' => 'OTP has been sent successfully.']);
+    }
+
+    public function password_save(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|min:6|max:15|confirmed',
+            'phone_number' => 'required',
+            'otp' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
+        }
+
+        $student = Student::where('otp', $request->otp)->where('phone',$request->phone_number)->first();
+
+        if(!isset($student)) {
+            return response()->json(['status' => false, 'message' => 'Invalid OTP.']);
+        }
+
+        $student->password = Hash::make($request->password);
+        $student->otp = null;
+        $student->save();
+        return response()->json(['status' => true, 'message' => 'Password has been updated successfully.']);
     }
 }

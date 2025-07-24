@@ -69,7 +69,7 @@
                             </div>
                         </div>
                         <p class="mb-0">
-                        <a href="{{ route('student.login') }}" class="text-center">Already registered? Login</a>
+                        <a href="{{ route('student.login', ['redirect' => request()->input('redirect')]) }}" class="text-center">Already registered? Login</a>
                         </p>
                     </form>
                 </div>

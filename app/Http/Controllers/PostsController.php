@@ -22,7 +22,7 @@ class PostsController extends Controller
         $posttype=$this->postTypeCheck($request);
         $taxonomy = $this->taxArray($posttype['postType']);
         $taxId = null;
-        $posts=Post::where('post_type', $posttype['postType'])->where('branch_id', session()->get('branch')['id'])->orderBy('id', 'desc');
+        $posts=Post::where('post_type', $posttype['postType'])->orderBy('id', 'desc');
         if(!empty($request->taxonomy)){
             $posts=$posts->whereHas('taxonomy', function($q) use ($request){
                 $q->where('id', $request->taxonomy);
@@ -38,7 +38,7 @@ class PostsController extends Controller
         $taxonomy = $this->taxArray($posttype['postType']);
         $posts = null;
         $taxId = null;
-        $posts=Post::where('post_type', $posttype['postType'])->where('branch_id', session()->get('branch')['id'])->orderBy('sort');
+        $posts=Post::where('post_type', $posttype['postType'])->orderBy('sort');
         if(!empty($request->taxonomy)){
             $posts=$posts->whereHas('taxonomy', function($q) use ($request){
                 $q->where('id', $request->taxonomy);
@@ -63,7 +63,7 @@ class PostsController extends Controller
 
     private function postSlug($slug){
         $slug = Str::slug($slug, '-');
-        $count = Post::where('slug','like',$slug.'%')->where('branch_id', session()->get('branch')['id'])->count();
+        $count = Post::where('slug','like',$slug.'%')->count();
         $suffix = $count ? $count+1 : '';
         $slug .= $suffix;
         return $slug;
@@ -121,7 +121,6 @@ class PostsController extends Controller
         $slug = $this->postSlug($request->title);
 
         $post = new Post;
-        $post->branch_id = session()->get('branch')['id'];
         $post->title=$request->title;
         $post->post_type=$request->post_type;
         $post->sort=$request->sort;

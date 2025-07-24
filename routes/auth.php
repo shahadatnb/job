@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\RegisteredStudentController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Models\Student;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -84,6 +84,14 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
                 ->name('student.password.store');
+
+
+
+    Route::post('reset-password-otp', [StudentController::class, 'send_otp'])
+                ->name('student.password.reset.phone');
+
+    Route::post('reset-password-save', [StudentController::class, 'password_save'])
+                ->name('student.password.store.phone');
 });
 
 Route::middleware('auth:student')->group(function () {

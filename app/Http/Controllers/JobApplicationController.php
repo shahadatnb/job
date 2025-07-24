@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\JobApplication;
 use App\Models\ApplicationStatus;
 use App\Models\Job;
+use App\Models\EduGroup;
 use Carbon\Carbon;
 
 class JobApplicationController extends Controller
@@ -44,22 +45,66 @@ class JobApplicationController extends Controller
             return response()->json(['status' => false, 'message' => 'You are not eligible for this job for age']);
         }
 
+        // experience check
+        $total_experience = 0;
+        foreach ($user->employments as $employment):
+            $length = Carbon::parse($employment->start_date)->diffInDays(Carbon::parse($employment->end_date));
+            $total_experience += $length>0 ? number_format($length/365,1) : 0;
+        endforeach;
+        if($job->minimum_experience > $total_experience) {
+            return response()->json(['status' => false, 'message' => 'Your experience is not eligible for this job']);
+        }
+
         // gender limit check
         if($job->gender != $user->gender && $job->gender != 'Any') {
             return response()->json(['status' => false, 'message' => 'You are not eligible for this job for gender']);
         }
 
+
         // edu level limit check
-        if($job->edu_level_id != $user->educations->where('edu_level_id', $job->edu_level_id)->first()->edu_level_id) {
-            return response()->json(['status' => false, 'message' => 'You are not eligible for this job for education level']);
+        $education_status = true;
+        $education_status2 = false;
+        $education_levels = $user->educations->pluck('edu_level_id')->toArray();
+
+        if(in_array($job->edu_level_id, $education_levels) == false) {
+            $education_status = false;
+            //return response()->json(['status' => false, 'message' => 'You are not eligible for this job for education level']);
         }
 
         // edu group limit check
         if($job->edu_group_any != 1) {
-            //dd(json_decode($job->edu_group_ids));
-            if(!in_array($user->educations->where('edu_level_id', $job->edu_level_id)->first()->edu_group_id, json_decode($job->edu_group_ids))) {
-                return response()->json(['status' => false, 'message' => 'You are not eligible for this job for education group']);
+            $edu_level = $user->educations->where('edu_level_id', $job->edu_level_id)->first();
+            if($edu_level){
+                if(!in_array($edu_level->edu_group_id, json_decode($job->edu_group_ids))) {
+                    $education_status = false;
+                    //return response()->json(['status' => false, 'message' => 'You are not eligible for this job for education group']);
+                }
+            }else{
+                $education_status = false;
             }
+        }
+
+        if($job->edu_level2_id != '') {
+            $education_status2 = true;
+            
+            if(in_array($job->edu_level2_id, $education_levels) == false) {
+                $education_status2 = false;
+            }
+
+            if($job->edu_group2_any != 1) {
+                $edu_level2 = $user->educations->where('edu_level_id', $job->edu_level2_id)->first();
+                if($edu_level2) {
+                    if(!in_array($edu_level2->edu_group_id, json_decode($job->edu_group2_ids))) {
+                        $education_status2 = false;
+                    }
+                }else{
+                    $education_status2 = false;
+                }
+            }
+        }
+
+        if($education_status == false && $education_status2 == false) {
+            return response()->json(['status' => false, 'message' => 'You are not eligible for this job for education']);
         }
 
         if(!$job) {
@@ -78,6 +123,7 @@ class JobApplicationController extends Controller
         $job_application->expected_salary = $request->expected_salary;
         $job_application->save();
         session()->forget('job_info');
+        session()->flash('success','Job application submitted successfully');
         return response()->json(['status' => true, 'message' => 'Job application submitted successfully']);
     }
 
@@ -89,21 +135,35 @@ class JobApplicationController extends Controller
 
     public function job_detail($id)
     {
+        $jobs = Job::where('status', 1)->whereDate('last_date', '>', date('Y-m-d'))->latest()->paginate(50);
         $job = Job::find($id);
+
+        if($job->edu_level_id != ''){            
+            $eduGroups = EduGroup::where('edu_level_id', $job->edu_level_id)->pluck('name', 'id')->toArray();
+        }else{
+            $eduGroups = [];
+        }
+
+        if($job->edu_level2_id != ''){            
+            $eduGroups2 = EduGroup::where('edu_level_id', $job->edu_level2_id)->pluck('name', 'id')->toArray();
+        }else{
+            $eduGroups2 = [];
+        }
         if(!$job) {
             abort(404);
         }
-        return view('frontend.pages.job_detail', compact('job'));
+        return view('frontend.pages.job_detail', compact('job', 'jobs', 'eduGroups', 'eduGroups2'));
     }
     
     public function application(Request $request)
     {
-        $data = ['dasignation_id'=>'','status'=>''];
+        $data = ['job_id'=>'','status'=>'','job_title'=>'','email'=>'','phone'=>''];
         $jobs = Job::where('status', 1)->pluck('title', 'id');
         $applied_jobs = JobApplication::with('job')->latest();
         $applicationStatus = ApplicationStatus::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
         if(!empty($request->job_id)) {
             $data['job_id'] = $request->job_id;
+            $data['job_title'] = $jobs[$request->job_id];
             $applied_jobs = $applied_jobs->whereHas('job', function ($query) use ($request) {
                 $query->where('id', $request->job_id);
             });
@@ -126,7 +186,7 @@ class JobApplicationController extends Controller
             $applied_jobs = $applied_jobs->where('status', $request->status);
         }
 
-        $applied_jobs = $applied_jobs->paginate(100);
+        $applied_jobs = $applied_jobs->paginate(300);
         return view('admin.job.applied_jobs', compact('applied_jobs', 'data', 'jobs','applicationStatus'));
     }
 

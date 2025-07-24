@@ -23,7 +23,7 @@ class JobController extends Controller
     public function create()
     {
         $exams = EduLevel::where('is_active', 1)->pluck('name', 'id');
-        $designations = Designation::where('status', 1)->pluck('name', 'id');
+        $designations = Designation::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
         $eduGroups = [];
         return view('admin.job.createOrEdit', compact('designations', 'exams', 'eduGroups'));
     }
@@ -41,10 +41,12 @@ class JobController extends Controller
             'compensation_other_benefits' => 'required',
             'age_min' => 'required',
             'age_max' => 'required',
+            'minimum_experience' => 'required',
             'gender' => 'required',
             'edu_level_id' => 'required',
             //'edu_group_ids' => 'required',
             'edu_group_ids' => 'required_without:edu_group_any',
+            'edu_group2_ids' => 'required_without:edu_group2_any',
         ],[
             'edu_group_ids.required_without' => 'Please select at least one education group',
         ]);
@@ -62,9 +64,13 @@ class JobController extends Controller
         $job->age_min = $request->age_min;
         $job->age_max = $request->age_max;
         $job->gender = $request->gender;
+        $job->minimum_experience = $request->minimum_experience;
         $job->edu_level_id = $request->edu_level_id;
         $job->edu_group_any = $request->edu_group_any;
         $job->edu_group_ids = json_encode($request->edu_group_ids);
+        $job->edu_level2_id = $request->edu_level2_id;
+        $job->edu_group2_any = $request->edu_group2_any;
+        $job->edu_group2_ids = json_encode($request->edu_group2_ids);
         $job->salary = $request->salary;
         $job->nagotiable = $request->nagotiable;
         $job->status = 1;
@@ -88,17 +94,24 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
-        $exams = EduLevel::where('is_active', 1)->pluck('name', 'id');
+        $exams = EduLevel::where('is_active', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
         if($job->edu_level_id != ''){            
-            $eduGroups = EduGroup::where('edu_level_id', 2)->pluck('name', 'id')->toArray();
+            $eduGroups = EduGroup::where('edu_level_id', $job->edu_level_id)->pluck('name', 'id')->toArray();
         }else{
             $eduGroups = [];
         }
 
+        if($job->edu_level2_id != ''){            
+            $eduGroups2 = EduGroup::where('edu_level_id', $job->edu_level2_id)->pluck('name', 'id')->toArray();
+        }else{
+            $eduGroups2 = [];
+        }
+
         $job->edu_group_ids = json_decode($job->edu_group_ids, true);
+        $job->edu_group2_ids = json_decode($job->edu_group2_ids, true);
 
         $designations = Designation::where('status', 1)->pluck('name', 'id');
-        return view('admin.job.createOrEdit', compact('job', 'designations', 'exams', 'eduGroups'));
+        return view('admin.job.createOrEdit', compact('job', 'designations', 'exams', 'eduGroups','eduGroups2'));
     }
 
     /**
@@ -114,10 +127,11 @@ class JobController extends Controller
             'compensation_other_benefits' => 'required',
             'age_min' => 'required',
             'age_max' => 'required',
+            'minimum_experience' => 'required',
             'gender' => 'required',
             'edu_level_id' => 'required',
-            //'edu_group_ids' => 'required',
             'edu_group_ids' => 'required_without:edu_group_any',
+            'edu_group2_ids' => 'required_without:edu_group2_any',
         ],[
             'edu_group_ids.required_without' => 'Please select at least one education group',
         ]);
@@ -135,10 +149,14 @@ class JobController extends Controller
         $job->last_date = $request->last_date;
         $job->age_min = $request->age_min;
         $job->age_max = $request->age_max;
+        $job->minimum_experience = $request->minimum_experience;
         $job->gender = $request->gender;
         $job->edu_level_id = $request->edu_level_id;
         $job->edu_group_any = $request->edu_group_any;
         $job->edu_group_ids = json_encode($request->edu_group_ids);
+        $job->edu_level2_id = $request->edu_level2_id;
+        $job->edu_group2_any = $request->edu_group2_any;
+        $job->edu_group2_ids = json_encode($request->edu_group2_ids);
         $job->salary = $request->salary;
         $job->nagotiable = $request->nagotiable;
         $job->status = $request->status;

@@ -56,7 +56,7 @@
             </div>
             <div class="form-group">
               {!! Form::label('job_nature', __('Job Nature'),['class'=>'']) !!}
-              {!! Form::text('job_nature',null,['class'=>'form-control','placeholder'=> __('Job Nature')]) !!}
+              {!! Form::select('job_nature', ['Full Time'=>'Full Time','Part Time'=>'Part Time','Contractual'=>'Contractual'],null,['class'=>'form-control','placeholder'=> __('Job Nature')]) !!}
             </div>
             <div class="form-group">
               {!! Form::label('location', __('Job Location'),['class'=>'']) !!}
@@ -75,6 +75,10 @@
               {!! Form::number('age_max',null,['class'=>'form-control','placeholder'=> __('Age Max')]) !!}
             </div>
             <div class="form-group">
+              {!! Form::label('minimum_experience', __('Minimum Experience').' *',['class'=>'']) !!}
+              {!! Form::number('minimum_experience',null,['class'=>'form-control','placeholder'=> __('Minimum Experience')]) !!}
+            </div>
+            <div class="form-group">
               {!! Form::label('gender', __('Gender').' *',['class'=>'']) !!}
               {!! Form::select('gender', ['Any'=>'Any','Male'=>'Male','Female'=>'Female'],null,['class'=>'form-control','placeholder'=> __('Select Gender')]) !!}
             </div>
@@ -87,6 +91,16 @@
             <div class="form-group">
               {!! Form::label('edu_group_ids', __('Education Group'),['class'=>'']) !!}
               {!! Form::select('edu_group_ids[]',$eduGroups,null,['class'=>'form-control select2','id'=>'edu_group_ids','multiple'=>true]) !!}
+            </div>
+            <div class="form-group">
+              {!! Form::label('edu_level2_id', __('Or Edu Level'),['class'=>'']) !!}
+              {!! Form::select('edu_level2_id',$exams,null,['class'=>'form-control','placeholder'=> __('Or Edu Level')]) !!}
+              {!! Form::label('edu_group2_any', __('Any Education Group'),['class'=>'']) !!}
+              {{ Form::checkbox('edu_group2_any',1,null) }}
+            </div>
+            <div class="form-group">
+              {!! Form::label('edu_group2_ids', __('Or Education Group'),['class'=>'']) !!}
+              {!! Form::select('edu_group2_ids[]',$eduGroups2,null,['class'=>'form-control select2','id'=>'edu_group2_ids','multiple'=>true]) !!}
             </div>
             <div class="form-group">
               {!! Form::label('salary', __('Salary'),['class'=>'']) !!}
@@ -129,12 +143,30 @@
                 url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
                 method: 'GET',
                 success: function(data) {
-                    console.log(data);                    
+                    //console.log(data);
                     if(data.status == true){
                         $('#edu_group_ids').empty();
                         //$('#edu_group_id').append('<option value="">Any Group</option>');
                         $.each(data.groups, function(index, value) {
                             $('#edu_group_ids').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                }
+            });
+          });
+
+          $('#edu_level2_id').change(function() {
+            var edu_level_id = $(this).val();
+            $.ajax({
+                url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
+                method: 'GET',
+                success: function(data) {
+                    //console.log(data);                    
+                    if(data.status == true){
+                        $('#edu_group2_ids').empty();
+                        //$('#edu_group_id').append('<option value="">Any Group</option>');
+                        $.each(data.groups, function(index, value) {
+                            $('#edu_group2_ids').append('<option value="' + value.id + '">' + value.name + '</option>');
                         });
                     }
                 }

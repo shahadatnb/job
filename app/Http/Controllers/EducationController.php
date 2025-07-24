@@ -28,18 +28,30 @@ class EducationController extends Controller
             'passing_year' => 'required',
             'result_type' => 'required',
             'result_gpa' => 'nullable|required_if:result_type,gpa|numeric|max:5',
+            'out_of' => 'nullable|required_if:result_type,gpa|numeric|max:5',
             'result_division' => 'required_if:result_type,division',
+            'result_pass' => 'required_if:result_type,pass',
         ],[
             'result_gpa.required_if' => 'GPA is required',
+            'out_of.required_if' => 'Out of is required',
             'result_division.required_if' => 'Division is required',
+            'result_pass.required_if' => 'Pass is required',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $result = $request->result_type == 'gpa' ? $request->result_gpa : $request->result_division;
-
         $edu = new StudentEducation();
+
+        if($request->result_type == 'gpa'){
+            $result = $request->result_gpa;
+            $edu->out_of = $request->out_of;
+        }elseif($request->result_type == 'division'){
+            $result = $request->result_division;
+        }else{
+            $result = $request->result_pass;
+        }
+
         $edu->student_id = auth('student')->user()->id;
         $edu->edu_level_id = $request->edu_level_id;
         $edu->edu_group_id = $request->edu_group_id;
@@ -76,17 +88,29 @@ class EducationController extends Controller
             'passing_year' => 'required',
             'result_type' => 'required',
             'result_gpa' => 'nullable|required_if:result_type,gpa|numeric|max:5',
+            'out_of' => 'nullable|required_if:result_type,gpa|numeric|max:5',
             'result_division' => 'required_if:result_type,division',
+            'result_pass' => 'required_if:result_type,pass',
         ],[
             'result_gpa.required_if' => 'GPA is required',
+            'out_of.required_if' => 'Out of is required',
             'result_division.required_if' => 'Division is required',
+            'result_pass.required_if' => 'Pass is required',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $result = $request->result_type == 'gpa' ? $request->result_gpa : $request->result_division;
         $edu = StudentEducation::find($request->id);
+        if($request->result_type == 'gpa'){
+            $result = $request->result_gpa;
+            $edu->out_of = $request->out_of;
+        }elseif($request->result_type == 'division'){
+            $result = $request->result_division;
+        }else{
+            $result = $request->result_pass;
+        }
+        //$result = $request->result_type == 'gpa' ?  $request->result_gpa : $request->result_division;
         $edu->edu_level_id = $request->edu_level_id;
         $edu->edu_group_id = $request->edu_group_id;
         $edu->edu_board_id = $request->edu_board_id;

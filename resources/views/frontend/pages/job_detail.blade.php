@@ -8,6 +8,7 @@
                 <div class="d-flex align-items-center mb-5">
                     {{-- <img class="flex-shrink-0 img-fluid border rounded" src="img/com-logo-2.jpg" alt="" style="width: 80px; height: 80px;"> --}}
                     <div class="text-start ps-4">
+                        @include('admin.layouts._message')
                         <h3 class="mb-3">{{$job->title}}</h3>
                         <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{$job->location}}</span>
                         <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>{{ $job->job_nature }}</span>
@@ -15,9 +16,60 @@
                     </div>
                 </div>
 
+                <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
+                    <h4 class="mb-4">Job Summery</h4>
+                    {{-- <p><i class="fa fa-angle-right text-primary me-2"></i>Published On: 01 Jan, 2045</p> --}}
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>Vacancy: {{ $job->vacancy==0 ? 'Not defined' : $job->vacancy }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>Age: {{ $job->age_min }} - {{ $job->age_max }} Years</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>Job Nature: {{ $job->job_nature }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>Gender: {{ $job->gender }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>Salary: {{ $job->nagotiable == 1 ? 'Nagotiable' : $job->salary }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>Location: {{ $job->location }}</p>
+                    <p class="m-0"><i class="fa fa-angle-right text-primary me-2"></i>Date Line: {{ date('d-m-Y', strtotime($job->last_date)) }}</p>
+                </div>
+
                 <div class="mb-5">
                     <h4 class="mb-3">Job Requirement</h4>
                     {!! $job->requirements !!}
+                    <p><strong>Education:</strong> {{ $job->eduLevel? $job->eduLevel->name : 'Not defined' }}
+                        @php
+                           if($job->edu_group_any !=1 && $job->edu_group_ids != ''){
+                            echo ' in ';
+                            if(count(json_decode($job->edu_group_ids)) > 1){
+                                echo implode(', ', array_map(function($value) use ($eduGroups) {
+                                    return $eduGroups[$value];
+                                }, json_decode($job->edu_group_ids)));
+                            }else{
+                                echo $eduGroups[json_decode($job->edu_group_ids)[0]];
+                            }
+                            /*
+                               foreach (json_decode($job->edu_group_ids) as $value) {
+                                   echo $eduGroups[$value].', ';
+                               }
+                            */
+                           }
+                        @endphp
+                        @if($job->edu_level2_id != '') 
+                            Or {{ $job->eduLevel2? $job->eduLevel2->name : 'Not defined' }}
+                            @php
+                               if($job->edu_group2_any !=1 && $job->edu_group2_ids != ''){
+                                echo ' in ';
+                                if(count(json_decode($job->edu_group2_ids)) > 1){
+                                   echo implode(', ', array_map(function($value) use ($eduGroups2) {
+                                        return $eduGroups2[$value];
+                                    }, json_decode($job->edu_group2_ids)));
+                                }else{
+                                    echo $eduGroups2[json_decode($job->edu_group2_ids)[0]];
+                                }
+                                /*
+                                   foreach (json_decode($job->edu_group2_ids) as $value) {
+                                       echo $eduGroups2[$value].', ';
+                                   }
+                                */
+                               }
+                            @endphp
+                        @endif
+                    </p>
                     <h4 class="mb-3">Responsibilities & Context</h4>
                     {!! $job->responsibility !!}
                     <h4 class="mb-3">Compensation & Other Benefits</h4>
@@ -52,18 +104,15 @@
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-4">                
                 <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
-                    <h4 class="mb-4">Job Summery</h4>
-                    {{-- <p><i class="fa fa-angle-right text-primary me-2"></i>Published On: 01 Jan, 2045</p> --}}
-                    <p><i class="fa fa-angle-right text-primary me-2"></i>Vacancy: {{ $job->vacancy==0 ? 'Not defined' : $job->vacancy }}</p>
-                    <p><i class="fa fa-angle-right text-primary me-2"></i>Job Nature: {{ $job->job_nature }}</p>
-                    <p><i class="fa fa-angle-right text-primary me-2"></i>Salary: {{ $job->nagotiable == 1 ? 'Nagotiable' : $job->salary }}</p>
-                    <p><i class="fa fa-angle-right text-primary me-2"></i>Location: {{ $job->location }}</p>
-                    <p class="m-0"><i class="fa fa-angle-right text-primary me-2"></i>Date Line: {{ date('d-m-Y', strtotime($job->last_date)) }}</p>
+                    <a class="btn btn-primary apply_now" data-job_id="{{ $job->id }}" data-post="{{ $job->title }}"  href="javascript:void(0)">Apply Now</a>
                 </div>
                 <div class="bg-light rounded p-5 wow slideInUp" data-wow-delay="0.1s">
-                    <a class="btn btn-primary apply_now" data-job_id="{{ $job->id }}" data-post="{{ $job->title }}"  href="javascript:void(0)">Apply Now</a>
+                    <h4 class="mb-4">Job List</h4>
+                    @foreach ($jobs as $job)
+                    <p> <a href="{{ route('job.job_detail', $job->id) }}">{{ $job->title }}</a> </p>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -115,7 +164,7 @@
                 data: {'job_id': $(this).data('job_id'), 'job_title': $(this).data('post')},
                 success: function (data) {
                     //console.log(data);
-                    location.href = "{{ route('student.login', ['redirect' => url()->current()]) }}";
+                    location.href = "{{ route('student.register', ['redirect' => url()->current()]) }}";
                 }
             })
         }else{

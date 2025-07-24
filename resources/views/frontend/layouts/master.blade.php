@@ -7,8 +7,8 @@
         @if(View::hasSection('title'))
             @yield('title')
       @else
-      {{-- {{ config('app.name', 'Laravel') }} --}}
-      JobEntry - Job Portal Website
+      {{ config('settings.appTitle', 'Laravel') }}
+      {{-- JobEntry - Job Portal Website --}}
       @endif
     </title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -37,10 +37,27 @@
     <!-- Template Stylesheet -->
     <link href="{{asset('/assets/frontend')}}/css/style.css" rel="stylesheet">
 	@yield('css')
+    <style type="text/css">
+        .headertop{
+            background-color:#00a3c8; 
+            color:#fff;
+            padding: 4px;
+            font-size: 14px;
+        }
+        .headertop a{
+            color:#fff;
+        }
+        .headertop .twittericon {
+            padding: 0 5px;
+        }
+        .headertop .facebookicon {
+            padding: 0 5px;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container-xxl bg-white p-0">
+    <div class="bg-white p-0">
         <!-- Spinner Start -->
         <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -49,11 +66,29 @@
         </div>
         <!-- Spinner End -->
 
-
+        <div class="headertop clearfix">
+            <div class="">
+                <div class="row">
+                    <!-- Address -->
+                    <div class="col-md-9">	     			
+                        <div class="px-lg-5 clearfix"><span><i class="fas fa-map-marker-alt"></i>86 (New), 726/A (Old), Satmasjid Road, Dhanmondi, Dhaka-1209</span>
+                        <a href="tel:01755697173-6" class="callusbtn"><i class="fas fa-phone"></i>01755697173-6</a>
+                        <a href="tel:0241023155" class="callusbtn"><i class="fas fa-phone"></i>0241023155</a>
+                        </div>
+                    </div>
+                    <!-- Social Links -->
+                    <div class="col-md-3">
+                        <a class="twittericon" title="Youtube" href="https://www.facebook.com/profile.php?id=100066431304810"><i class="fab fa-youtube"></i></a>
+                        <a class="facebookicon" title="Facebook" href="https://www.youtube.com/@ProfDrAKMFazlulHaque"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Navbar Start -->
         <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0 d-print-none">
             <a href="{{ route('/') }}" class="navbar-brand d-flex align-items-center text-center py-0 px-4 px-lg-5">
-                <h1 class="m-0 text-primary">Job Portal</h1>
+                {{-- <h1 class="m-0 text-primary">{{ config('settings.appTitle', 'Job Portal') }}</h1> --}}
+                <img src="{{ asset('upload/site_file/'.config('settings.appLogo')) }}" alt="{{ config('settings.appTitle', 'Job Portal') }}" class="img-fluid" style="max-height: 50px">
             </a>
             <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
@@ -61,7 +96,7 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto p-4 p-lg-0">
                     <a href="{{ route('/') }}" class="nav-item nav-link active">Home</a>
-                    <a href="#" class="nav-item nav-link">About</a>
+                    <a href="{{ url('/page/instructions')}}" class="nav-item nav-link">আবেদন সংক্রান্ত নির্দেশনাবলী</a>
                     {{-- <a href="{{ route('ex-student.create')}}" class="nav-item nav-link">Ex-Student</a> --}}
                     {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Jobs</a>
@@ -78,15 +113,15 @@
                             <a href="#" class="dropdown-item">404</a>
                         </div>
                     </div> --}}
-                    <a href="#" class="nav-item nav-link">Contact</a>
+                    {{-- <a href="#" class="nav-item nav-link">Contact</a> --}}
                 </div>
 				@guest('student')
-                <a href="{{route('student.login')}}" class="btn btn-primary rounded-0 py-4 px-lg-5">Login</a>
-                <a href="{{route('student.register')}}" class="btn btn-primary rounded-0 py-4 px-lg-5">Register</a>
+                <a href="{{route('student.login')}}" class="btn btn-info rounded-0 py-4 px-lg-5">Login</a>
+                <a href="{{route('student.register')}}" class="btn btn-secondary rounded-0 py-4 px-lg-5">Register</a>
 				@endguest
 				@auth('student')
-                <a href="{{route('student.dashboard')}}" class="btn btn-primary rounded-0 py-4 px-lg-5">Profile</a>
-                <a class="btn btn-primary rounded-0 py-4 px-lg-5" href="{{ route('student.logout') }}" onclick="event.preventDefault();
+                <a href="{{route('student.dashboard')}}" class="btn btn-info rounded-0 py-4 px-lg-5">{{ auth('student')->user()->name }}</a>
+                <a class="btn btn-secondary rounded-0 py-4 px-lg-5" href="{{ route('student.logout') }}" onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">Logout</a>
 				@endauth
 				<form id="logout-form" action="{{ route('student.logout') }}" method="POST" style="display: none;">
@@ -96,16 +131,16 @@
         </nav>
         <!-- Navbar End -->
 
-
+    <div class="container">
         @yield('content')
-        
+    </div>        
 
         <!-- Footer Start -->
         <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn d-print-none" data-wow-delay="0.1s">
-            <div class="container py-5">
+            {{-- <div class="container py-5">
                 <div class="row g-5">
                     <div class="col-lg-3 col-md-6">
-                        <h5 class="text-white mb-4">Company</h5>
+                        <h5 class="text-white mb-4">{{ config('app.name') }}</h5>
                         <a class="btn btn-link text-white-50" href="">About Us</a>
                         <a class="btn btn-link text-white-50" href="">Contact Us</a>
                         <a class="btn btn-link text-white-50" href="">Our Services</a>
@@ -142,14 +177,14 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <div class="container">
                 <div class="copyright">
                     <div class="row">
                         <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                             &copy; <a class="border-bottom" href="#">{{ config('app.name', 'Laravel') }}</a>, All Right Reserved. 						
 							
-							Designed By <a class="border-bottom" href="https://pontit.com">Pondit.com</a>
+							Designed By <a class="border-bottom" href="https://pondit.com">Pondit.com</a>
                         </div>
                         <div class="col-md-6 text-center text-md-end">
                             <div class="footer-menu">

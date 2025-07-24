@@ -20,6 +20,7 @@
               <th>ID</th>
               <th>Title</th>
               <th>Designation</th>
+              <th>Dadeline</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -30,7 +31,16 @@
                     <td>{{$item->id}}</td>
                     <td>{{$item->title}}</td>
                     <td>{{$item->designation?$item->designation->name:''}}</td>
-                    <td>{{$item->status}}</td>
+                    <td>{{ date('d-m-Y', strtotime($item->last_date)) }}</td>
+                    <td>
+                      @if ($item->status == 1 && $item->last_date >= date('Y-m-d'))
+                        <span class="badge badge-success">Live</span>
+                      @elseif ($item->status == 1 && $item->last_date < date('Y-m-d'))
+                        <span class="badge badge-danger">Expired</span>
+                      @else
+                        <span class="badge badge-info">Draft</span>
+                      @endif
+                    </td>
                     <td>
                       <div class="btn-group btn-group-sm">
                         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

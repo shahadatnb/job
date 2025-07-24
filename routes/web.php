@@ -11,7 +11,6 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MenuController;
 
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\EmploymentController;
@@ -49,10 +48,11 @@ Route::get('ac_config', function()
 });
 
 Route::get('/', [HomeController::class,'homepage'])->name('/');
+Route::get('/page/{slug}', [HomeController::class,'page'])->name('page');
 Route::get('/job_detail/{id}', [JobApplicationController::class,'job_detail'])->name('job.job_detail');
 Route::post('/job_apply', [JobApplicationController::class,'apply'])->name('job.apply');
 Route::get('/set_session', [JobApplicationController::class,'set_session'])->name('job.set_session');
-Route::get('student/get_edu_group', [EducationController::class, 'edu_group'])->name('student.education.group');
+Route::get('applicant/get_edu_group', [EducationController::class, 'edu_group'])->name('student.education.group');
 
 Route::prefix(config('app.admin_prefix','admin'))->group(function() {
     //Auth::routes(['register' => false]);//['verify'=> false]
@@ -66,7 +66,7 @@ Route::get('/admin_dashboard', function () {
     return redirect()->route('home');
 });
 
-Route::group(['prefix'=>'student','middleware'=>'auth:student'], function(){  
+Route::group(['prefix'=>'applicant','middleware'=>'auth:student'], function(){  
 
     Route::get('/', [StudentController::class,'index'])->name('student.dashboard');
     Route::get('/profile', [StudentController::class,'profile'])->name('student.profile');
@@ -74,6 +74,7 @@ Route::group(['prefix'=>'student','middleware'=>'auth:student'], function(){
     Route::post('/updateProfile', [StudentController::class,'updateProfile'])->name('student.updateProfile');
     Route::post('/chengePassword', [StudentController::class,'chengePassword'])->name('student.chengePassword');
     Route::post('/updatePhoto', [StudentController::class,'updatePhoto'])->name('student.photo.update');
+    Route::post('/updateSignature', [StudentController::class,'updateSignature'])->name('student.signature.update');
     Route::post('/updateAddress', [StudentController::class,'updateAddress'])->name('student.address.update');
     Route::get('/view_cv', [StudentController::class,'view_cv'])->name('student.view_cv');
     Route::get('/applied_jobs', [StudentController::class,'applied_jobs'])->name('student.applied_jobs');
@@ -113,9 +114,9 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
     Route::post('/chengePassword', [UsersController::class,'chengePassword'])->name('chengePassword');
 
     //Route::resource('unit', UnitController::class);
-    Route::get('/students/destroy/{student}', [StudentController::class,'destroy'])->name('student.destroy');
-    Route::get('/students/{student}', [StudentController::class,'show'])->name('student.show');
-    Route::get('/students', [StudentController::class,'students'])->name('student.index');
+    Route::get('/applicants/destroy/{student}', [StudentController::class,'destroy'])->name('student.destroy');
+    Route::get('/applicants/{student}', [StudentController::class,'show'])->name('student.show');
+    Route::get('/applicants', [StudentController::class,'students'])->name('student.index');
     Route::get('/job/application', [JobApplicationController::class,'application'])->name('job.application');
     Route::post('/job/application_status', [JobApplicationController::class,'application_status'])->name('job.application_status');
     Route::resource('job', JobController::class);
@@ -125,11 +126,7 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
 });
 Route::get('/childLocation', [LocationController::class,'childLocation'])->name('childLocation');
 
-Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth','branch']], function(){
-    
-    
-    
-    
+Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth']], function(){
     Route::resource('posts', PostsController::class);
 //    Route::get('PostDelete/{id}',[PostsController::class, 'PostDelete')->name('PostDelete');
     Route::get('postOrder', [PostsController::class, 'postOrder'])->name('postOrder');
@@ -139,9 +136,6 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth
 });
 
 Route::group(['prefix'=>'sms','middleware'=> ['auth']], function(){
-    Route::post('contact_import', [SmsContactController::class, 'import'])->name('contact.import');
-    Route::resource('contact', SmsContactController::class);
-    Route::post('addCategory', [SmsContactController::class, 'addCategory'])->name('add.contact.category');
     Route::resource('smsTemplate', SmsTemplateController::class);
     Route::get('/smsBalance', [SMSController::class, 'smsBalance'])->name('smsBalance');
     Route::get('send', [SmsController::class, 'index'])->name('sms.send');
@@ -167,9 +161,6 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth
     Route::resource('users', UsersController::class);
     Route::resource('location', LocationController::class);
     Route::resource('menus',MenuController::class);
-
-    Route::post('/assignPermission/{user}', [UsersController::class, 'assignPermission'])->name('user.assignPermission');
-    Route::post('/assignBranch/{user}', [UsersController::class, 'assignBranch'])->name('user.assignBranch');
     Route::post('/user-ban', [UsersController::class, 'ban'])->name('user-ban');
     Route::get('/user-unban/{id}', [UsersController::class, 'unban'])->name('user-unban');
 });

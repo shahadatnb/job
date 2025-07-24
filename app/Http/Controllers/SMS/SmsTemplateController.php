@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class SmsTemplateController extends Controller
 {
     public function index(){
-        $templates = SmsTemplate::where('branch_id', session('branch')['id'])->paginate(1000);
+        $templates = SmsTemplate::paginate(100);
         return view('admin.sms.templates.index', compact('templates'));
     }
 
@@ -24,7 +24,6 @@ class SmsTemplateController extends Controller
         ));
         
         $template = new SmsTemplate();
-        $template->branch_id = session('branch')['id'];
         $template->title = $request->title;
         $template->content = $request->content;
         $template->save();
@@ -37,10 +36,6 @@ class SmsTemplateController extends Controller
     }
 
     public function edit(SmsTemplate $smsTemplate){
-        if($smsTemplate->branch_id != session('branch')['id']){
-            session()->flash('error', 'You are not authorized to edit this template');
-            return redirect()->back();
-        }
         return view('admin.sms.templates.edit', compact('smsTemplate'));
     }
 

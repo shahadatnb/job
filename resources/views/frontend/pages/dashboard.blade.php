@@ -1,6 +1,7 @@
 @extends('frontend.layouts.master')
 @section('title','Dashboard')
 @section('css')
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 <style type="text/css">
 	#photoPreview {
@@ -39,7 +40,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group list-group-item"><a href="{{route('student.dashboard')}}">Dashboard</a></li>
                     <li class="list-group list-group-item"><a href="{{route('student.view_cv')}}">View CV</a></li>
-                    <li class="list-group list-group-item"><a href="{{Session::has('job_info')?route('job.job_detail',Session::get('job_info')['job_id']):route('/')}}">Apply Now</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('/')}}">Job List</a></li>
                     <li class="list-group list-group-item"><a href="{{route('student.applied_jobs')}}">Applied Jobs</a></li>
                 </ul>
             </div>
@@ -51,6 +52,7 @@
                 <h4>Profile
 					@if(Session::has('job_info'))
 						|| Post Name: {{Session::get('job_info')['job_title']}}
+						<a class="btn btn-sm btn-success" href="{{ route('job.job_detail',Session::get('job_info')['job_id']) }}">Applay now</a>						
 					@endif
 				</h4>
             </div>
@@ -61,12 +63,13 @@
                         <button class="nav-link" id="nav-education-tab" data-bs-toggle="tab" data-bs-target="#nav-education" type="button" role="tab" aria-controls="nav-education" aria-selected="false">Education/Training</button>
                         <button class="nav-link" id="nav-employment-tab" data-bs-toggle="tab" data-bs-target="#nav-employment" type="button" role="tab" aria-controls="nav-employment" aria-selected="false">Employment</button>
                         <button class="nav-link" id="nav-others-tab" data-bs-toggle="tab" data-bs-target="#nav-others" type="button" role="tab" aria-controls="nav-others" aria-selected="false">Skills</button>
+                        <button class="nav-link" id="nav-photograph-tab" data-bs-toggle="tab" data-bs-target="#nav-photograph" type="button" role="tab" aria-controls="nav-employment" aria-selected="false">Photograph</button>
                     </div>
                 </nav>
                 <div class="tab-content p-3 border bg-light" id="nav-profile">
                     <div class="tab-pane fade active show" id="nav-basic" role="tabpanel" aria-labelledby="nav-home-tab">
 											<div class="row">
-													<div class="col-12 col-md-6 col-lg-6">
+													{{-- <div class="col-12 col-md-6 col-lg-6">
 														<div class="d-flex justify-content-between">
 															<h2 class="d-inline-block">Basic Information</h2>
 															<button class="btn btn-sm btn-primary" id="btnBasicModal">Edit</button>
@@ -115,23 +118,87 @@
 																</tr>
 															</tbody>
 														</table>
-													</div>
-													<div class="col-12 col-md-6 col-lg-6">
-														<div id="errorMsgPhoto"></div>
-														<img id="photoPreview" src="{{asset('/storage/'.$student->photo)}}" alt="" class="img-thumbnail" width="300 px">
-														<br>
-														<form action="{{route('student.photo.update')}}" method="POST" enctype="multipart/form-data">
-															@csrf
-															<label for="photo">Change Photo</label>
-															<input type="file" name="photo" class="" id="photo">
-														</form>
-													</div>
+													</div> --}}
 											</div>
 											<div id="errorMsgAddress"></div>
 											{!! Form::model($student, ['route'=>['student.address.update', $student], 'method'=>'POST', 'id' => 'updateAddress']) !!}
 											<div class="row">
+													<div class="col-12 mb-3">
+														<h3>Basic Information</h3>
+														<div class="form-group">
+															{{ Form::label('name', 'Name') }}
+															{{ Form::text('name', null, ['class' => 'form-control']) }}
+														</div>
+														<div class="row">
+															<div class="col-6">
+																<div class="form-group">
+																	{{ Form::label('father_name', 'Father Name') }}
+																	{{ Form::text('father_name', null, ['class' => 'form-control']) }}
+																</div>
+															</div>
+															<div class="col-6">
+																<div class="form-group">
+																	{{ Form::label('mother_name', 'Mother Name') }}
+																	{{ Form::text('mother_name', null, ['class' => 'form-control']) }}
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-6">
+																<div class="form-group">
+																	{{ Form::label('email', 'Email') }}
+																	{{ Form::email('email', null, ['class' => 'form-control']) }}
+																</div>
+															</div>
+															<div class="col-6">
+																<div class="form-group">
+																	{{ Form::label('phone', 'Phone') }}
+																	{{ Form::text('phone', null, ['class' => 'form-control']) }}
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-6">
+																<div class="form-group">
+																	{{ Form::label('nid', 'NID') }}
+																	{{ Form::text('nid', null, ['class' => 'form-control']) }}
+																</div>
+															</div>
+															<div class="col-6">
+																<div class="form-group">
+																	{{ Form::label('date_of_birth', 'Date of Birth') }}
+																	{!! Form::text('date_of_birth', $student->date_of_birth == '' ? null : date('d-m-Y', strtotime($student->date_of_birth)), ['class' => 'form-control datetimepicker-input','id'=>'date_of_birth', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date_of_birth", 'placeholder' => 'YYYY-MM-DD', 'required'=>true]) !!}
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-6">
+																<div class="form-group">
+																	{{ Form::label('gender', 'Gender') }}
+																	{{ Form::select('gender', ['male' => 'Male', 'female' => 'Female'], null, ['class' => 'form-control', 'placeholder' => 'Select Gender']) }}
+																</div>
+															</div>
+															<div class="col-6">
+																<div class="form-group">
+																	{{ Form::label('religion', 'Religion') }}
+																	{{ Form::select('religion', ['islam' => 'Islam', 'hindu' => 'Hindu', 'christian' => 'Christian', 'others' => 'Others'], null, ['class' => 'form-control select2', 'placeholder' => 'Select Religion']) }}
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-6">
+																<div class="form-group">
+																	{{ Form::label('blood_group', 'Blood Group') }}
+																	{{ Form::select('blood_group', ['A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-', 'O+' => 'O+', 'O-' => 'O-', 'AB+' => 'AB+', 'AB-' => 'AB-', 'Unknown' => 'Unknown'], null, ['class' => 'form-control select2', 'placeholder' => 'Select Blood Group']) }}
+																</div>
+															</div>
+														</div>
+													</div>
+											</div>
+											<div class="row">
 													<div class="col-12 col-md-6 col-lg-6">
 														<h3>Present Address</h3>
+
 														<div class="form-group">
 															{{ Form::label('village', 'Village') }}
 															{{ Form::text('village', null, ['class' => 'form-control']) }}
@@ -142,15 +209,19 @@
 														</div>
 														<div class="form-group">
 															{{ Form::label('district_id', 'District') }}
-															{{ Form::select('district_id', $districts, null, ['class' => 'form-control', 'placeholder' => 'Select District']) }}
+															{{ Form::select('district_id', $districts, null, ['class' => 'form-control select2', 'placeholder' => 'Select District']) }}
 														</div>
 														<div class="form-group">
 															{{ Form::label('upazila_id', 'Thana/Upazila') }}
-															{{ Form::select('upazila_id', $upazilas, null, ['class' => 'form-control', 'placeholder' => 'Select Thana/Upazila']) }}
+															{{ Form::select('upazila_id', $upazilas, null, ['class' => 'form-control select2', 'placeholder' => 'Select Thana/Upazila']) }}
 														</div>
 													</div>
 													<div class="col-12 col-md-6 col-lg-6">
 														<h3>Permanent Address</h3>
+														<div class="custom-control custom-checkbox">
+															{{ Form::checkbox('sameAsPresent', 1, null, ['class' => 'custom-control-input', 'id' => 'sameAsPresent']) }}
+															{!! Form::label('sameAsPresent', __('Same As Present'),['class'=>'custom-control-label']) !!}
+														</div>
 														<div class="form-group">
 															{{ Form::label('permanent_village', 'Permanent Village') }}
 															{{ Form::text('permanent_village', null, ['class' => 'form-control']) }}
@@ -161,15 +232,15 @@
 														</div>
 														<div class="form-group">
 															{{ Form::label('permanent_district_id', 'Permanent District') }}
-															{{ Form::select('permanent_district_id', $districts, null, ['class' => 'form-control', 'placeholder' => 'Select District']) }}
+															{{ Form::select('permanent_district_id', $districts, null, ['class' => 'form-control select2', 'placeholder' => 'Select District']) }}
 														</div>
 														<div class="form-group">
 															{{ Form::label('permanent_upazila_id', 'Permanent Thana/Upazila') }}
-															{{ Form::select('permanent_upazila_id', $permanent_upazilas, null, ['class' => 'form-control', 'placeholder' => 'Select Thana/Upazila']) }}
+															{{ Form::select('permanent_upazila_id', $permanent_upazilas, null, ['class' => 'form-control select2', 'placeholder' => 'Select Thana/Upazila']) }}
 														</div>
 													</div>
 													{{ Form::hidden('id', $student->id) }}
-													{{ Form::button('Update Address', ['type' => 'submit', 'class' => 'btn btn-primary']) }}
+													{{ Form::button('Update', ['type' => 'submit', 'class' => 'btn btn-primary mt-3']) }}
 											</div>
 											{{ Form::close() }}
                     </div>
@@ -280,6 +351,25 @@
 													</div>
 												</div>
                     </div>
+                    <div class="tab-pane fade" id="nav-photograph" role="tabpanel" aria-labelledby="nav-photograph-tab">
+												<h2>Photograph</h2>
+												<div id="errorMsgPhoto"></div>
+												<img id="photoPreview" src="{{asset('/storage/'.$student->photo)}}" alt="" class="img-thumbnail" width="300 px">
+												<br>
+												<form action="{{route('student.photo.update')}}" method="POST" enctype="multipart/form-data">
+													@csrf
+													<label for="photo">Change Photo (Photo Size: 300px X 300px and File Size: 100kb)</label>
+													<input type="file" name="photo" class="" id="photo">
+												</form>
+
+												<img id="signaturePreview" src="{{asset('/storage/'.$student->signature)}}" alt="" class="img-thumbnail mt-3" width="300 px">
+												<br>
+												<form action="{{route('student.signature.update')}}" method="POST" enctype="multipart/form-data">
+													@csrf
+													<label for="signature">Change Signature (Photo Size: 300px X 80px and File Size: 40kb)</label>
+													<input type="file" name="signature" class="" id="signature">
+												</form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -295,7 +385,7 @@
 				</div>
 				<div class="modal-body">
 					<div id="errorMsgBasic"></div>
-					<form action="" id="basicForm" method="post">
+					{{-- <form action="" id="basicForm" method="post">
 						@csrf
 						<div class="form-group">
 							<label for="name">Name</label>
@@ -359,7 +449,7 @@
 						<div class="form-group">
 							<button type="submit" class="btn btn-primary">Save</button>
 						</div>
-					</form>
+					</form> --}}
 				</div>
 		</div>
 	</div>
@@ -403,15 +493,20 @@
                     <input type="text" name="passing_year" id="passing_year" class="form-control">
                 </div>
                 <div class="form-group">
-										<input name = "result_type" type = "radio" id="gpa" value = "gpa" checked> GPA
-										<input name = "result_type" type = "radio" id="division" value = "division"> Division
-                    <input type="text" name="result_gpa" id="result_gpa" class="form-control">
-										<select name="result_division" id="result_division" class="form-control d-none">
-											<option value="">Select Division</option>
-											<option value="1st">1st</option>
-											<option value="2nd">2nd</option>
-											<option value="3rd">3rd</option>
-										</select>
+					<input name = "result_type" type = "radio" id="gpa" value = "gpa" checked> GPA
+					<input name = "result_type" type = "radio" id="division" value = "division"> Division
+					<input name = "result_type" type = "radio" id="pass" value = "pass"> Pass
+					<div class="input-group" id="gpaInput">
+						<input type="text" name="result_gpa" id="result_gpa" class="form-control" placeholder="GPA">
+						<input type="text" name="out_of" id="out_of" class="form-control" placeholder="Out of">
+					</div>
+          <input type="text" name="result_pass" id="result_pass" class="form-control" value="Pass" readonly>
+					<select name="result_division" id="result_division" class="form-control d-none">
+						<option value="">Select Division</option>
+						<option value="1st">1st</option>
+						<option value="2nd">2nd</option>
+						<option value="3rd">3rd</option>
+					</select>
                 </div>
 
                 <button type="submit" class="btn btn-primary mt-3">Save</button>
@@ -526,7 +621,7 @@
                 url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
                 method: 'GET',
                 success: function(data) {
-                    console.log(data);                    
+                    //console.log(data);                    
                     if(data.status == true){
                         $('#edu_group_id').empty();
                         $('#edu_group_id').append('<option value="">Select Group</option>');
@@ -557,6 +652,18 @@
             });
 						$.LoadingOverlay("hide");
 					});
+
+		$("#sameAsPresent").change(function(){
+				if($(this).is(":checked")) {
+						$("#permanent_village").val($("#village").val());
+						$("#permanent_post_office").val($("#post_office").val());
+						$("#permanent_district_id").empty();
+						$("#permanent_district_id").append(`<option value='${$("#district_id").val()}'>${$("#district_id").find(':selected').text()}</option>`);
+						$("#permanent_district_id").val($("#district_id").val());
+						$("#permanent_upazila_id").append(`<option value='${$("#upazila_id").val()}'>${$("#upazila_id").find(':selected').text()}</option>`);
+						$("#permanent_upazila_id").val($("#upazila_id").val());
+				}
+		});
 
 // basic
 		$('#date_of_birth').datetimepicker({
@@ -642,7 +749,7 @@
 						method: 'POST',
 						data: formData,
 						success: function(data) {
-							console.log(data);
+							//console.log(data);
 							if(data.status == true){
 								$("#profile_name").text(data.student.name);
 								$("#profile_father_name").text(data.student.father_name);
@@ -682,11 +789,17 @@
 				$('input[name="result_type"]').on('change', function() {
 					var value = $("input[name='result_type']:checked").val();
 					if (value == 'gpa' || value == '') {
-						$('#result_gpa').removeClass('d-none');
+						$('#gpaInput').removeClass('d-none');
 						$('#result_division').addClass('d-none');
-					} else {
-						$('#result_gpa').addClass('d-none');
+						$('#result_pass').addClass('d-none');
+					} else if (value == 'division') {
+						$('#gpaInput').addClass('d-none');
 						$('#result_division').removeClass('d-none');
+						$('#result_pass').addClass('d-none');
+					}else{
+						$('#gpaInput').addClass('d-none');
+						$('#result_division').addClass('d-none');
+						$('#result_pass').removeClass('d-none');
 					}
 				});
     
@@ -786,9 +899,12 @@
 					if(data.education.result_type == 'gpa'){
 						$("#gpa").prop('checked', true);
 						$("#result_gpa").val(data.education.result);
-					} else {
+						$("#out_of").val(data.education.out_of);
+					} else if(data.education.result_type == 'division'){
 						$("#division").prop('checked', true);
 						$("#result_division").val(data.education.result).change();
+					} else{
+						$("#pass").prop('checked', true);
 					}
 					$("input[name='result_type']").change();
 					$('#newEduModal').modal('show');
@@ -1019,6 +1135,7 @@
 
 		$("#photo").change(function(){
 			$.LoadingOverlay("show");
+			$("#errorMsgPhoto").empty();
 			var photo = this.files[0];
 			let formData = new FormData();			
 			//const blob = new Blob([metadata], { type: 'application/json' });
@@ -1032,7 +1149,7 @@
 				contentType: false,
 				processData: false,
 				success: function(data){
-					console.log(data.errors);
+					//console.log(data.errors);
 					//$('#photoPreview').html(data);
 					if(data.status == true){
 						$("#photoPreview").attr('src', data.photo);
@@ -1041,6 +1158,39 @@
 								$("#errorMsgPhoto").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
 							}
 						data.errors.photo.forEach(function(element){
+							$("#errorMsgPhoto").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+						});
+					}
+				}
+			})
+			$.LoadingOverlay("hide");
+		});
+
+		$("#signature").change(function(){
+			$.LoadingOverlay("show");
+			$("#errorMsgPhoto").empty();
+			var signature = this.files[0];
+			let formData = new FormData();
+			//const blob = new Blob([metadata], { type: 'application/json' });
+			//formData.append('metadata', blob);
+			formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+			formData.append('signature', signature);
+			$.ajax({
+				url: "{{route('student.signature.update')}}",
+				method: 'POST',
+				data: formData,
+				contentType: false,
+				processData: false,
+				success: function(data){
+					//console.log(data.errors);
+					//$('#photoPreview').html(data);
+					if(data.status == true){
+						$("#signaturePreview").attr('src', data.signature);
+					}else{
+						if(data.message){
+								$("#errorMsgPhoto").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+							}
+						data.errors.signature.forEach(function(element){
 							$("#errorMsgPhoto").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
 						});
 					}

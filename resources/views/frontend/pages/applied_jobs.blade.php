@@ -15,7 +15,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group list-group-item"><a href="{{route('student.dashboard')}}">Dashboard</a></li>
                     <li class="list-group list-group-item"><a href="{{route('student.view_cv')}}">View CV</a></li>
-                    <li class="list-group list-group-item"><a href="{{route('/')}}">Apply Now</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('/')}}">Job List</a></li>
                     <li class="list-group list-group-item"><a href="{{route('student.applied_jobs')}}">Applied Jobs</a></li>
                 </ul>
             </div>
@@ -27,6 +27,7 @@
                 <h4>Applied Jobs</h4>
             </div>
             <div class="card-body">
+                @include('admin.layouts._message')
                 <table id="example1" class="table table-sm table-bordered table-striped">
 					<thead>
 					<tr>

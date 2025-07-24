@@ -16,7 +16,6 @@
 			@endif
 
 			<div class="_aboutcontenttext">
-				<h2>Our Story</h2>
 				{!! $page->body !!}
 			</div>
 		</div>

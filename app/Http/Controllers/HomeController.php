@@ -14,17 +14,17 @@ class HomeController extends Controller
         //return redirect()->route('login');
     }
 
-   public function page(Request $request, $branch, $page){
-        $page = Post::where('slug', $page)->where('branch_id', $request->branch->id)->first();
+   public function page(Request $request, $slug){
+        $page = Post::where('slug', $slug)->first();
         if($page){            
             return view('frontend.pages.single',compact('page'));
         }
         abort(404);
    }
 
-   public function section(Request $request, $branch, $post_type){
+   public function section(Request $request, $post_type){
         //dd($request->all(), $post_type);
-        $datas = Post::where('post_type','post_type')->where('branch_id', $request->branch->id)->latest()->get();
+        $datas = Post::where('post_type','post_type')->latest()->get();
         return view('frontend.pages.admission_result',compact('datas'));
    }
 

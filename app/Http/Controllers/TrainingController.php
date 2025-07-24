@@ -11,12 +11,12 @@ class TrainingController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'training_title' => 'required',
-            'topics_covered' => 'required',
+            'training_title' => 'required|max:150',
+            'topics_covered' => 'required|max:250',
             'training_year' => 'required',
-            'training_institute' => 'required',
-            'training_duration' => 'required',
-            'training_location' => 'required',
+            'training_institute' => 'required|max:150',
+            'training_duration' => 'required|max:150',
+            'training_location' => 'required|max:150',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
@@ -43,12 +43,12 @@ class TrainingController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'training_title' => 'required',
-            'topics_covered' => 'required',
+            'training_title' => 'required|max:150',
+            'topics_covered' => 'required|max:250',
             'training_year' => 'required',
-            'training_institute' => 'required',
-            'training_duration' => 'required',
-            'training_location' => 'required',
+            'training_institute' => 'required|max:150',
+            'training_duration' => 'required|max:150',
+            'training_location' => 'required|max:150',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);

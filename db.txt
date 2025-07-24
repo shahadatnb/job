@@ -20,3 +20,11 @@ ALTER TABLE `jobs` CHANGE `qualifications` `compensation_other_benefits` TEXT CH
 
 ALTER TABLE `job_applications` ADD `age` VARCHAR(50) NULL DEFAULT NULL AFTER `student_id`; 
 ALTER TABLE `job_applications` ADD `remarks` VARCHAR(255) NULL DEFAULT NULL AFTER `expected_salary`; 
+
+ALTER TABLE `sms_logs` DROP `branch_id`;
+ALTER TABLE `jobs` ADD `minimum_experience` SMALLINT UNSIGNED NOT NULL DEFAULT '0' AFTER `age_max`; 
+
+ALTER TABLE `student_education` CHANGE `result_type` `result_type` ENUM('gpa','division','pass') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
+ALTER TABLE `students` ADD `signature` VARCHAR(200) NULL DEFAULT NULL AFTER `photo`; 
+
+ALTER TABLE `students` ADD `otp` INT NULL DEFAULT NULL AFTER `signature`; 

@@ -30,24 +30,36 @@ class CustomHelper
         return Language::pluck($lan,'code')->toArray();
     }
 
+    public function send_sms($to,$message,$type='text'){
+        $url = config('settings.sms_domain_url',null)."/sendtext?apikey=".config('settings.sms_api_key')."&secretkey=".config('settings.sms_secretkey',null)."&callerID=12345&toUser=".$to."&messageContent=".urlencode($message);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		//curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        return curl_exec($ch);
+    }
+
+    /*
     public function send_sms($to,$message) {
-    $url = config('settings.sms_domain_url',null)."/smsapi";
-    $data = [
-        "api_key" => config('settings.sms_api_key'),
-        "type" => "text",
-        "contacts" => $to,
-        "senderid" => config('settings.sms_senderid',null),
-        "msg" => $message,//urlencode(),
-    ];
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    return $response;
+        $url = config('settings.sms_domain_url',null)."/smsapi";
+        $data = [
+            "api_key" => config('settings.sms_api_key'),
+            "type" => "text",
+            "contacts" => $to,
+            "senderid" => config('settings.sms_senderid',null),
+            "msg" => $message,//urlencode(),
+        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        return $response;
     }
 
     function send_sms_many() {
@@ -76,7 +88,7 @@ class CustomHelper
         curl_close($ch);
         return $response;
       }
-
+*/
     
 
     public function posts($arg1){
@@ -92,14 +104,12 @@ class CustomHelper
         ];
 
         $arg = array_merge($arg,$arg1);
-        $post = Post::where('branch_id',$arg['branch_id']);
+        $post = Post::where('status',1);
         if($arg['cat']){
             $post = Post::whereHas('taxonomy', function($q) use ($arg){
                 $q->whereIn('slug', $arg['cat']);
-            })->where('status',1);
-        }else{
-            $post = Post::where('status',1);
-        }        
+            });
+        }
         
         $post = $post->where('post_type',$arg['post_type'])
             ->orderBy($arg['orderBy'],$arg['orderType']);
