@@ -48,12 +48,12 @@ class Student extends Authenticatable
 
     public function educations()
     {
-        return $this->hasMany(StudentEducation::class);
+        return $this->hasMany(StudentEducation::class)->orderBy('passing_year', 'desc');
     }
 
     public function employments()
     {
-        return $this->hasMany(StudentEmployment::class);
+        return $this->hasMany(StudentEmployment::class)->orderBy('end_date', 'desc');
     }
 
     public function trainings()
@@ -68,7 +68,17 @@ class Student extends Authenticatable
 
     public function certifications()
     {
-        return $this->hasMany(StudentCertification::class);
+        return $this->hasMany(ProfessionalCertificate::class)->orderBy('end_date', 'desc');
+    }
+
+    public function references()
+    {
+        return $this->hasMany(References::class);
+    }
+
+    public function languages()
+    {
+        return $this->hasMany(LanguageProficiency::class);
     }
 
 }

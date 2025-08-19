@@ -14,7 +14,7 @@ class EmploymentController extends Controller
             'company_name' => 'required',
             'job_title' => 'required',
             'start_date' => 'required:date',
-            'end_date' => 'required',
+            'end_date' => 'required_if:is_current,0|date',
             'job_description' => 'required',
             'company_location' => 'required',
         ]);
@@ -29,9 +29,10 @@ class EmploymentController extends Controller
         $student_employment->company_name = $request->company_name;
         $student_employment->job_title = $request->job_title;
         $student_employment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
-        $student_employment->end_date = Carbon::parse($request->end_date)->format('Y-m-d');// $request->end_date;
+        $student_employment->end_date = $request->is_current ? null : Carbon::parse($request->end_date)->format('Y-m-d');// $request->end_date;
         $student_employment->job_description = $request->job_description;
         $student_employment->company_location = $request->company_location;
+        $student_employment->is_current = $request->is_current ? 1 : 0;
         $student_employment->save();
         return response()->json(['status' => true, 'type'=> 'save', 'employment'=> $student_employment, 'message' => 'Education saved successfully']);
     }
@@ -41,7 +42,7 @@ class EmploymentController extends Controller
             'company_name' => 'required',
             'job_title' => 'required',
             'start_date' => 'required:date',
-            'end_date' => 'required|date',
+            'end_date' => 'required_if:is_current,0|date',
             'job_description' => 'required',
             'company_location' => 'required',
         ]);
@@ -54,9 +55,10 @@ class EmploymentController extends Controller
         $student_employment->company_name = $request->company_name;
         $student_employment->job_title = $request->job_title;
         $student_employment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
-        $student_employment->end_date = Carbon::parse($request->end_date)->format('Y-m-d');// $request->end_date;
+        $student_employment->end_date = $request->is_current ? null : Carbon::parse($request->end_date)->format('Y-m-d');// $request->end_date;
         $student_employment->job_description = $request->job_description;
         $student_employment->company_location = $request->company_location;
+        $student_employment->is_current = $request->is_current ? 1 : 0;
         $student_employment->save();
         return response()->json(['status' => true, 'type'=> 'update', 'employment'=> $student_employment, 'message' => 'Education updated successfully']);
     }

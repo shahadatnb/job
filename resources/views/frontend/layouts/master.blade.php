@@ -66,7 +66,7 @@
         </div>
         <!-- Spinner End -->
 
-        <div class="headertop clearfix">
+        <div class="headertop clearfix d-print-none">
             <div class="">
                 <div class="row">
                     <!-- Address -->
@@ -213,6 +213,7 @@
     <script src="{{asset('/assets/frontend')}}/lib/waypoints/waypoints.min.js"></script>
     {{-- <script src="{{asset('/assets/frontend')}}/lib/owlcarousel/owl.carousel.min.js"></script> --}}
 	@yield('js')
+    @stack('js')
     <!-- Template Javascript -->
     <script src="{{asset('/assets/frontend')}}/js/main.js"></script>
 

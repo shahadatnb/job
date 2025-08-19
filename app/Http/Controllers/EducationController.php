@@ -24,7 +24,7 @@ class EducationController extends Controller
             'edu_level_id' => 'required',
             'edu_group_id' => 'required',
             'edu_board_id' => 'nullable',
-            'university' => 'nullable',
+            'university' => 'required|string|max:100',
             'passing_year' => 'required',
             'result_type' => 'required',
             'result_gpa' => 'nullable|required_if:result_type,gpa|numeric|max:5',
@@ -36,6 +36,9 @@ class EducationController extends Controller
             'out_of.required_if' => 'Out of is required',
             'result_division.required_if' => 'Division is required',
             'result_pass.required_if' => 'Pass is required',
+            'university.required' => 'Institute name is required',
+            'university.string' => 'Institute name must be a string',
+            'university.max' => 'Institute name must be less than 100 characters',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
@@ -54,7 +57,7 @@ class EducationController extends Controller
 
         $edu->student_id = auth('student')->user()->id;
         $edu->edu_level_id = $request->edu_level_id;
-        $edu->edu_group_id = $request->edu_group_id;
+        $edu->edu_group_id = $request->edu_group_id != 0 ? $request->edu_group_id : null;
         $edu->edu_board_id = $request->edu_board_id;
         $edu->university = $request->university;
         $edu->passing_year = $request->passing_year;
@@ -64,7 +67,7 @@ class EducationController extends Controller
         
         $education = StudentEducation::find($edu->id);
         $education->exam_name = $education->exam? $education->exam->name : '';
-        $education->board_name = $education->board? $education->board->name : $education->university;
+        $education->board_name = $education->board? $education->board->name : '';
         $education->group_name = $education->group? $education->group->name : ''; 
 
         return response()->json(['status' => true, 'type'=> 'save', 'education'=> $education, 'message' => 'Education saved successfully']);
@@ -84,7 +87,7 @@ class EducationController extends Controller
             'edu_level_id' => 'required',
             'edu_group_id' => 'required',
             'edu_board_id' => 'nullable',
-            'university' => 'nullable',
+            'university' => 'required|string|max:100',
             'passing_year' => 'required',
             'result_type' => 'required',
             'result_gpa' => 'nullable|required_if:result_type,gpa|numeric|max:5',
@@ -96,6 +99,9 @@ class EducationController extends Controller
             'out_of.required_if' => 'Out of is required',
             'result_division.required_if' => 'Division is required',
             'result_pass.required_if' => 'Pass is required',
+            'university.required' => 'Institute name is required',
+            'university.string' => 'Institute name must be a string',
+            'university.max' => 'Institute name must be less than 100 characters',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
@@ -112,7 +118,7 @@ class EducationController extends Controller
         }
         //$result = $request->result_type == 'gpa' ?  $request->result_gpa : $request->result_division;
         $edu->edu_level_id = $request->edu_level_id;
-        $edu->edu_group_id = $request->edu_group_id;
+        $edu->edu_group_id = $request->edu_group_id != 0 ? $request->edu_group_id : null;
         $edu->edu_board_id = $request->edu_board_id;
         $edu->university = $request->university;
         $edu->passing_year = $request->passing_year;
@@ -122,7 +128,7 @@ class EducationController extends Controller
         
         $education = StudentEducation::find($edu->id);
         $education->exam_name = $education->exam? $education->exam->name : '';
-        $education->board_name = $education->board? $education->board->name : $education->university;
+        $education->board_name = $education->board? $education->board->name : '';
         $education->group_name = $education->group? $education->group->name : '';  
 
         return response()->json(['status' => true, 'type'=> 'update', 'education'=> $education, 'message' => 'Education updated successfully']);

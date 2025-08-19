@@ -1,30 +1,3 @@
-ALTER TABLE `students` ADD `photo` VARCHAR(150) NULL DEFAULT NULL AFTER `parmanent_district_id`; 
-ALTER TABLE `students` CHANGE `parmanent_village` `permanent_village` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `parmanent_post_office` `permanent_post_office` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `parmanent_post_code` `permanent_post_code` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `parmanent_upazila_id` `permanent_upazila_id` INT UNSIGNED NULL DEFAULT NULL, CHANGE `parmanent_district_id` `permanent_district_id` INT UNSIGNED NULL DEFAULT NULL; 
+ALTER TABLE `students` ADD `objective` TEXT NULL DEFAULT NULL AFTER `permanent_district_id`, ADD `present_salary` DECIMAL(6) NULL DEFAULT NULL AFTER `objective`, ADD `expected_salary` DECIMAL(6) NULL DEFAULT NULL AFTER `present_salary`, ADD `looking_for` ENUM("Entry Level","Mid Level","Top Level") NULL DEFAULT NULL COMMENT 'Job Level' AFTER `expected_salary`, ADD `available_for` ENUM("Full Time","Part Time","Contract","Internship","Freelance") NULL DEFAULT NULL COMMENT 'Job Nature' AFTER `looking_for`, ADD `career_summary` TEXT NULL DEFAULT NULL AFTER `available_for`, ADD `special_qualification` TEXT NULL DEFAULT NULL AFTER `career_summary`, ADD `keywords` VARCHAR(255) NULL DEFAULT NULL AFTER `special_qualification`; 
 
-
-ALTER TABLE `student_education` ADD `result_type` ENUM('gpa','division') NULL DEFAULT NULL AFTER `passing_year`; 
-ALTER TABLE `student_education` CHANGE `gpa` `result` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
-
-ALTER TABLE `student_education` CHANGE `edu_board_id` `edu_board_id` BIGINT UNSIGNED NULL DEFAULT NULL; 
-ALTER TABLE `student_education` ADD `university` VARCHAR(255) NULL DEFAULT NULL AFTER `edu_board_id`; 
-
-ALTER TABLE `jobs` CHANGE `age_limit` `age_min` SMALLINT UNSIGNED NULL DEFAULT NULL COMMENT 'Age Limit in Year'; 
-ALTER TABLE `jobs` ADD `age_max` SMALLINT UNSIGNED NULL DEFAULT NULL AFTER `age_min`; 
-ALTER TABLE `jobs` ADD `gender` ENUM('Male','Female','Any') NULL DEFAULT NULL AFTER `age_max`; 
-ALTER TABLE `students` CHANGE `gender` `gender` ENUM('Male','Female','Other') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
-ALTER TABLE `jobs` ADD `edu_level_id` BIGINT UNSIGNED NULL DEFAULT NULL AFTER `gender`, ADD `edu_group_any` TINYINT UNSIGNED NULL DEFAULT '0' AFTER `edu_level_id`; 
-ALTER TABLE `jobs` ADD `edu_group_ids` JSON NULL DEFAULT NULL AFTER `edu_group_any`; 
-ALTER TABLE `jobs` CHANGE `description` `requirements` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
-ALTER TABLE `jobs` CHANGE `qualifications` `compensation_other_benefits` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
-
-
-ALTER TABLE `job_applications` ADD `age` VARCHAR(50) NULL DEFAULT NULL AFTER `student_id`; 
-ALTER TABLE `job_applications` ADD `remarks` VARCHAR(255) NULL DEFAULT NULL AFTER `expected_salary`; 
-
-ALTER TABLE `sms_logs` DROP `branch_id`;
-ALTER TABLE `jobs` ADD `minimum_experience` SMALLINT UNSIGNED NOT NULL DEFAULT '0' AFTER `age_max`; 
-
-ALTER TABLE `student_education` CHANGE `result_type` `result_type` ENUM('gpa','division','pass') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL; 
-ALTER TABLE `students` ADD `signature` VARCHAR(200) NULL DEFAULT NULL AFTER `photo`; 
-
-ALTER TABLE `students` ADD `otp` INT NULL DEFAULT NULL AFTER `signature`; 
+ALTER TABLE `student_education` CHANGE `edu_group_id` `edu_group_id` BIGINT UNSIGNED NULL DEFAULT NULL; 

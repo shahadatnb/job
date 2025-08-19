@@ -9,6 +9,7 @@ use App\Models\JobApplication;
 use App\Models\ApplicationStatus;
 use App\Models\Job;
 use App\Models\EduGroup;
+use App\Models\JobSignature;
 use Carbon\Carbon;
 
 class JobApplicationController extends Controller
@@ -19,30 +20,46 @@ class JobApplicationController extends Controller
             'job_id' => 'required',
             'expected_salary' => 'required|numeric',
         ]);
-
         $user = auth('student')->user();
 
-        if ($validator->fails()) {
-            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
-        }
-
         $job = Job::find($request->job_id);
+        
+        if(!$job) {
+            return response()->json(['status' => false, 'message' => 'Job not found']);
+        }else{
+            $check_duplicate = JobApplication::where('job_id', $job->id)->where('student_id', auth('student')->user()->id)->first();
+            if($check_duplicate) {
+                //return response()->json(['status' => false, 'message' => 'You have already applied for this job']);
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('duplicate', 'You have already applied for this job');
+                });
+            }
+        }
 
         // check job is active or not
         if($job->status == 0) {
-            return response()->json(['status' => false, 'message' => 'Job is not active']);
+            //return response()->json(['status' => false, 'message' => 'Job is not active']);
+            $validator->after(function ($validator) {
+                $validator->errors()->add('job', 'Job is not active');
+            });            
         }
 
         // check job is expired or not
         if($job->last_date < date('Y-m-d')) {
-            return response()->json(['status' => false, 'message' => 'Job is expired']);
+            //return response()->json(['status' => false, 'message' => 'Job is expired']);
+            $validator->after(function ($validator) {
+                $validator->errors()->add('job_expired', 'Job is expired');
+            });  
         }
 
         // age limit check
         $current_age = Carbon::parse($user->date_of_birth)->age; 
         //return response()->json(['status' => false, 'message' => $current_age]);
         if($job->age_min > $current_age || $job->age_max < $current_age) {
-            return response()->json(['status' => false, 'message' => 'You are not eligible for this job for age']);
+            //return response()->json(['status' => false, 'message' => 'You are not eligible for this job for age']);
+            $validator->after(function ($validator) {
+                $validator->errors()->add('age', 'You are not eligible for this job for age');
+            });
         }
 
         // experience check
@@ -52,12 +69,18 @@ class JobApplicationController extends Controller
             $total_experience += $length>0 ? number_format($length/365,1) : 0;
         endforeach;
         if($job->minimum_experience > $total_experience) {
-            return response()->json(['status' => false, 'message' => 'Your experience is not eligible for this job']);
+            //return response()->json(['status' => false, 'message' => 'Your experience is not eligible for this job']);
+            $validator->after(function ($validator) {
+                $validator->errors()->add('experience', 'Your experience is not eligible for this job');
+            });
         }
 
         // gender limit check
         if($job->gender != $user->gender && $job->gender != 'Any') {
-            return response()->json(['status' => false, 'message' => 'You are not eligible for this job for gender']);
+            //return response()->json(['status' => false, 'message' => 'You are not eligible for this job for gender']);
+            $validator->after(function ($validator) {
+                $validator->errors()->add('gender', 'You are not eligible for this job for gender');
+            });
         }
 
 
@@ -69,6 +92,14 @@ class JobApplicationController extends Controller
         if(in_array($job->edu_level_id, $education_levels) == false) {
             $education_status = false;
             //return response()->json(['status' => false, 'message' => 'You are not eligible for this job for education level']);
+        }
+
+        // photo and signature check
+        if($user->photo == '' || $user->signature == '') {
+            //return response()->json(['status' => false, 'message' => 'Please upload your photo and signature']);
+            $validator->after(function ($validator) {
+                $validator->errors()->add('file', 'Please upload your photo and signature');
+            });
         }
 
         // edu group limit check
@@ -104,16 +135,15 @@ class JobApplicationController extends Controller
         }
 
         if($education_status == false && $education_status2 == false) {
-            return response()->json(['status' => false, 'message' => 'You are not eligible for this job for education']);
+            //return response()->json(['status' => false, 'message' => 'You are not eligible for this job for education']);
+            $validator->after(function ($validator) {
+                $validator->errors()->add('experience', 'Your experience is not eligible for this job');
+            });
         }
 
-        if(!$job) {
-            return response()->json(['status' => false, 'message' => 'Job not found']);
-        }else{
-            $check_duplicate = JobApplication::where('job_id', $job->id)->where('student_id', auth('student')->user()->id)->first();
-            if($check_duplicate) {
-                return response()->json(['status' => false, 'message' => 'You have already applied for this job']);
-            }
+        // error message
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
         $job_application = new JobApplication();
@@ -159,14 +189,16 @@ class JobApplicationController extends Controller
     {
         $data = ['job_id'=>'','status'=>'','job_title'=>'','email'=>'','phone'=>''];
         $jobs = Job::where('status', 1)->pluck('title', 'id');
-        $applied_jobs = JobApplication::with('job')->latest();
+        $applied_jobs = JobApplication::with('job')->with('student')->latest();
         $applicationStatus = ApplicationStatus::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
+        $jobSignature = [];
         if(!empty($request->job_id)) {
             $data['job_id'] = $request->job_id;
             $data['job_title'] = $jobs[$request->job_id];
             $applied_jobs = $applied_jobs->whereHas('job', function ($query) use ($request) {
                 $query->where('id', $request->job_id);
             });
+            $jobSignature = JobSignature::where('job_id', $data['job_id'])->with('signature')->orderBy('serial', 'asc')->get();
         }
         if(!empty($request->email)) {
             $data['email'] = $request->email;
@@ -187,7 +219,7 @@ class JobApplicationController extends Controller
         }
 
         $applied_jobs = $applied_jobs->paginate(300);
-        return view('admin.job.applied_jobs', compact('applied_jobs', 'data', 'jobs','applicationStatus'));
+        return view('admin.job.applied_jobs', compact('applied_jobs', 'data', 'jobs','applicationStatus','jobSignature'));
     }
 
     public function application_status(Request $request)

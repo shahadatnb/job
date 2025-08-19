@@ -25,7 +25,8 @@ class JobController extends Controller
         $exams = EduLevel::where('is_active', 1)->pluck('name', 'id');
         $designations = Designation::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
         $eduGroups = [];
-        return view('admin.job.createOrEdit', compact('designations', 'exams', 'eduGroups'));
+        $eduGroups2 = [];
+        return view('admin.job.createOrEdit', compact('designations', 'exams', 'eduGroups', 'eduGroups2'));
     }
 
     /**
@@ -49,6 +50,7 @@ class JobController extends Controller
             'edu_group2_ids' => 'required_without:edu_group2_any',
         ],[
             'edu_group_ids.required_without' => 'Please select at least one education group',
+            'edu_group2_ids.required_without' => 'Please select at least one education group for second level',
         ]);
 
         $job = new Job();
@@ -73,7 +75,9 @@ class JobController extends Controller
         $job->edu_group2_ids = json_encode($request->edu_group2_ids);
         $job->salary = $request->salary;
         $job->nagotiable = $request->nagotiable;
-        $job->status = 1;
+        if($request->save == 'publish'){
+            $job->status = 1;
+        }
         $job->save();
 
         session()->flash('success','Successfully Save');
@@ -134,6 +138,7 @@ class JobController extends Controller
             'edu_group2_ids' => 'required_without:edu_group2_any',
         ],[
             'edu_group_ids.required_without' => 'Please select at least one education group',
+            'edu_group2_ids.required_without' => 'Please select at least one education group for second level',
         ]);
 
         //dd(json_encode($request->edu_group_ids));
@@ -159,12 +164,16 @@ class JobController extends Controller
         $job->edu_group2_ids = json_encode($request->edu_group2_ids);
         $job->salary = $request->salary;
         $job->nagotiable = $request->nagotiable;
-        $job->status = $request->status;
+        if($request->save == 'publish'){
+            $job->status = 1;
+        }elseif($request->save == 'draft'){
+            $job->status = 0;
+        }
         $job->save();
 
         session()->flash('success','Successfully Update');
 
-        return redirect()->route('job.index');
+        return redirect()->back();
     }
 
     /**

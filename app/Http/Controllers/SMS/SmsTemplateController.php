@@ -19,7 +19,7 @@ class SmsTemplateController extends Controller
 
     public function store(Request $request){
         $this->validate($request, array(
-            'title'=>'required|max:255:unique:sms_templates,title',
+            'title'=>'required|max:255|unique:sms_templates,title',
             'content'=>'required|string',
         ));
         

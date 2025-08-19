@@ -49,12 +49,12 @@
     <div class="col-12 col-md-9 col-lg-9 mt-3">
         <div class="card">
             <div class="card-header">
-                <h4>Profile
-					@if(Session::has('job_info'))
-						|| Post Name: {{Session::get('job_info')['job_title']}}
-						<a class="btn btn-sm btn-success" href="{{ route('job.job_detail',Session::get('job_info')['job_id']) }}">Applay now</a>						
-					@endif
-				</h4>
+							<h4>Profile
+								@if(Session::has('job_info'))
+									|| Post Name: {{Session::get('job_info')['job_title']}}
+									<a class="btn btn-sm btn-success" href="{{ route('job.job_detail',Session::get('job_info')['job_id']) }}">Applay now</a>						
+								@endif
+							</h4>
             </div>
             <div class="card-body">
                 <nav>
@@ -62,294 +62,22 @@
                         <button class="nav-link active" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#nav-basic" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Basic</button>
                         <button class="nav-link" id="nav-education-tab" data-bs-toggle="tab" data-bs-target="#nav-education" type="button" role="tab" aria-controls="nav-education" aria-selected="false">Education/Training</button>
                         <button class="nav-link" id="nav-employment-tab" data-bs-toggle="tab" data-bs-target="#nav-employment" type="button" role="tab" aria-controls="nav-employment" aria-selected="false">Employment</button>
-                        <button class="nav-link" id="nav-others-tab" data-bs-toggle="tab" data-bs-target="#nav-others" type="button" role="tab" aria-controls="nav-others" aria-selected="false">Skills</button>
+                        <button class="nav-link" id="nav-others-tab" data-bs-toggle="tab" data-bs-target="#nav-others" type="button" role="tab" aria-controls="nav-others" aria-selected="false">Other Information</button>
                         <button class="nav-link" id="nav-photograph-tab" data-bs-toggle="tab" data-bs-target="#nav-photograph" type="button" role="tab" aria-controls="nav-employment" aria-selected="false">Photograph</button>
                     </div>
                 </nav>
                 <div class="tab-content p-3 border bg-light" id="nav-profile">
                     <div class="tab-pane fade active show" id="nav-basic" role="tabpanel" aria-labelledby="nav-home-tab">
-											<div class="row">
-													{{-- <div class="col-12 col-md-6 col-lg-6">
-														<div class="d-flex justify-content-between">
-															<h2 class="d-inline-block">Basic Information</h2>
-															<button class="btn btn-sm btn-primary" id="btnBasicModal">Edit</button>
-														</div>
-														<table class="table table-sm">
-															<tbody id="basicTable">
-																<tr>
-																		<th>Name</th>
-																		<td id="profile_name">{{ $student->name }}</td>
-																</tr>
-																<tr>
-																		<th>Father Name</th>
-																		<td id="profile_father_name">{{ $student->father_name }}</td>
-																</tr>
-																<tr>
-																		<th>Mother Name</th>
-																		<td id="profile_mother_name">{{ $student->mother_name }}</td>
-																</tr>
-																<tr>
-																		<th>Email</th>
-																		<td id="profile_email">{{ $student->email }}</td>
-																</tr>
-																<tr>
-																		<th>Phone</th>
-																		<td id="profile_phone">{{ $student->phone }}</td>
-																</tr>
-																<tr>
-																		<th>NID</th>
-																		<td id="profile_nid">{{ $student->nid }}</td>
-																</tr>
-																<tr>
-																		<th>Date of Birth</th>
-																		<td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($student->date_of_birth)) }}</td>
-																</tr>
-																<tr>
-																		<th>Gender</th>
-																		<td id="profile_gender">{{ $student->gender }}</td>
-																</tr>
-																<tr>
-																		<th>Religion</th>
-																		<td id="profile_religion">{{ $student->religion }}</td>
-																</tr>
-																<tr>
-																		<th>Blood Group</th>
-																		<td id="profile_blood_group">{{ $student->blood_group }}</td>
-																</tr>
-															</tbody>
-														</table>
-													</div> --}}
-											</div>
-											<div id="errorMsgAddress"></div>
-											{!! Form::model($student, ['route'=>['student.address.update', $student], 'method'=>'POST', 'id' => 'updateAddress']) !!}
-											<div class="row">
-													<div class="col-12 mb-3">
-														<h3>Basic Information</h3>
-														<div class="form-group">
-															{{ Form::label('name', 'Name') }}
-															{{ Form::text('name', null, ['class' => 'form-control']) }}
-														</div>
-														<div class="row">
-															<div class="col-6">
-																<div class="form-group">
-																	{{ Form::label('father_name', 'Father Name') }}
-																	{{ Form::text('father_name', null, ['class' => 'form-control']) }}
-																</div>
-															</div>
-															<div class="col-6">
-																<div class="form-group">
-																	{{ Form::label('mother_name', 'Mother Name') }}
-																	{{ Form::text('mother_name', null, ['class' => 'form-control']) }}
-																</div>
-															</div>
-														</div>
-														<div class="row">
-															<div class="col-6">
-																<div class="form-group">
-																	{{ Form::label('email', 'Email') }}
-																	{{ Form::email('email', null, ['class' => 'form-control']) }}
-																</div>
-															</div>
-															<div class="col-6">
-																<div class="form-group">
-																	{{ Form::label('phone', 'Phone') }}
-																	{{ Form::text('phone', null, ['class' => 'form-control']) }}
-																</div>
-															</div>
-														</div>
-														<div class="row">
-															<div class="col-6">
-																<div class="form-group">
-																	{{ Form::label('nid', 'NID') }}
-																	{{ Form::text('nid', null, ['class' => 'form-control']) }}
-																</div>
-															</div>
-															<div class="col-6">
-																<div class="form-group">
-																	{{ Form::label('date_of_birth', 'Date of Birth') }}
-																	{!! Form::text('date_of_birth', $student->date_of_birth == '' ? null : date('d-m-Y', strtotime($student->date_of_birth)), ['class' => 'form-control datetimepicker-input','id'=>'date_of_birth', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date_of_birth", 'placeholder' => 'YYYY-MM-DD', 'required'=>true]) !!}
-																</div>
-															</div>
-														</div>
-														<div class="row">
-															<div class="col-6">
-																<div class="form-group">
-																	{{ Form::label('gender', 'Gender') }}
-																	{{ Form::select('gender', ['male' => 'Male', 'female' => 'Female'], null, ['class' => 'form-control', 'placeholder' => 'Select Gender']) }}
-																</div>
-															</div>
-															<div class="col-6">
-																<div class="form-group">
-																	{{ Form::label('religion', 'Religion') }}
-																	{{ Form::select('religion', ['islam' => 'Islam', 'hindu' => 'Hindu', 'christian' => 'Christian', 'others' => 'Others'], null, ['class' => 'form-control select2', 'placeholder' => 'Select Religion']) }}
-																</div>
-															</div>
-														</div>
-														<div class="row">
-															<div class="col-6">
-																<div class="form-group">
-																	{{ Form::label('blood_group', 'Blood Group') }}
-																	{{ Form::select('blood_group', ['A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-', 'O+' => 'O+', 'O-' => 'O-', 'AB+' => 'AB+', 'AB-' => 'AB-', 'Unknown' => 'Unknown'], null, ['class' => 'form-control select2', 'placeholder' => 'Select Blood Group']) }}
-																</div>
-															</div>
-														</div>
-													</div>
-											</div>
-											<div class="row">
-													<div class="col-12 col-md-6 col-lg-6">
-														<h3>Present Address</h3>
-
-														<div class="form-group">
-															{{ Form::label('village', 'Village') }}
-															{{ Form::text('village', null, ['class' => 'form-control']) }}
-														</div>
-														<div class="form-group">
-															{{ Form::label('post_office', 'Post Office') }}
-															{{ Form::text('post_office', null, ['class' => 'form-control']) }}
-														</div>
-														<div class="form-group">
-															{{ Form::label('district_id', 'District') }}
-															{{ Form::select('district_id', $districts, null, ['class' => 'form-control select2', 'placeholder' => 'Select District']) }}
-														</div>
-														<div class="form-group">
-															{{ Form::label('upazila_id', 'Thana/Upazila') }}
-															{{ Form::select('upazila_id', $upazilas, null, ['class' => 'form-control select2', 'placeholder' => 'Select Thana/Upazila']) }}
-														</div>
-													</div>
-													<div class="col-12 col-md-6 col-lg-6">
-														<h3>Permanent Address</h3>
-														<div class="custom-control custom-checkbox">
-															{{ Form::checkbox('sameAsPresent', 1, null, ['class' => 'custom-control-input', 'id' => 'sameAsPresent']) }}
-															{!! Form::label('sameAsPresent', __('Same As Present'),['class'=>'custom-control-label']) !!}
-														</div>
-														<div class="form-group">
-															{{ Form::label('permanent_village', 'Permanent Village') }}
-															{{ Form::text('permanent_village', null, ['class' => 'form-control']) }}
-														</div>
-														<div class="form-group">
-															{{ Form::label('permanent_post_office', 'Permanent Post Office') }}
-															{{ Form::text('permanent_post_office', null, ['class' => 'form-control']) }}
-														</div>
-														<div class="form-group">
-															{{ Form::label('permanent_district_id', 'Permanent District') }}
-															{{ Form::select('permanent_district_id', $districts, null, ['class' => 'form-control select2', 'placeholder' => 'Select District']) }}
-														</div>
-														<div class="form-group">
-															{{ Form::label('permanent_upazila_id', 'Permanent Thana/Upazila') }}
-															{{ Form::select('permanent_upazila_id', $permanent_upazilas, null, ['class' => 'form-control select2', 'placeholder' => 'Select Thana/Upazila']) }}
-														</div>
-													</div>
-													{{ Form::hidden('id', $student->id) }}
-													{{ Form::button('Update', ['type' => 'submit', 'class' => 'btn btn-primary mt-3']) }}
-											</div>
-											{{ Form::close() }}
+											@include('frontend.pages.profile.basic')
                     </div>
                     <div class="tab-pane fade" id="nav-education" role="tabpanel" aria-labelledby="nav-education-tab">
-                        <h2>Academic Summary</h2>
-                        <table class="table table-sm">
-													<thead>
-                            <tr>
-                                <th>Exam</th>
-                                <th>Group</th>
-                                <th>Board/University</th>
-                                <th>Year</th>
-                                <th>Result</th>
-                                <th>Action</th>
-                            </tr>
-                        	</thead>
-							            <tbody id="academicTable">
-                            @foreach($student->educations as $edu)
-                            <tr data-id="{{ $edu->id }}">
-                                <td>{{ $edu->exam->name }}</td>
-                                <td>{{ $edu->group->name }}</td>
-                                <td>{{ $edu->board ? $edu->board->name : $edu->university }}</td>
-                                <td>{{ $edu->passing_year }}</td>    
-                                <td>{{ $edu->result }}</td>
-																<td>
-																	<button class="btn btn-sm btn-primary editAcademic" data-id="{{ $edu->id }}">Edit</button>
-																	<button class="btn btn-sm btn-danger deleteAcademic" data-id="{{ $edu->id }}">Delete</button>
-																</td>
-                            </tr>
-                            @endforeach
-													</tbody>
-                        </table>
-                        <button class="btn btn-primary" id="newAcademicModal">New Entry</button>
-                        <h2>Training Summary</h2>
-                        <table class="table table-sm">
-													<thead>
-                            <tr>
-																<th>Title</th>
-																<th>Topics Covered</th>
-																<th>Year</th>
-																<th>Institute</th>
-																<th>Duration</th>
-																<th>Location</th>
-                                <th>Action</th>
-                            </tr>
-													</thead>
-													<tbody id="trainingTable">
-                            @foreach($student->trainings as $edu)
-                            <tr data-id="{{ $edu->id }}">
-                                <td>{{ $edu->training_title }}</td>
-                                <td>{{ $edu->topics_covered }}</td>
-                                <td>{{ $edu->training_year }}</td>
-                                <td>{{ $edu->training_institute }}</td>
-                                <td>{{ $edu->training_duration }}</td>
-                                <td>{{ $edu->training_location }}</td>
-																<td>
-																		<button class="btn btn-sm btn-primary editTraining" data-id="{{ $edu->id }}">Edit</button>
-																		<button class="btn btn-sm btn-danger deleteTraining" data-id="{{ $edu->id }}">Delete</button>
-																</td>
-                            </tr>
-                            @endforeach
-													</tbody>
-                        </table>
-                        <button class="btn btn-primary" id="btnTrainingModal">New Entry</button>
+											@include('frontend.pages.profile.education')
                     </div>
                     <div class="tab-pane fade" id="nav-employment" role="tabpanel" aria-labelledby="nav-employment-tab">
-                        <h2>Employment</h2>
-												<table class="table table-sm">
-													<thead>
-														<tr>
-																<th>Job Title</th>
-																<th>Company</th>
-																<th>Job Description</th>
-																<th>Form</th>
-																<th>To</th>
-																<th>Action</th>
-														</tr>
-													</thead>
-													<tbody id="employmentTable">
-														@foreach($student->employments as $edu)
-														<tr data-id="{{ $edu->id }}">
-																<td>{{ $edu->job_title }}</td>
-																<td>{{ $edu->company_name }}</td>
-																<td>{{ $edu->job_description }}</td>
-																<td>{{ date('d-m-Y', strtotime($edu->start_date)) }}</td>
-																<td>{{ date('d-m-Y', strtotime($edu->end_date)) }}</td>
-																<td>
-																		<button class="btn btn-sm btn-primary editEmployment" data-id="{{ $edu->id }}">Edit</button>
-																		<button class="btn btn-sm btn-danger deleteEmployment" data-id="{{ $edu->id }}">Delete</button>
-																</td>
-														</tr>
-														@endforeach
-													</tbody>
-												</table>
-												<button class="btn btn-primary" id="btnEmploymentModal">New Entry</button>
+											@include('frontend.pages.profile.employment')
                     </div>
                     <div class="tab-pane fade" id="nav-others" role="tabpanel" aria-labelledby="nav-others-tab">
-												<h2>Skills</h2>
-												<div id="skillTable" class="mb-3">
-													@foreach($student->skills as $skill)
-													<span data-id="{{ $skill->id }}" class="badge bg-primary">{{ $skill->skill }} <a class="deleteSkill" data-id="{{ $skill->id }}">X</a></span>
-													@endforeach
-												</div>
-												<div class="input-group">
-                        	<input type="text" name="skill" id="skill" class="form-control">
-													<div class="input-group-append">
-															<button class="btn btn-primary" id="addSkill">Add</button>
-													</div>
-												</div>
+												@include('frontend.pages.profile.others')
                     </div>
                     <div class="tab-pane fade" id="nav-photograph" role="tabpanel" aria-labelledby="nav-photograph-tab">
 												<h2>Photograph</h2>
@@ -376,232 +104,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="basicModalLabel">Basic Information</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<div id="errorMsgBasic"></div>
-					{{-- <form action="" id="basicForm" method="post">
-						@csrf
-						<div class="form-group">
-							<label for="name">Name</label>
-							<input type="text" name="name" id="name" class="form-control">
-						</div>
-						<div class="form-group">
-							<label for="father_name">Father Name</label>
-							<input type="text" name="father_name" id="father_name" class="form-control">
-						</div>
-						<div class="form-group">
-							<label for="mother_name">Mother Name</label>
-							<input type="text" name="mother_name" id="mother_name" class="form-control">
-						</div>
-						<div class="form-group">
-							<label for="email">Email</label>
-							<input type="email" name="email" id="email" class="form-control">
-						</div>
-						<div class="form-group">
-							<label for="phone">Phone</label>
-							<input type="text" name="phone" id="phone" class="form-control">
-						</div>
-						<div class="form-group">
-							<label for="nid">NID</label>
-							<input type="text" name="nid" id="nid" class="form-control">
-						</div>
-						<div class="form-group">
-							<label for="date_of_birth">Date of Birth</label>
-							{!! Form::text('date_of_birth', date('d-m-Y', strtotime($student->date_of_birth)), ['class' => 'form-control datetimepicker-input','id'=>'date_of_birth', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date_of_birth", 'placeholder' => 'YYYY-MM-DD', 'required'=>true]) !!}
-						</div>
-						<div class="form-group">
-							<label for="gender">Gender</label>
-							<select name="gender" id="gender" class="form-control">
-								<option value="Male">Male</option>
-								<option value="Female">Female</option>
-								<option value="Other">Other</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="religion">Religion</label>
-							<select name="religion" id="religion" class="form-control">
-								<option value="islam">Islam</option>
-								<option value="hindu">Hindu</option>
-								<option value="christian">Christian</option>
-								<option value="others">Others</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="blood_group">Blood Group</label>
-							<select name="blood_group" id="blood_group" class="form-control">
-								<option value="A+">A+</option>
-								<option value="A-">A-</option>
-								<option value="B+">B+</option>
-								<option value="B-">B-</option>
-								<option value="O+">O+</option>
-								<option value="O-">O-</option>
-								<option value="AB+">AB+</option>
-								<option value="AB-">AB-</option>
-								<option value="Unknown">Unknown</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<button type="submit" class="btn btn-primary">Save</button>
-						</div>
-					</form> --}}
-				</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="newEduModal" tabindex="-1" role="dialog" aria-labelledby="newEduModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="newEduModalLabel">New Education</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div id="errorMsg"></div>
-            <form action="{{route('student.education.store')}}" id="eduForm" method="post">
-                @csrf
-                <div class="form-group">
-                    <label for="edu_level_id">Exam</label>
-                    <select name="edu_level_id" id="edu_level_id" class="form-control">
-                        <option value="">Select Exam</option>
-                        @foreach($exams as $exam)
-                        <option value="{{$exam->id}}">{{$exam->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="edu_group_id">Group</label>
-                    <select name="edu_group_id" id="edu_group_id" class="form-control">
-                        <option value="">Select Group</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="edu_board_id">Board/University</label>
-                    <select name="edu_board_id" id="edu_board_id" class="form-control">
-                        <option value="">Select Board</option>
-                    </select>
-					          <input type="text" name="university" id="university" class="form-control d-none">
-                </div>
-                <div class="form-group">
-                    <label for="passing_year">Passing Year</label>
-                    <input type="text" name="passing_year" id="passing_year" class="form-control">
-                </div>
-                <div class="form-group">
-					<input name = "result_type" type = "radio" id="gpa" value = "gpa" checked> GPA
-					<input name = "result_type" type = "radio" id="division" value = "division"> Division
-					<input name = "result_type" type = "radio" id="pass" value = "pass"> Pass
-					<div class="input-group" id="gpaInput">
-						<input type="text" name="result_gpa" id="result_gpa" class="form-control" placeholder="GPA">
-						<input type="text" name="out_of" id="out_of" class="form-control" placeholder="Out of">
-					</div>
-          <input type="text" name="result_pass" id="result_pass" class="form-control" value="Pass" readonly>
-					<select name="result_division" id="result_division" class="form-control d-none">
-						<option value="">Select Division</option>
-						<option value="1st">1st</option>
-						<option value="2nd">2nd</option>
-						<option value="3rd">3rd</option>
-					</select>
-                </div>
-
-                <button type="submit" class="btn btn-primary mt-3">Save</button>
-            </form>
-        </div>
-      </div>
-    </div>
-</div>
-
-<div class="modal fade" id="newTrainingModal" tabindex="-1" role="dialog" aria-labelledby="newTrainingModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="newTrainingModalLabel">New Training</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-						<div id="errorMsgBasic"></div>
-						<form action="{{route('student.training.store')}}" id="trainingForm" method="post">
-								@csrf
-								<div class="form-group">
-										<label for="training_title">Title</label>
-										<input type="text" name="training_title" id="training_title" class="form-control">
-								</div>
-								<div class="form-group">
-										<label for="topics_covered">Topics Covered</label>
-										<input type="text" name="topics_covered" id="topics_covered" class="form-control">
-								</div>
-								<div class="form-group">
-										<label for="training_year">Year</label>
-										<input type="text" name="training_year" id="training_year" class="form-control">
-								</div>
-								<div class="form-group">
-										<label for="training_institute">Institute</label>
-										<input type="text" name="training_institute" id="training_institute" class="form-control">
-								</div>
-								<div class="form-group">
-										<label for="training_duration">Duration</label>
-										<input type="text" name="training_duration" id="training_duration" class="form-control">
-								</div>
-								<div class="form-group">
-										<label for="training_location">Location</label>
-										<input type="text" name="training_location" id="training_location" class="form-control">
-								</div>
-
-								<button type="submit" class="btn btn-primary">Save</button>
-						</form>
-				</div>
-			</div>
-		</div>
-</div>
-
-	<div class="modal fade" id="newEmploymentModal" tabindex="-1" role="dialog" aria-labelledby="newEmploymentModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="newEmploymentModalLabel">New Employment</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-						<div id="errorMsgEmployment"></div>
-						<form action="{{route('student.experience.store')}}" id="employmentForm" method="post">
-								@csrf
-								<div class="form-group">
-										<label for="company_name">Company Name</label>
-										<input type="text" name="company_name" id="company_name" class="form-control">
-								</div>
-								<div class="form-group">
-										<label for="job_title">Job Title/Designation</label>
-										<input type="text" name="job_title" id="job_title" class="form-control">
-								</div>
-								<div class="form-group">
-										<label for="start_date">Start Date</label>
-										<input type="text" name="start_date" id="start_date" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker5">
-								</div>
-								<div class="form-group">
-										<label for="end_date">End Date</label>
-										<input type="text" name="end_date" id="end_date" class="form-control  datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker5">
-								</div>
-								<div class="form-group">
-										<label for="job_description">Job Description</label>
-										<input type="text" name="job_description" id="job_description" class="form-control">
-								</div>
-								<div class="form-group">
-										<label for="company_location">Company Location</label>
-										<input type="text" name="company_location" id="company_location" class="form-control">
-								</div>
-
-								<button type="submit" class="btn btn-primary">Save</button>
-						</form>
-				</div>
-			</div>
-		</div>
-	</div>
-
 @endsection
 
 
@@ -624,17 +126,21 @@
                     //console.log(data);                    
                     if(data.status == true){
                         $('#edu_group_id').empty();
-                        $('#edu_group_id').append('<option value="">Select Group</option>');
-                        $.each(data.groups, function(index, value) {
-                            $('#edu_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });
+												if(data.groups.length > 0){
+													$('#edu_group_id').append('<option value="">Select Group</option>');
+													$.each(data.groups, function(index, value) {
+															$('#edu_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+													});
+												}else{
+													$('#edu_group_id').append('<option value="0">Select Group</option>');
+												}
+                        
                         $('#edu_board_id').empty();
                         //$('#university').val('');
                         if(data.boards.length > 0){
-
-                          $('#edu_board_id').removeClass('d-none');
-                          $('#university').addClass('d-none');
-                          $('#university').attr('required', false);
+                          $('#boardDiv').removeClass('d-none');
+                          //$('#universityDiv').addClass('d-none');
+                          //$('#university').attr('required', false);
                           $('#edu_board_id').attr('required', true);
 
                           $('#edu_board_id').append('<option value="">Select Board</option>');
@@ -642,9 +148,9 @@
                               $('#edu_board_id').append('<option value="' + value.id + '">' + value.name + '</option>');
                           });
                         }else{
-                          $('#edu_board_id').addClass('d-none');
-                          $('#university').removeClass('d-none');
-                          $('#university').attr('required', true);
+                          $('#boardDiv').addClass('d-none');
+                          //$('#universityDiv').removeClass('d-none');
+                          //$('#university').attr('required', true);
                           $('#edu_board_id').attr('required', false);
                         }
                     }
@@ -675,6 +181,10 @@
 				format: 'DD-MM-YYYY'
 		});
 		$('#end_date').datetimepicker({
+				//format: 'DD/MM/YYYY'
+				format: 'DD-MM-YYYY'
+		});
+		$('.datetimepicker').datetimepicker({
 				//format: 'DD/MM/YYYY'
 				format: 'DD-MM-YYYY'
 		});
@@ -776,362 +286,6 @@
 				});
 
 
-				// EDUCATION
-
-        $('#newAcademicModal').click(function() {
-						$('#eduForm')[0].reset();
-						$("input[name='result_type']").trigger('change');
-						$("#errorMsg").empty();
-            $('#eduForm').attr('action', "{{route('student.education.store')}}");
-            $('#newEduModal').modal('show');
-        });
-
-				$('input[name="result_type"]').on('change', function() {
-					var value = $("input[name='result_type']:checked").val();
-					if (value == 'gpa' || value == '') {
-						$('#gpaInput').removeClass('d-none');
-						$('#result_division').addClass('d-none');
-						$('#result_pass').addClass('d-none');
-					} else if (value == 'division') {
-						$('#gpaInput').addClass('d-none');
-						$('#result_division').removeClass('d-none');
-						$('#result_pass').addClass('d-none');
-					}else{
-						$('#gpaInput').addClass('d-none');
-						$('#result_division').addClass('d-none');
-						$('#result_pass').removeClass('d-none');
-					}
-				});
-    
-        $('#eduForm').submit(function(e) {
-            e.preventDefault();
-						$.LoadingOverlay("show");
-            var formData = $(this).serialize();
-            let url = $(this).attr('action');
-            $("#errorMsg").empty();
-            $.ajax({
-                url: url,
-                method: 'POST',
-                data: formData,
-                success: function(data) {
-                    console.log(data);
-                    if(data.status == true){
-											if(data.type == 'save'){
-												$("#academicTable").append(`<tr>
-													<td>${data.education.exam_name}</td>
-													<td>${data.education.board_name}</td>
-													<td>${data.education.group_name}</td>
-													<td>${data.education.passing_year}</td>
-													<td>${data.education.result}</td>
-													<td>
-														<button class="btn btn-sm btn-primary editAcademic" data-id="${data.education.id}">Edit</button>
-														<button class="btn btn-sm btn-danger deleteAcademic" data-id="${data.education.id}">Delete</button>
-													</td>
-												</tr>`);
-											}else{
-												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
-												.find('td').eq(0).html(data.education.exam_name);
-												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
-												.find('td').eq(1).html(data.education.group_name);
-												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
-												.find('td').eq(2).html(data.education.board_name);
-												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
-												.find('td').eq(3).html(data.education.passing_year);
-												$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
-												.find('td').eq(4).html(data.education.result);
-											}
-                        $('#newEduModal').modal('hide');
-                    }else{
-                        //console.log(data);
-                        if(data.message){
-                            $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);														
-                        }
-                            data.errors.forEach(function(element){
-                            $("#errorMsg").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
-                        });
-                    }
-                }
-            });
-					$.LoadingOverlay("hide");
-        });
-
-		$("#nav-education").on('click', '.editAcademic', function(){
-			$('#eduForm')[0].reset();
-			$.LoadingOverlay("show");
-			$("#errorMsg").empty();
-			var id = $(this).data('id');
-			$.ajax({
-				url: "{{route('student.education.edit')}}?id=" + id,
-				method: 'GET',
-				success: function(data){
-					//console.log(data);
-					$("#eduForm").attr('action', "{{route('student.education.update')}}?id=" + id);
-					$("#edu_level_id").val(data.education.edu_level_id);
-					//$('#edu_level_id').trigger('change');
-						$('#edu_group_id').empty();
-						$('#edu_group_id').append('<option value="">Select Group</option>');
-						$.each(data.groups, function(index, value) {
-								$('#edu_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-						});
-						$('#edu_board_id').empty();
-            if(data.boards.length > 0){
-              $('#edu_board_id').removeClass('d-none');
-              $('#university').addClass('d-none');
-              $('#university').attr('required', false);
-              $('#edu_board_id').attr('required', true);
-
-              $('#edu_board_id').append('<option value="">Select Board</option>');
-              $.each(data.boards, function(index, value) {
-                  $('#edu_board_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-              }); 
-            }else{
-              $('#edu_board_id').addClass('d-none');
-              $('#university').removeClass('d-none');
-              $('#university').attr('required', true);
-              $('#edu_board_id').attr('required', false);
-            }
-						
-					$("#edu_group_id").val(data.education.edu_group_id);
-					$("#edu_board_id").val(data.education.edu_board_id);
-					$("#university").val(data.education.university);
-					$("#passing_year").val(data.education.passing_year);
-					//console.log(data.education.result_type);
-					if(data.education.result_type == 'gpa'){
-						$("#gpa").prop('checked', true);
-						$("#result_gpa").val(data.education.result);
-						$("#out_of").val(data.education.out_of);
-					} else if(data.education.result_type == 'division'){
-						$("#division").prop('checked', true);
-						$("#result_division").val(data.education.result).change();
-					} else{
-						$("#pass").prop('checked', true);
-					}
-					$("input[name='result_type']").change();
-					$('#newEduModal').modal('show');
-				}
-			});
-			$.LoadingOverlay("hide");
-		});
-
-		$("#nav-education").on('click', '.deleteAcademic', function(){
-			if(confirm("Are you sure?")){
-				var id = $(this).data('id');
-				$.ajax({
-					url: "{{route('student.education.destroy')}}?id=" + id,
-					method: 'GET',
-					success: function(data){
-						console.log(data);
-						if(data.status == true){
-							$("#academicTable").find('tr[data-id="'+id+'"]').remove();
-						}
-					}
-				});
-			}
-		});
-
-
-		// TRAINING
-		$("#btnTrainingModal").click(function(){
-			$("#trainingForm").attr('action', "{{route('student.training.store')}}");
-			$('#newTrainingModal').modal('show');
-		})
-		$('#trainingForm').submit(function(e) {
-			e.preventDefault();
-			$.LoadingOverlay("show");
-			var formData = $(this).serialize();
-			let url = $(this).attr('action');
-			$("#errorMsgTraining").empty();
-			$.ajax({
-				url: url,
-				method: 'POST',
-				data: formData,
-				success: function(data) {
-					console.log(data);
-					if(data.status == true){
-						if(data.type == 'save'){
-							$("#trainingTable").append(`
-								<tr data-id="${data.training.id}">
-									<td>${data.training.training_title}</td>
-									<td>${data.training.topics_covered}</td>
-									<td>${data.training.training_year}</td>
-									<td>${data.training.training_institute}</td>
-									<td>${data.training.training_duration}</td>
-									<td>${data.training.training_location}</td>
-									<td>
-										<a class="btn btn-primary btn-sm editTraining" data-id="${data.training.id}">Edit</a>
-										<a class="btn btn-danger btn-sm deleteTraining" data-id="${data.training.id}">Delete</a>
-									</td>
-								</tr>
-							`);
-						}else{
-							$("#trainingTable").find('tr[data-id="'+data.training.id+'"]')
-							.find('td').eq(0).html(data.training.training_title);
-							$("#trainingTable").find('tr[data-id="'+data.training.id+'"]')
-							.find('td').eq(1).html(data.training.topics_covered);
-							$("#trainingTable").find('tr[data-id="'+data.training.id+'"]')
-							.find('td').eq(2).html(data.training.training_year);
-							$("#trainingTable").find('tr[data-id="'+data.training.id+'"]')
-							.find('td').eq(3).html(data.training.training_institute);
-							$("#trainingTable").find('tr[data-id="'+data.training.id+'"]')
-							.find('td').eq(4).html(data.training.training_duration);
-							$("#trainingTable").find('tr[data-id="'+data.training.id+'"]')
-							.find('td').eq(5).html(data.training.training_location);
-						}
-						$('#trainingForm')[0].reset();
-						$('#newTrainingModal').modal('hide');
-					}else{
-						//console.log(data);
-						if(data.message){
-							$("#errorMsgTraining").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
-						}
-							data.errors.forEach(function(element){
-							$("#errorMsgTraining").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
-						});
-					}
-				}
-			});
-			$.LoadingOverlay("hide");
-		});
-
-		$("#nav-education").on('click', '.editTraining', function(){
-			var id = $(this).data('id');
-			$.ajax({
-				url: "{{route('student.training.edit')}}?id=" + id,
-				method: 'GET',
-				success: function(data){
-					//console.log(data);
-					$("#trainingForm").attr('action', "{{route('student.training.update')}}?id=" + id);
-					$("#training_title").val(data.training.training_title);
-					$("#topics_covered").val(data.training.topics_covered);
-					$("#training_year").val(data.training.training_year);
-					$("#training_institute").val(data.training.training_institute);
-					$("#training_duration").val(data.training.training_duration);
-					$("#location").val(data.training.training_location);
-					$('#newTrainingModal').modal('show');
-				}
-			});
-		});
-
-		$("#nav-education").on('click', '.deleteTraining', function(){
-			if(confirm("Are you sure?")){
-				var id = $(this).data('id');
-				$.ajax({
-					url: "{{route('student.training.destroy')}}?id=" + id,
-					method: 'GET',
-					success: function(data){
-						console.log(data);
-						if(data.status == true){
-							$("#trainingTable").find('tr[data-id="'+id+'"]').remove();
-						}
-					}
-				});
-			}
-		});
-
-
-		//employment
-		$("#btnEmploymentModal").click(function(){
-			$("#employmentForm").attr('action', "{{route('student.experience.store')}}");
-			$('#newEmploymentModal').modal('show');
-		});
-
-		$('#employmentForm').submit(function(e) {
-			e.preventDefault();
-			$.LoadingOverlay("show");
-			var formData = $(this).serialize();
-			let url = $(this).attr('action');
-			$("#errorMsgEmployment").empty();
-			$.ajax({
-				url: url,
-				method: 'POST',
-				data: formData,
-				success: function(data) {
-					//console.log(data);
-					if(data.status == true){
-						$('#newEmploymentModal').modal('hide');
-						$('#employmentForm')[0].reset();
-						if(data.type == 'save'){
-						$("#employmentTable").append(`
-							<tr data-id="${data.employment.id}">
-								<td>${data.employment.job_title}</td>
-								<td>${data.employment.company_name}</td>
-								<td>${data.employment.job_description}</td>
-								<td>${data.employment.start_date}</td>
-								<td>${data.employment.end_date}</td>
-								<td>
-									<a class="btn btn-primary btn-sm editEmployment" data-id="${data.employment.id}">Edit</a>
-									<a class="btn btn-danger btn-sm deleteEmployment" data-id="${data.employment.id}">Delete</a>
-								</td>
-							</tr>
-						`);
-							
-						}else{
-							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							.find('td').eq(0).html(data.employment.job_title);
-							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							.find('td').eq(1).html(data.employment.company_name);
-							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							.find('td').eq(2).html(data.employment.job_description);
-							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							.find('td').eq(3).html(moment(data.employment.start_date).format('DD-MM-YYYY')); //data.employment.start_date);
-							$("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							.find('td').eq(4).html(moment(data.employment.end_date).format('DD-MM-YYYY'));
-							// $("#employmentTable").find('tr[data-id="'+data.employment.id+'"]')
-							// .find('td').eq(8).html(data.employment.job_description);
-						}
-					}else{
-						//console.log(data);
-						if(data.message){
-							$("#errorMsgEmployment").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
-						}
-							data.errors.forEach(function(element){
-							$("#errorMsgEmployment").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
-						});
-					}
-				}
-			});
-			$.LoadingOverlay("hide");
-		});
-
-		$("#nav-employment").on('click', '.editEmployment', function(){
-			$.LoadingOverlay("show");
-			var id = $(this).data('id');
-			$.ajax({
-				url: "{{route('student.experience.edit')}}?id=" + id,
-				method: 'GET',
-				success: function(data){
-					console.log(data);
-					$("#employmentForm").attr('action', "{{route('student.experience.update')}}?id=" + id);
-					$("#employment_title").val(data.employment.employment_title);
-					$("#company_name").val(data.employment.company_name);
-					$("#company_location").val(data.employment.company_location);
-					$("#company_phone").val(data.employment.company_phone);
-					$("#company_email").val(data.employment.company_email);
-					$("#job_title").val(data.employment.job_title);
-					$("#start_date").val( moment(data.employment.start_date).format('DD-MM-YYYY') ); // data.employment.start_date);
-					$("#end_date").val( moment(data.employment.end_date).format('DD-MM-YYYY') );
-					$("#job_description").val(data.employment.job_description);
-					$('#newEmploymentModal').modal('show');
-				}
-			});
-			$.LoadingOverlay("hide");
-		});
-
-		$("#nav-employment").on('click', '.deleteEmployment', function(){
-			if(confirm("Are you sure?")){
-				var id = $(this).data('id');
-				$.ajax({
-					url: "{{route('student.experience.destroy')}}?id=" + id,
-					method: 'GET',
-					success: function(data){
-						console.log(data);
-						if(data.status == true){
-							$("#employmentTable").find('tr[data-id="'+id+'"]').remove();
-						}
-					}
-				});
-			}
-		});
 
 		$("#photo").change(function(){
 			$.LoadingOverlay("show");
@@ -1214,13 +368,71 @@
 					if(data.status == true){
 						//$("#addressModal").modal('hide');
 						$("#errorMsgAddress").append(`<div class="alert alert-success"><strong>Success: </strong>${data.message}</div>`);
-						$('#nav-education-tab').tab('show');
+						//$('#nav-education-tab').tab('show');
 					}else{
 						if(data.message){
 								$("#errorMsgAddress").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
 							}
 						data.errors.forEach(function(element){
 							$("#errorMsgAddress").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+						});
+					}
+				}
+			})
+			$.LoadingOverlay("hide");
+		})
+
+		$("#updateCareer").submit(function(e){
+			e.preventDefault();
+			$.LoadingOverlay("show");
+			var formData = $(this).serialize();
+			let url = $(this).attr('action');
+			$("#errorMsgCareer").empty();
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: formData,
+				success: function(data){
+					//console.log(data);
+					if(data.status == true){
+						//$("#addressModal").modal('hide');
+						$("#errorMsgCareer").append(`<div class="alert alert-success"><strong>Success: </strong>${data.message}</div>`);
+						//$('#nav-education-tab').tab('show');
+					}else{
+						if(data.message){
+								$("#errorMsgCareer").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+							}
+						data.errors.forEach(function(element){
+							$("#errorMsgCareer").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+						});
+					}
+				}
+			})
+			$.LoadingOverlay("hide");
+		})
+
+		$("#updateOther").submit(function(e){
+			e.preventDefault();
+			$.LoadingOverlay("show");
+			var formData = $(this).serialize();
+			let url = $(this).attr('action');
+			$("#errorMsgOther").empty();
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: formData,
+				success: function(data){
+					//console.log(data);
+					if(data.status == true){
+						//$("#addressModal").modal('hide');
+						$("#errorMsgOther").append(`<div class="alert alert-success"><strong>Success: </strong>${data.message}</div>`);
+						//$('#nav-education-tab').tab('show');
+					}else{
+						if(data.message){
+								$("#errorMsgOther").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+							}
+						data.errors.forEach(function(element){
+							$("#errorMsgOther").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
 						});
 					}
 				}
@@ -1271,6 +483,208 @@
 						console.log(data);
 						if(data.status == true){
 							$("#skillTable").find('span[data-id="'+id+'"]').remove();
+						}
+					}
+				});
+			}
+		});
+
+
+		//Language Proficiency
+		$("#btnLanguageModal").click(function(){
+			$("#languageForm").attr('action', "{{route('student.language.store')}}");
+			$('#newLanguageModal').modal('show');
+		});
+
+		$('#languageForm').submit(function(e) {
+			e.preventDefault();
+			$.LoadingOverlay("show");
+			var formData = $(this).serialize();
+			let url = $(this).attr('action');
+			$("#errorMsgLanguage").empty();
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: formData,
+				success: function(data) {
+					//console.log(data);
+					if(data.status == true){
+						$('#newLanguageModal').modal('hide');
+						$('#languageForm')[0].reset();
+						if(data.type == 'save'){
+						$("#languageTable").append(`
+							<tr data-id="${data.language.id}">
+								<td>${data.language.language}</td>
+								<td>${data.language.reading}</td>
+								<td>${data.language.writing}</td>
+								<td>${data.language.speaking}</td>
+								<td>
+									<a class="btn btn-primary btn-sm editLanguage" data-id="${data.language.id}">Edit</a>
+									<a class="btn btn-danger btn-sm deleteLanguage" data-id="${data.language.id}">Delete</a>
+								</td>
+							</tr>
+						`);
+							
+						}else{
+							$("#languageTable").find('tr[data-id="'+data.language.id+'"]')
+							.find('td').eq(0).html(data.language.language);
+							$("#languageTable").find('tr[data-id="'+data.language.id+'"]')
+							.find('td').eq(1).html(data.language.reading);
+							$("#languageTable").find('tr[data-id="'+data.language.id+'"]')
+							.find('td').eq(2).html(data.language.writing);
+							$("#languageTable").find('tr[data-id="'+data.language.id+'"]')
+							.find('td').eq(3).html(data.language.speaking);
+						}
+					}else{
+						//console.log(data);
+						if(data.message){
+							$("#errorMsgLanguage").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+						}
+							data.errors.forEach(function(element){
+							$("#errorMsgLanguage").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+						});
+					}
+				}
+			});
+			$.LoadingOverlay("hide");
+		});
+
+		$("#languageTable").on('click', '.editLanguage', function(){
+			$.LoadingOverlay("show");
+			var id = $(this).data('id');
+			$.ajax({
+				url: "{{route('student.language.edit')}}?id=" + id,
+				method: 'GET',
+				success: function(data){
+					console.log(data);
+					$("#languageForm").attr('action', "{{route('student.language.update')}}?id=" + id);
+					$("#lan_language").val(data.language.language);
+					$("#lan_reading").val(data.language.reading);
+					$("#lan_writing").val(data.language.writing);
+					$("#lan_speaking").val(data.language.speaking);
+					$('#newLanguageModal').modal('show');
+				}
+			});
+			$.LoadingOverlay("hide");
+		});
+
+		$("#languageTable").on('click', '.deleteLanguage', function(){
+			if(confirm("Are you sure?")){
+				var id = $(this).data('id');
+				$.ajax({
+					url: "{{route('student.language.destroy')}}?id=" + id,
+					method: 'GET',
+					success: function(data){
+						console.log(data);
+						if(data.status == true){
+							$("#languageTable").find('tr[data-id="'+id+'"]').remove();
+						}
+					}
+				});
+			}
+		});
+
+
+		//Reference
+		$("#btnReferenceModal").click(function(){
+			$("#referenceForm").attr('action', "{{route('student.reference.store')}}");
+			$('#newReferenceModal').modal('show');
+		});
+
+		$('#referenceForm').submit(function(e) {
+			e.preventDefault();
+			$.LoadingOverlay("show");
+			var formData = $(this).serialize();
+			let url = $(this).attr('action');
+			$("#errorMsgReference").empty();
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: formData,
+				success: function(data) {
+					//console.log(data);
+					if(data.status == true){
+						$('#newReferenceModal').modal('hide');
+						$('#referenceForm')[0].reset();
+						if(data.type == 'save'){
+						$("#referenceTable").append(`
+							<tr data-id="${data.reference.id}">
+								<td>${data.reference.name}</td>
+								<td>${data.reference.designation}</td>
+								<td>${data.reference.organization}</td>
+								<td>${data.reference.email}</td>
+								<td>${data.reference.relation}</td>
+								<td>${data.reference.mobile}</td>
+								<td>${data.reference.address}</td>
+								<td>
+									<a class="btn btn-primary btn-sm editReference" data-id="${data.reference.id}">Edit</a>
+									<a class="btn btn-danger btn-sm deleteReference" data-id="${data.reference.id}">Delete</a>
+								</td>
+							</tr>
+						`);
+							
+						}else{
+							$("#referenceTable").find('tr[data-id="'+data.reference.id+'"]')
+							.find('td').eq(0).html(data.reference.name);
+							$("#referenceTable").find('tr[data-id="'+data.reference.id+'"]')
+							.find('td').eq(1).html(data.reference.designation);
+							$("#referenceTable").find('tr[data-id="'+data.reference.id+'"]')
+							.find('td').eq(2).html(data.reference.organization);
+							$("#referenceTable").find('tr[data-id="'+data.reference.id+'"]')
+							.find('td').eq(3).html(data.reference.email);
+							$("#referenceTable").find('tr[data-id="'+data.reference.id+'"]')
+							.find('td').eq(4).html(data.reference.relation);
+							$("#referenceTable").find('tr[data-id="'+data.reference.id+'"]')
+							.find('td').eq(5).html(data.reference.mobile);
+							$("#referenceTable").find('tr[data-id="'+data.reference.id+'"]')
+							.find('td').eq(6).html(data.reference.address);
+						}
+					}else{
+						//console.log(data);
+						if(data.message){
+							$("#errorMsgReference").append(`<div class="alert alert-danger"><strong>Warning: </strong>${data.message}</div>`);
+						}
+							data.errors.forEach(function(element){
+							$("#errorMsgReference").append(`<div class="alert alert-danger"><strong>Warning: </strong>${element}</div>`);
+						});
+					}
+				}
+			});
+			$.LoadingOverlay("hide");
+		});
+
+		$("#referenceTable").on('click', '.editReference', function(){
+			$.LoadingOverlay("show");
+			var id = $(this).data('id');
+			$.ajax({
+				url: "{{route('student.reference.edit')}}?id=" + id,
+				method: 'GET',
+				success: function(data){
+					console.log(data);
+					$("#referenceForm").attr('action', "{{route('student.reference.update')}}?id=" + id);
+					$("#ref_name").val(data.reference.name);
+					$("#ref_designation").val(data.reference.designation);
+					$("#ref_organization").val(data.reference.organization);
+					$("#ref_email").val(data.reference.email);
+					$("#ref_relation").val(data.reference.relation);
+					$("#ref_mobile").val(data.reference.mobile);
+					$("#ref_address").val(data.reference.address);
+					$('#newReferenceModal').modal('show');
+				}
+			});
+			$.LoadingOverlay("hide");
+		});
+
+		$("#referenceTable").on('click', '.deleteReference', function(){
+			if(confirm("Are you sure?")){
+				var id = $(this).data('id');
+				$.ajax({
+					url: "{{route('student.reference.destroy')}}?id=" + id,
+					method: 'GET',
+					success: function(data){
+						console.log(data);
+						if(data.status == true){
+							$("#referenceTable").find('tr[data-id="'+id+'"]').remove();
 						}
 					}
 				});

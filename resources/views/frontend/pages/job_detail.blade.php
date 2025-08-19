@@ -77,9 +77,9 @@
                 </div>
 
                 <div class="">
-                    <h4 class="mb-4">Apply For The Job</h4>
+                    {{-- <h4 class="mb-4">Apply For The Job</h4>
                     <a class="btn btn-primary apply_now" data-job_id="{{ $job->id }}" data-post="{{ $job->title }}"  href="javascript:void(0)">Apply Now</a>
-                    {{-- <form>
+                    <form>
                         <div class="row g-3">
                             <div class="col-12 col-sm-6">
                                 <input type="text" class="form-control" placeholder="Your Name">
@@ -100,8 +100,8 @@
                                 <button class="btn btn-primary w-100" type="submit">Apply Now</button>
                             </div>
                         </div>
-                    </form> --}}
-                </div>
+                    </form>
+                </div> --}}
             </div>
 
             <div class="col-lg-4">                

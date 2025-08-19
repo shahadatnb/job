@@ -98,6 +98,9 @@ class StudentController extends Controller
             'phone' => 'required|digits:11|unique:students,phone,' . auth('student')->user()->id,
             'nid' => 'required|max:17|unique:students,nid,' . auth('student')->user()->id,
             'date_of_birth' => 'required',
+            'gender' => 'required',
+            'religion' => 'required',
+            'blood_group' => 'required',
             'village' => 'required|string|max:50',
             'post_office' => 'required|string|max:50',
             'post_code' => 'nullable|numeric',
@@ -111,7 +114,7 @@ class StudentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['status' => false, 'errors' => $validator->errors()]);
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
         $student = auth('student')->user();
@@ -138,6 +141,50 @@ class StudentController extends Controller
         $student->permanent_upazila_id = $request->permanent_upazila_id;
         $student->save();
         return response()->json(['status' => true,'message' => 'Address updated successfully']);
+    }
+
+    public function updateCareer(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'objective' => 'required|string|max:800',
+            'present_salary' => 'nullable|numeric|max:999999',
+            'expected_salary' => 'nullable|numeric|max:999999',
+            'looking_for' => 'nullable|string|max:50',
+            'available_for' => 'nullable|string|max:50',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
+        }
+
+        $student = auth('student')->user();
+        $student->objective = $request->objective;
+        $student->present_salary = $request->present_salary;
+        $student->expected_salary = $request->expected_salary;
+        $student->looking_for = $request->looking_for;
+        $student->available_for = $request->available_for;
+        $student->save();
+        return response()->json(['status' => true,'message' => 'Career and Application Information updated successfully']);
+    }
+
+    public function updateOther(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'career_summary' => 'required|string|max:800',
+            'special_qualification' => 'required|string|max:800',
+            'keywords' => 'required|string|max:250',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
+        }
+
+        $student = auth('student')->user();
+        $student->career_summary = $request->career_summary;
+        $student->special_qualification = $request->special_qualification;
+        $student->keywords = $request->keywords;
+        $student->save();
+        return response()->json(['status' => true,'message' => 'Other Relevant Information updated successfully']);
     }
 
     public function updatePhoto(Request $request)

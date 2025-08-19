@@ -3,6 +3,11 @@
 @section('css')
 <link href="//cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+<style type="text/css">
+  .summary p{
+    margin-bottom: 1px;
+  }
+</style>
 @endsection
 @section('content')
 <!-- Default box -->
@@ -108,17 +113,113 @@
               {!! Form::label('nagotiable', __('Nagotiable'),['class'=>'']) !!}
               {{ Form::checkbox('nagotiable',1,null) }}
             </div>
-            <div class="form-group">
+            {{-- <div class="form-group">
               {!! Form::label('status', __('Publish Status'),['class'=>'']) !!}
               {{ Form::checkbox('status',1,null) }}
+            </div> --}}
+            <div class="form-group">
+              @if (request()->routeIs('job.edit'))
+                @if ($job->status == 1)
+                  <span class="badge badge-success">Live</span>
+                  <button type="submit" class="btn btn-warning" name="save" value="draft"><i class="fas fa-save"></i> Make Draft</button>
+                @else
+                  <span class="badge badge-info">Draft</span>
+                @endif
+              @endif
             </div>
-            {{ Form::submit('Save',array('class'=>'btn btn-primary')) }}
+            <div class="btn-group">
+              <button type="button" class="btn btn-info" id="preview" {{ request()->routeIs('job.create') ? 'disabled' : '' }}><i class="fas fa-eye"></i> Preview</button>
+              <button type="submit" class="btn btn-primary" name="save" value="save"><i class="fas fa-save"></i> Save</button>
+              <button type="submit" class="btn btn-success" name="save" value="publish"><i class="fas fa-save"></i> Save & Publish</button>
+            </div>
           </div>
         </div>
       </div>
       {!! Form::close() !!}
     <!-- /.card-body -->
     <!-- /.card-footer-->
+
+@if (request()->routeIs('job.edit'))
+    <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="previewModalLabel">Preview</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="text-start ps-4">
+                <h3 class="mb-1">{{$job->title}}</h3>
+                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{$job->location}}</span>
+                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>{{ $job->job_nature }}</span>
+                <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>{{ $job->nagotiable == 1 ? 'Nagotiable' : $job->salary }}</span>
+            </div>
+            <div class="bg-light rounded p-3 mb-4 summary">
+                <h4 class="mb-2">Job Summery</h4>
+                {{-- <p><i class="fa fa-angle-right text-primary me-2"></i>Published On: 01 Jan, 2045</p> --}}
+                <p><i class="fa fa-angle-right text-primary me-2"></i>Vacancy: {{ $job->vacancy==0 ? 'Not defined' : $job->vacancy }}</p>
+                <p><i class="fa fa-angle-right text-primary me-2"></i>Age: {{ $job->age_min }} - {{ $job->age_max }} Years</p>
+                <p><i class="fa fa-angle-right text-primary me-2"></i>Job Nature: {{ $job->job_nature }}</p>
+                <p><i class="fa fa-angle-right text-primary me-2"></i>Gender: {{ $job->gender }}</p>
+                <p><i class="fa fa-angle-right text-primary me-2"></i>Salary: {{ $job->nagotiable == 1 ? 'Nagotiable' : $job->salary }}</p>
+                <p><i class="fa fa-angle-right text-primary me-2"></i>Location: {{ $job->location }}</p>
+                <p class="m-0"><i class="fa fa-angle-right text-primary me-2"></i>Date Line: {{ date('d-m-Y', strtotime($job->last_date)) }}</p>
+            </div>
+            <h4 class="mb-3">Job Requirement</h4>
+            {!! $job->requirements !!}
+            <p><strong>Education:</strong> {{ $job->eduLevel? $job->eduLevel->name : 'Not defined' }}
+                @php
+                    if($job->edu_group_any !=1 && $job->edu_group_ids != ''){
+                    echo ' in ';
+                    if(count(json_decode($job->edu_group_ids)) > 1){
+                        echo implode(', ', array_map(function($value) use ($eduGroups) {
+                            return $eduGroups[$value];
+                        }, json_decode($job->edu_group_ids)));
+                    }else{
+                        echo $eduGroups[json_decode($job->edu_group_ids)[0]];
+                    }
+                    /*
+                        foreach (json_decode($job->edu_group_ids) as $value) {
+                            echo $eduGroups[$value].', ';
+                        }
+                    */
+                    }
+                @endphp
+                @if($job->edu_level2_id != '') 
+                    Or {{ $job->eduLevel2? $job->eduLevel2->name : 'Not defined' }}
+                    @php
+                        if($job->edu_group2_any !=1 && $job->edu_group2_ids != ''){
+                        echo ' in ';
+                        if(count(json_decode($job->edu_group2_ids)) > 1){
+                            echo implode(', ', array_map(function($value) use ($eduGroups2) {
+                                return $eduGroups2[$value];
+                            }, json_decode($job->edu_group2_ids)));
+                        }else{
+                            echo $eduGroups2[json_decode($job->edu_group2_ids)[0]];
+                        }
+                        /*
+                            foreach (json_decode($job->edu_group2_ids) as $value) {
+                                echo $eduGroups2[$value].', ';
+                            }
+                        */
+                        }
+                    @endphp
+                @endif
+            </p>
+            <h4 class="mb-3">Responsibilities & Context</h4>
+            {!! $job->responsibility !!}
+            <h4 class="mb-3">Compensation & Other Benefits</h4>
+            {!! $job->compensation_other_benefits !!}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+@endif
 </div>
 <!-- /.card -->
 @endsection
@@ -172,6 +273,11 @@
                 }
             });
           });
+
+          $("#preview").on('click', function(){
+            $("#previewModal").modal('show');
+          });
+
         });
     </script>
 @endsection

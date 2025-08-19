@@ -1,5 +1,5 @@
 @extends('admin.layouts.layout')
-@section('title',"Job")
+@section('title',"Application Lists")
 @section('css')
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.24/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/datatables.min.css"/>
 <style>
@@ -66,34 +66,37 @@
           <div class="col-6 col-md-2">
             {!! Form::select('status',$applicationStatus,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Status')]) !!}
           </div>
-          <div class="col-6 col-md-3">
+          <div class="col-6 col-md-2">
             <div class="btn-group">
               <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-search"></i> Filter</button>
-              <a class="btn btn-danger btn-sm" href="{{ route('job.application')}}"><i class="fas fa-sync"></i> Reset</a>
-              <button type="button" class="btn btn-primary btn-sm" onclick="exportTableToExcel('applied_jobs')" ><i class="fas fa-file-excel"></i> Export</button>
+              <a class="btn btn-danger btn-sm ml-1" href="{{ route('job.application')}}"><i class="fas fa-sync"></i> Reset</a>
               {{-- <button type="button" class="btn btn-info btn-sm" onclick="sendSMS()" ><i class="fas fa-sms"></i> SMS</button> --}}
             </div>              
           </div>
           {!! Form::close() !!}
         </div>
-        <div class="col-3">
+      </div>
+      <div class="row d-flex justify-content-between">        
+        <div class="col-6">
+          <button type="button" class="btn btn-primary btn-sm" onclick="exportTableToExcel('applied_jobs')" ><i class="fas fa-file-excel"></i> Export</button>
+          <button type="button" class="btn btn-success btn-sm" onclick="PrintElem('#vivaSheet','Viva Sheet')"><i class="fas fa-print"></i> Viva Sheet</button>
+          <button type="button" class="btn btn-info btn-sm" onclick="PrintElem('#attendanceSheet','Attendance Sheet')"><i class="fas fa-print"></i> Attendance Sheet</button>
+          <button type="button" class="btn btn-info btn-sm" onclick="PrintElem('#selectedSheet','Selected Sheet')"><i class="fas fa-print"></i> Selected Sheet</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="errorMsg"></div>
+      <div class="col-3 mb-2">
           {!! Form::open(['route' => 'job.application_status','class'=>'d-print-none row','id'=>'application_status']) !!}
           <div class="input-group">
-            {!! Form::select('status',$applicationStatus,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Application Status')]) !!}
+            {!! Form::select('status',$applicationStatus,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Approval Application')]) !!}
             <div class="input-group-append">
               <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-save"></i> Save</button>
             </div>
           </div>
           {!! Form::close() !!}
         </div>
-        <div class="col-3">
-          <button type="button" class="btn btn-success btn-sm" onclick="PrintElem('#vivaSheet','Viva Sheet')"><i class="fas fa-print"></i> Viva Sheet</button>
-          <button type="button" class="btn btn-info btn-sm" onclick="PrintElem('#attendanceSheet','Attendance Sheet')"><i class="fas fa-print"></i> Attendance Sheet</button>
-        </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div id="errorMsg"></div>
       <div class="table-responsive">
         <table id="applied_jobs" class="table table-sm table-bordered table-striped">
             <thead>
@@ -101,11 +104,11 @@
               <th class="not-exported"><input class="checkbox" id="selectAll" name="selectAll" type="checkbox"> <label for="selectAll">All</label></th>
               <th>SL</th>
               <th>Image</th>
-              <th>Name</th>
+              <th>Name & Details</th>
               <th>Career Summary</th>
-              <th>Experience And Application Status</th>
+              <th>Experience and expected salary</th>
               <th>Applied On</th>
-              <th>Remarks</th>
+              {{-- <th>Remarks</th> --}}
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -128,30 +131,31 @@
                       {{$item->student->name }} <br>
                       Age: {{$item->age }} <br>
                       @foreach ($item->student->educations as $education)
-                        {{$education->exam ? $education->exam->name : '' }}, {{$education->edu_board_id != '' ? $education->board->name : $education->university }} <br>
+                        {{$education->exam ? $education->exam->name : '' }}: {{ $education->university }}{{ $education->board ? '(Board: '.$education->board->name.')' : '' }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }}<br>
                       @endforeach
                       Phone: {{$item->student->phone }} <br>
                       Email: {{$item->student->email }} <br>
-                      Address: {{$item->student->village }}, {{$item->student->post_office }}, {{$item->student->upazila ? $item->student->upazila->name : '' }}, {{$item->student->district ? $item->student->district->name : '' }}
+                      Address: {{$item->student->village }}, {{$item->student->post_office }}{{$item->student->upazila ? ', '.$item->student->upazila->name : '' }}{{$item->student->district ? ', '.$item->student->district->name : '' }}
                     </td>
                     <td>
                       @php $total_experience = 0 @endphp
                       @foreach ($item->student->employments as $employment)
-                        @php $length = \Carbon\Carbon::parse($employment->start_date)->diffInDays(\Carbon\Carbon::parse($employment->end_date)) @endphp
+                        @php $end_date = $employment->is_current ? \Carbon\Carbon::now() : \Carbon\Carbon::parse($employment->end_date) @endphp
+                        @php $length = \Carbon\Carbon::parse($employment->start_date)->diffInDays($end_date) @endphp
                         {{$employment->company_name }}, {{$employment->job_title }}, {{ $experience =  $length>0 ? number_format($length/365,1) : 0}}+ <br>
                         @php $total_experience += $experience @endphp
                       @endforeach
+                      <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p>
                     </td>
                     <td>
-                      {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }} <br>
-                      {{$item->expected_salary}}
+                      {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }}  and Taka: {{$item->expected_salary}}/-
                     </td>
                     <td>
                       {{ date('d-m-Y', strtotime($item->created_at)) }}
                     </td>
-                    <td>
+                    {{-- <td>
                       {{$item->remarks}}
-                    </td>
+                    </td> --}}
                     <td class="not-exported">
                       {{ $item->application_status->name }}
                     </td>
@@ -210,9 +214,9 @@
         <th>Image</th>
         <th>Name and Details</th>
         <th>Career Summary</th>
-        <th>Experience And Sallary</th>
-        <th>Present Sallary</th>
-        <th>Vaiva Expected Sallary</th>
+        <th>Experience And Salary</th>
+        <th>Present Salary</th>
+        <th>Viva Expected Salary</th>
         <th>Marks</th>
         <th>Position</th>
       </tr>
@@ -228,7 +232,7 @@
             {{$item->student->name }} <br>
             Age: {{$item->age }} <br>
             @foreach ($item->student->educations as $education)
-              {{$education->exam ? $education->exam->name : '' }}, {{$education->edu_board_id != '' ? $education->board->name : $education->university }} <br>
+              {{$education->exam ? $education->exam->name : '' }}: {{ $education->university }}{{ $education->board ? '(Board: '.$education->board->name.')' : '' }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }} <br>
             @endforeach
             Phone: {{$item->student->phone }} <br>
             Email: {{$item->student->email }} <br>
@@ -237,14 +241,86 @@
           <td>
             @php $total_experience = 0 @endphp
             @foreach ($item->student->employments as $employment)
-              @php $length = \Carbon\Carbon::parse($employment->start_date)->diffInDays(\Carbon\Carbon::parse($employment->end_date)) @endphp
+              @php $end_date = $employment->is_current ? \Carbon\Carbon::now() : \Carbon\Carbon::parse($employment->end_date) @endphp
+              @php $length = \Carbon\Carbon::parse($employment->start_date)->diffInDays($end_date) @endphp
               {{$employment->company_name }}, {{$employment->job_title }}, {{ $experience =  $length>0 ? number_format($length/365,1) : 0}}+ <br>
               @php $total_experience += $experience @endphp
             @endforeach
+            <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p>
           </td>
           <td>
-            {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }} <br>
-            {{$item->expected_salary}}
+            {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }}  and Taka: {{$item->expected_salary}}/-
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      @endforeach
+    </tbody>
+  </table> 
+</div>
+
+<div class="d-none" id="selectedSheet">
+  {{-- <div class="print-header">
+      <h1>Viva Sheet</h1>
+  </div> --}}
+  <table border="1" width="100%" cellspacing="0">
+    <thead>
+      <tr>
+        <th colspan="9" class="text-center">{{ config('settings.appTitle') }}</th>
+      </tr>
+      <tr>
+        <th colspan="9" class="text-center">{{ config('settings.appAddress') }}</th>
+      </tr>
+      <tr>
+        <th align="left" colspan="6">Selected Sheet For {{ $data['job_title'] }}</th>
+        <th colspan="3">Date: {{ date('d-m-Y') }}</th>
+      </tr>
+      {{-- <tr>
+        <th colspan="9">Interview Sheet For {{ $data['job_title'] }}</th>
+      </tr> --}}
+      <tr>
+        <th>Roll No</th>
+        <th>Image</th>
+        <th>Name and Details</th>
+        <th>Career Summary</th>
+        <th>Experience And Salary</th>
+        <th>Present Salary</th>
+        <th>Viva Expected Salary</th>
+        <th>Marks</th>
+        <th>Position</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach ($applied_jobs as $key => $item)
+        <tr>
+          <td>{{ ++$key }}</td>
+          <td>
+            <img src="{{asset('/storage/'.$item->student->photo)}}" alt="" width="100">
+          </td>
+          <td>
+            {{$item->student->name }} <br>
+            Age: {{$item->age }} <br>
+            @foreach ($item->student->educations as $education)
+              {{$education->exam ? $education->exam->name : '' }}: {{ $education->university }}{{ $education->board ? '(Board: '.$education->board->name.')' : '' }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }} <br>
+            @endforeach
+            Phone: {{$item->student->phone }} <br>
+            Email: {{$item->student->email }} <br>
+            Address: {{$item->student->village }}, {{$item->student->post_office }}, {{$item->student->upazila ? $item->student->upazila->name : '' }}, {{$item->student->district ? $item->student->district->name : '' }}
+          </td>
+          <td>
+            @php $total_experience = 0 @endphp
+            @foreach ($item->student->employments as $employment)
+              @php $end_date = $employment->is_current ? \Carbon\Carbon::now() : \Carbon\Carbon::parse($employment->end_date) @endphp
+              @php $length = \Carbon\Carbon::parse($employment->start_date)->diffInDays($end_date) @endphp
+              {{$employment->company_name }}, {{$employment->job_title }}, {{ $experience =  $length>0 ? number_format($length/365,1) : 0}}+ <br>
+              @php $total_experience += $experience @endphp
+            @endforeach
+            <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p>
+          </td>
+          <td>
+            {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }}  and Taka: {{$item->expected_salary}}/-
           </td>
           <td></td>
           <td></td>
@@ -254,6 +330,16 @@
       @endforeach
     </tbody>
   </table>  
+  <div class="row d-flex justify-content-around">
+    @foreach ($jobSignature as $item)
+       <div class="col-md-3 text-center" style="margin-top: 60px"> 
+         <p class="m-0 font-weight-bold text-center">
+          {{ $item->signature ? $item->signature->name : '' }} <br>
+          {!! $item->signature ? $item->signature->description : '' !!}
+        </p>
+       </div>
+    @endforeach
+  </div>
 </div>
 
 <div class="d-none" id="attendanceSheet">
@@ -488,18 +574,6 @@ function applyWorksheetBorders(ws) {
     }
 }
 
-// Usage Example:
-// exportTableToExcel('myTable', {
-//     filename: 'product_catalog',
-//     sheetName: 'Products',
-//     excludeColumns: [0], // Exclude first column
-//     imageOptions: {
-//         includeImages: true,
-//         imageWidth: 150,
-//         imageHeight: 100
-//     }
-// });
-
 
     $(function () {
 
@@ -547,133 +621,7 @@ function applyWorksheetBorders(ws) {
         });
         $.LoadingOverlay("hide");
       });
-
-      
-/*
-      var header = $('#report-header').html();
-		
-        $('#applied_jobs').DataTable( {
-            dom: '<"row d-print-none"<"col"B><"col"f><"col text-right"l>>tip',
-            buttons: [
-				'copy',
-				{
-                extend: 'excel',
-					text: '<i title="Excel" class="far fa-file-excel"></i>',
-                	messageTop: header,
-                  exportOptions: {
-                    columns: ':visible:Not(.not-exported)',
-                    rows: ':visible',
-                    // format: {
-                    //     body: function(data, row, column, node) {
-                    //         if (column === 1) {
-                    //             return '<img src="'+data+'" width="80" height="80">';
-                    //         } else {
-                    //             return data;
-                    //         }
-                    //     }
-                    // }
-                  },
-            	},
-                {
-					extend: 'pdfHtml5',	//pdf
-					text: '<i title="PDF" class="far fa-file-pdf"></i>',
-					messageTop: header,
-					exportOptions: {
-						columns: ':visible:Not(.not-exported)',
-						rows: ':visible'
-					},
-				},
-				{
-					extend: 'print',
-					text: '<i title="Print" class="fas fa-print"></i>',
-					messageTop: header,
-					title: '',
-					exportOptions: {
-						columns: ':visible:Not(.not-exported)',
-						rows: ':visible'
-					},
-					messageBottom: null
-				},
-				{
-                  extend: 'colvis',
-                  text: '<i title="column visibility" class="fa fa-eye"></i>',
-                  columns: ':gt(0)'
-              },
-            ],
-            "paging":   false,columns: [
-              { orderable: false }, // first column
-              null, // second column
-              { orderable: false }, // third column
-              null, // fourth column
-              null, // fifth column
-              null, // sixth column
-              null, // seventh column
-              null, // eighth column
-              { orderable: false }, // ninth column
-            ],
-            //"ordering": false,
-        } );
-         */
     });
-
-    function vivaSheetPrint() {
-            // Create a new window
-            const printWindow = window.open('', '_blank');
-            
-            // Get the HTML content for the print view
-            let printContent = `
-                <html>
-                <head>
-                    <title>Applicant List - Print View</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            margin: 20px;
-                        }
-                        table {
-                            width: 100%;
-                            border-collapse: collapse;
-                        }
-                        th, td {
-                            border: 1px solid #ddd;
-                            padding: 8px;
-                            text-align: left;
-                        }
-                        th {
-                            background-color: #f2f2f2;
-                        }
-                        .print-header {
-                            text-align: center;
-                            margin-bottom: 20px;
-                        }
-                        .print-footer {
-                            text-align: center;
-                            margin-top: 20px;
-                            font-size: 12px;
-                        }
-                    </style>
-                </head>
-                <body>`;
-                    
-    printContent += $("#vivaSheet").html();
-    printContent += `
-          <script>
-            window.onload = function() {
-                setTimeout(function() {
-                    window.print();
-                }, 500);
-            };
-          <\\/script>  
-      `;
-    printContent += `</body>
-                </html>`;
-            
-            // Write the content to the new window
-            printWindow.document.open();
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-        }
-
 
       function PrintElem(elem,title){	     
 	        Popup($(elem).html(),title);
@@ -682,8 +630,48 @@ function applyWorksheetBorders(ws) {
 	    function Popup(data,title) {
 	        var mywindow = window.open('', title, 'height=562,width=795');
 	        mywindow.document.write('<html><head><title>'+title+'</title>');
+          //mywindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">');
 	        mywindow.document.write(`<style type="text/css">
              table td, table th {border:1px solid #ccc; }
+             .row {
+                display: flex;
+                flex-wrap: wrap;
+                margin-right: -15px;
+                margin-left: -15px;
+              }
+
+              .d-flex {
+                display: flex !important;
+              }
+
+              .justify-content-around {
+                justify-content: space-around !important;
+              }
+
+              .col-md-3 {
+                position: relative;
+                width: 100%;
+                /* For medium screens and up (≥768px), width is 25% */
+                flex: 0 0 25%;
+                max-width: 25%;
+              }
+
+              .text-center {
+                text-align: center !important;
+              }
+
+              .m-0 {
+                margin: 0 !important;
+              }
+
+              .font-weight-bold {
+                font-weight: 700 !important;
+              }
+
+              /* Inline style equivalent */
+              .custom-margin-top {
+                margin-top: 60px;
+              }
             </style>`);
           mywindow.document.oriantation = 'landscape';
 	        mywindow.document.write('</head><body >');

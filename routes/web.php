@@ -10,6 +10,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MenuController;
 
+use App\Http\Controllers\SignatureController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\CertificationController;
@@ -19,6 +20,8 @@ use App\Http\Controllers\SkillConrtoller;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\EduBoardController;
 use App\Http\Controllers\EduGroupController;
+use App\Http\Controllers\LanguageProficiencyController;
+use App\Http\Controllers\ReferencesController;
 
 use App\Http\Controllers\SMS\SmsContactController;
 use App\Http\Controllers\SMS\SmsLogController;
@@ -76,6 +79,8 @@ Route::group(['prefix'=>'applicant','middleware'=>'auth:student'], function(){
     Route::post('/updatePhoto', [StudentController::class,'updatePhoto'])->name('student.photo.update');
     Route::post('/updateSignature', [StudentController::class,'updateSignature'])->name('student.signature.update');
     Route::post('/updateAddress', [StudentController::class,'updateAddress'])->name('student.address.update');
+    Route::post('/updateCareer', [StudentController::class,'updateCareer'])->name('student.career.update');
+    Route::post('/updateOther', [StudentController::class,'updateOther'])->name('student.other.update');
     Route::get('/view_cv', [StudentController::class,'view_cv'])->name('student.view_cv');
     Route::get('/applied_jobs', [StudentController::class,'applied_jobs'])->name('student.applied_jobs');
 
@@ -98,6 +103,16 @@ Route::group(['prefix'=>'applicant','middleware'=>'auth:student'], function(){
     Route::get('training_edit', [TrainingController::class, 'edit'])->name('student.training.edit');
     Route::post('training_update', [TrainingController::class, 'update'])->name('student.training.update');
     Route::get('training_destroy', [TrainingController::class, 'destroy'])->name('student.training.destroy');
+
+    Route::post('language_store', [LanguageProficiencyController::class, 'store'])->name('student.language.store');
+    Route::get('language_edit', [LanguageProficiencyController::class, 'edit'])->name('student.language.edit');
+    Route::post('language_update', [LanguageProficiencyController::class, 'update'])->name('student.language.update');
+    Route::get('language_destroy', [LanguageProficiencyController::class, 'destroy'])->name('student.language.destroy');
+
+    Route::post('reference_store', [ReferencesController::class, 'store'])->name('student.reference.store');
+    Route::get('reference_edit', [ReferencesController::class, 'edit'])->name('student.reference.edit');
+    Route::post('reference_update', [ReferencesController::class, 'update'])->name('student.reference.update');
+    Route::get('reference_destroy', [ReferencesController::class, 'destroy'])->name('student.reference.destroy');
 
     Route::post('skill_store', [SkillConrtoller::class, 'store'])->name('student.skill.store');
     Route::get('skill_destroy', [SkillConrtoller::class, 'destroy'])->name('student.skill.destroy');
@@ -123,7 +138,12 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
     Route::resource('designation', DesignationController::class);
     Route::resource('eduBoard', EduBoardController::class);
     Route::resource('eduGroup', EduGroupController::class);
+    Route::post('signature_add', [SignatureController::class, 'add'])->name('signature.add');
+    Route::get('signature_delete/{id}', [SignatureController::class, 'delete'])->name('signature.delete');
+    Route::post('signature_serial', [SignatureController::class, 'serial'])->name('signature.serial');
+    Route::resource('signature', SignatureController::class);
 });
+
 Route::get('/childLocation', [LocationController::class,'childLocation'])->name('childLocation');
 
 Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth']], function(){

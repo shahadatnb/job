@@ -21,17 +21,31 @@
         <div class="">
                             <img id="photoPreview" src="{{asset('/storage/'.$student->photo)}}" alt="" class="img-thumbnail" width="150 px">
         </div>
-        </div>             
+        </div>
+
+        @if($student->objective != '')
+        <h4>Objective</h4>
+        <div class="mb-3">{!! nl2br($student->objective) !!}</div>
+        @endif
+        @if($student->career_summary != '')                
+        <h4>Career Summary</h4>
+        <div class="mb-3">{!! nl2br($student->career_summary) !!}</div>
+        @endif
+        @if($student->special_qualification != '')
+        <h4>Special Qualification</h4>
+        <div class="mb-3">{!! nl2br($student->special_qualification) !!}</div>
+        @endif
+
         @if($student->employments->count() > 0)
         <h4>Experience</h4>
         <table class="table table-sm ">
         <thead class="table-light">
             <tr>
-                <th>Job Title</th>
-                <th>Company</th>
-                <th>Job Description</th>
-                <th>From</th>
-                <th>To</th>
+                <th width="15%">Job Title</th>
+                <th width="15%">Company</th>
+                <th width="50%">Job Description</th>
+                <th width="10%">From</th>
+                <th width="10%">To</th>
             </tr>
         </thead>
         <tbody id="experienceTable">
@@ -41,7 +55,7 @@
                 <td>{{ $exp->company_name }}</td>
                 <td>{{ $exp->job_description }}</td>
                 <td>{{ date('d-m-Y', strtotime($exp->start_date)) }}</td>
-                <td>{{ date('d-m-Y', strtotime($exp->end_date)) }}</td>
+                <td>{{ $exp->is_current ==1 ? 'Continuing' : date('d-m-Y', strtotime($exp->end_date)) }}</td>
             </tr>
             @endforeach
         </tbody>
@@ -51,21 +65,21 @@
         <table class="table table-sm">
         <thead class="table-light">
             <tr>
-                <th>Exam</th>
-                <th>Group</th>
-                <th>Board</th>
-                <th>Year</th>
-                <th>Result</th>
+                <th width="15%">Exam</th>
+                <th width="15%">Group</th>
+                <th width="45%">Instotute</th>
+                <th width="10%">Year</th>
+                <th width="15%">Result</th>
             </tr>
         </thead>
         <tbody id="academicTable">
             @foreach($student->educations as $edu)
             <tr data-id="{{ $edu->id }}">
-                <td>{{ $edu->exam? $edu->exam->name : '' }}</td>
-                <td>{{ $edu->group? $edu->group->name : '' }}</td>
-                <td>{{ $edu->board? $edu->board->name : $edu->university }}</td>
+                <td>{{ $edu->exam ? $edu->exam->name : '' }}</td>
+                <td>{{ $edu->group ? $edu->group->name : '' }}</td>
+                <td>{{ $edu->university }}{{ $edu->board ? '(Board: '.$edu->board->name.')' : '' }}</td>
                 <td>{{ $edu->passing_year }}</td>    
-                <td>{{ $edu->gpa }}{{ $edu->result_type == 'gpa' ? '/'.$edu->out_of : '' }}</td>
+                <td>{{ $edu->result }}{{ $edu->result_type == 'gpa' ? ' out of '.$edu->out_of : '' }}</td>
             </tr>
             @endforeach
         </tbody>
@@ -76,12 +90,12 @@
         <table class="table table-sm">
         <thead class="table-light">
             <tr>
-                <th>Title</th>
-                <th>Topics Covered</th>
-                <th>Year</th>
-                <th>Institute</th>
-                <th>Duration</th>
-                <th>Location</th>
+                <th width="15%">Title</th>
+                <th width="40%">Topics Covered</th>
+                <th width="7%">Year</th>
+                <th width="15%">Institute</th>
+                <th width="10%">Duration</th>
+                <th width="13%">Location</th>
             </tr>
         </thead>
         <tbody id="trainingTable">
@@ -98,6 +112,33 @@
         </tbody>
         </table>
         @endif
+
+        @if($student->certifications->count() > 0)
+        <h4>Professional Certificates</h4>
+        <table class="table table-sm">
+        <thead class="table-light">
+            <tr>
+                <th width="30%">Certification</th>
+                <th width="30%">Institute</th>
+                <th width="20%">Location</th>
+                <th width="10%">From</th>
+                <th width="10%">To</th>
+            </tr>
+        </thead>
+        <tbody id="certificationTable">
+            @foreach($student->certifications as $edu)
+            <tr data-id="{{ $edu->id }}">
+                <td>{{ $edu->certification }}</td>
+                <td>{{ $edu->institute }}</td>
+                <td>{{ $edu->location }}</td>
+                <td>{{ date('d-m-Y', strtotime($edu->start_date)) }}</td>
+                <td>{{ date('d-m-Y', strtotime($edu->end_date)) }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+        </table>
+        @endif
+
         @if($student->skills->count() > 0)
         <h4>Skills</h4>
         <p>
@@ -105,6 +146,30 @@
         {{ $skill->skill }}, 
         @endforeach
         </p>
+        @endif
+
+        @if($student->languages->count() > 0)
+        <h4>Languages Preficiency</h4>
+        <table class="table table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Language</th>
+                <th>Reading</th>
+                <th>Writing</th>
+                <th>Speaking</th>
+            </tr>
+        </thead>
+        <tbody id="languageTable">
+            @foreach($student->languages as $lang)
+            <tr data-id="{{ $lang->id }}">
+                <td>{{ $lang->language }}</td>
+                <td>{{ $lang->reading }}</td>
+                <td>{{ $lang->writing }}</td>
+                <td>{{ $lang->speaking }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+        </table>
         @endif
         <h4>Basic Information</h4>
         <table class="table table-sm">
@@ -137,7 +202,7 @@
             <th>Blood Group</th>
             <td id="profile_blood_group">{{ $student->blood_group }}</td>
             </tr>
-            <tr>
+            {{-- <tr>
             <th colspan="2">Present Address</th>
             </tr>
             <tr>
@@ -155,7 +220,7 @@
             <tr>
             <th>District</th>
             <td>{{ $student->district ? $student->district->name : '' }}</td>
-            </tr>
+            </tr> --}}
             <tr>
             <th colspan="2">Permanent Address:</th>
             </tr>
@@ -175,17 +240,57 @@
             <th>District</th>
             <td>{{ $student->districtPermanent ? $student->districtPermanent->name : '' }}</td>
             </tr>
-                  <tr>
-                    <td></td>
-                    <td align="center" class="mt-5">
-                        <div style="width: 300px">
-                            <img src="{{asset('/storage/'.$student->signature)}}" style="height: 50px;" alt="">
-                            <p class="mt-0" style="border-top: 1px solid black;">Signature</p>
-                        </div>
-                    </td>
-                  </tr>
         </tbody>
         </table>
+
+        <h4>References:</h4>
+        <div class="row">
+        @foreach($student->references as $reference)
+        <div class="col-md-6">
+            <table class="table table-sm">
+            <tbody>
+                <tr>
+                <th>Name</th>
+                <td>{{ $reference->name }}</td>
+                </tr>
+                <tr>
+                <th>Designation</th>
+                <td>{{ $reference->designation }}</td>
+                </tr>
+                <tr>
+                <th>Organization</th>
+                <td>{{ $reference->organization }}</td>
+                </tr>
+                <tr>
+                <th>Email</th>
+                <td>{{ $reference->email }}</td>
+                </tr>
+                <tr>
+                <th>Phone</th>
+                <td>{{ $reference->mobile }}</td>
+                </tr>
+                <tr>
+                <th>Address</th>
+                <td>{{ $reference->address }}</td>
+                </tr>
+                <tr>
+                <th>Relationship</th>
+                <td>{{ $reference->relation }}</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        @endforeach
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 offset-md-6 text-center">
+                <div style="width: 300px">
+                    <img src="{{asset('/storage/'.$student->signature)}}" style="height: 50px;" alt="">
+                    <p class="mt-0" style="border-top: 1px solid black;">Signature</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
