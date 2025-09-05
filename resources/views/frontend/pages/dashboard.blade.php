@@ -115,49 +115,7 @@
 <script src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"> </script>
 
 <script>
-    $(document).ready(function() {
-        $('#edu_level_id').change(function() {
-						$.LoadingOverlay("show");
-            var edu_level_id = $(this).val();
-            $.ajax({
-                url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
-                method: 'GET',
-                success: function(data) {
-                    //console.log(data);                    
-                    if(data.status == true){
-                        $('#edu_group_id').empty();
-												if(data.groups.length > 0){
-													$('#edu_group_id').append('<option value="">Select Group</option>');
-													$.each(data.groups, function(index, value) {
-															$('#edu_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-													});
-												}else{
-													$('#edu_group_id').append('<option value="0">Select Group</option>');
-												}
-                        
-                        $('#edu_board_id').empty();
-                        //$('#university').val('');
-                        if(data.boards.length > 0){
-                          $('#boardDiv').removeClass('d-none');
-                          //$('#universityDiv').addClass('d-none');
-                          //$('#university').attr('required', false);
-                          $('#edu_board_id').attr('required', true);
-
-                          $('#edu_board_id').append('<option value="">Select Board</option>');
-                          $.each(data.boards, function(index, value) {
-                              $('#edu_board_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-                          });
-                        }else{
-                          $('#boardDiv').addClass('d-none');
-                          //$('#universityDiv').removeClass('d-none');
-                          //$('#university').attr('required', true);
-                          $('#edu_board_id').attr('required', false);
-                        }
-                    }
-                }
-            });
-						$.LoadingOverlay("hide");
-					});
+    $(document).ready(function() {        
 
 		$("#sameAsPresent").change(function(){
 				if($(this).is(":checked")) {

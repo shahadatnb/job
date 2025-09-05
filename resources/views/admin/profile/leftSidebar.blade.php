@@ -45,7 +45,7 @@
     <strong><i class="fas fa-book mr-1"></i> Education</strong>
 
     <p class="text-muted">
-        B.S. in Computer Science from the University of Tennessee at Knoxville
+        B.S. in Computer Science from the institute of Tennessee at Knoxville
     </p>
 
     <hr>

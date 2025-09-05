@@ -23,4 +23,10 @@ class JobApplication extends Model
     {
         return $this->belongsTo(ApplicationStatus::class, 'status');
     }
+
+    public function result(){
+        return $this->hasOne(ApplicantResult::class, 'application_id');
+    }
+
+    
 }

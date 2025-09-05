@@ -18,7 +18,9 @@ use App\Http\Controllers\EmploymentController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\SkillConrtoller;
 use App\Http\Controllers\JobApplicationController;
+use App\Http\Controllers\ApplicantResultController;
 use App\Http\Controllers\EduBoardController;
+use App\Http\Controllers\EduLevelGroupController;
 use App\Http\Controllers\EduGroupController;
 use App\Http\Controllers\LanguageProficiencyController;
 use App\Http\Controllers\ReferencesController;
@@ -134,8 +136,13 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
     Route::get('/applicants', [StudentController::class,'students'])->name('student.index');
     Route::get('/job/application', [JobApplicationController::class,'application'])->name('job.application');
     Route::post('/job/application_status', [JobApplicationController::class,'application_status'])->name('job.application_status');
+    
+    Route::get('/job/result_entry', [ApplicantResultController::class,'result_entry'])->name('job.result_entry');
+    Route::post('/job/result_save', [ApplicantResultController::class,'result_save'])->name('job.result_save');
+    
     Route::resource('job', JobController::class);
     Route::resource('designation', DesignationController::class);
+    Route::resource('eduLevelGroup', EduLevelGroupController::class);
     Route::resource('eduBoard', EduBoardController::class);
     Route::resource('eduGroup', EduGroupController::class);
     Route::post('signature_add', [SignatureController::class, 'add'])->name('signature.add');

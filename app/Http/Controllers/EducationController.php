@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\StudentEducation;
 use App\Models\EduBoard;
 use App\Models\EduGroup;
+use App\Models\EduLevelGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,9 +14,10 @@ class EducationController extends Controller
 
     public function edu_group(Request $request)
     {
-        $groups = EduGroup::where('edu_level_id', $request->edu_level_id)->get();
-        $boards = EduBoard::where('edu_level_id', $request->edu_level_id)->get();
-        return response()->json(['status'=>true,'groups' => $groups, 'boards' => $boards]);
+        $groups = EduGroup::where('edu_level_id', $request->edu_level_id)->where('is_active', 1)->get();
+        $boards = EduBoard::where('edu_level_id', $request->edu_level_id)->where('is_active', 1)->get();
+        $level_groups = EduLevelGroup::where('edu_level_id', $request->edu_level_id)->where('is_active', 1)->get();
+        return response()->json(['status'=>true,'groups' => $groups, 'boards' => $boards, 'level_groups' => $level_groups]);
     }
 
     public function store(Request $request)
@@ -23,8 +25,9 @@ class EducationController extends Controller
         $validator = Validator::make($request->all(), [
             'edu_level_id' => 'required',
             'edu_group_id' => 'required',
+            'edu_level_group_id' => 'nullable',
             'edu_board_id' => 'nullable',
-            'university' => 'required|string|max:100',
+            'institute' => 'required|string|max:100',
             'passing_year' => 'required',
             'result_type' => 'required',
             'result_gpa' => 'nullable|required_if:result_type,gpa|numeric|max:5',
@@ -32,13 +35,11 @@ class EducationController extends Controller
             'result_division' => 'required_if:result_type,division',
             'result_pass' => 'required_if:result_type,pass',
         ],[
+            'edu_level_group_id.required' => 'Degree title is required',
             'result_gpa.required_if' => 'GPA is required',
             'out_of.required_if' => 'Out of is required',
             'result_division.required_if' => 'Division is required',
             'result_pass.required_if' => 'Pass is required',
-            'university.required' => 'Institute name is required',
-            'university.string' => 'Institute name must be a string',
-            'university.max' => 'Institute name must be less than 100 characters',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
@@ -59,7 +60,8 @@ class EducationController extends Controller
         $edu->edu_level_id = $request->edu_level_id;
         $edu->edu_group_id = $request->edu_group_id != 0 ? $request->edu_group_id : null;
         $edu->edu_board_id = $request->edu_board_id;
-        $edu->university = $request->university;
+        $edu->edu_level_group_id = $request->edu_level_group_id;
+        $edu->institute = $request->institute;
         $edu->passing_year = $request->passing_year;
         $edu->result_type = $request->result_type;
         $edu->result = $result;
@@ -76,9 +78,10 @@ class EducationController extends Controller
     public function edit(Request $request)
     {
         $education = StudentEducation::find($request->id);
-        $groups = EduGroup::where('edu_level_id', $education->edu_level_id)->get();
-        $boards = EduBoard::where('edu_level_id', $education->edu_level_id)->get();
-        return response()->json(['status' => true, 'type'=> 'edit', 'education'=> $education, 'groups' => $groups, 'boards' => $boards]);
+        $groups = EduGroup::where('edu_level_id', $education->edu_level_id)->where('is_active', 1)->get();
+        $boards = EduBoard::where('edu_level_id', $education->edu_level_id)->where('is_active', 1)->get();
+        $level_groups = EduLevelGroup::where('edu_level_id', $education->edu_level_id)->where('is_active', 1)->get();
+        return response()->json(['status' => true, 'type'=> 'edit', 'education'=> $education, 'groups' => $groups, 'boards' => $boards, 'level_groups' => $level_groups]);
     }
 
     public function update(Request $request)
@@ -86,8 +89,9 @@ class EducationController extends Controller
         $validator = Validator::make($request->all(), [
             'edu_level_id' => 'required',
             'edu_group_id' => 'required',
+            'edu_level_group_id' => 'nullable',
             'edu_board_id' => 'nullable',
-            'university' => 'required|string|max:100',
+            'institute' => 'required|string|max:100',
             'passing_year' => 'required',
             'result_type' => 'required',
             'result_gpa' => 'nullable|required_if:result_type,gpa|numeric|max:5',
@@ -95,13 +99,11 @@ class EducationController extends Controller
             'result_division' => 'required_if:result_type,division',
             'result_pass' => 'required_if:result_type,pass',
         ],[
+            'edu_level_group_id.required' => 'Degree title is required',
             'result_gpa.required_if' => 'GPA is required',
             'out_of.required_if' => 'Out of is required',
             'result_division.required_if' => 'Division is required',
             'result_pass.required_if' => 'Pass is required',
-            'university.required' => 'Institute name is required',
-            'university.string' => 'Institute name must be a string',
-            'university.max' => 'Institute name must be less than 100 characters',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
@@ -119,8 +121,9 @@ class EducationController extends Controller
         //$result = $request->result_type == 'gpa' ?  $request->result_gpa : $request->result_division;
         $edu->edu_level_id = $request->edu_level_id;
         $edu->edu_group_id = $request->edu_group_id != 0 ? $request->edu_group_id : null;
+        $edu->edu_level_group_id = $request->edu_level_group_id;
         $edu->edu_board_id = $request->edu_board_id;
-        $edu->university = $request->university;
+        $edu->institute = $request->institute;
         $edu->passing_year = $request->passing_year;
         $edu->result_type = $request->result_type;
         $edu->result = $result;

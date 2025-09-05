@@ -3,8 +3,8 @@
 <!-- Jobs Start -->
 <div class="container-xxl py-5">
     <div class="container">
-        <marquee behavior="scroll" direction="left" scrollamount="4" style="font-size: 22px" class="text-danger mb-5">For any technical problems, please contact: 01332-533535</marquee>
-        <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Job Listing</h1>
+        <marquee behavior="scroll" direction="left" scrollamount="4" style="font-size: 22px" class="text-danger mb-3">For any technical problems, please contact: 01332-533535</marquee>
+        <h1 class="text-center mb-3 wow fadeInUp" data-wow-delay="0.1s">Job Listing</h1>
         @foreach ($jobs as $job)
         <div class="job-item p-4 mb-4">
             <div class="row g-4">
@@ -22,7 +22,7 @@
                         <a class="btn btn-primary" href="{{ route('job.job_detail', $job->id) }}">Details</a>
                         {{-- <a class="btn btn-primary apply_now" data-job_id="{{ $job->id }}" data-post="{{ $job->title }}"  href="javascript:void(0)">Apply Now</a> --}}
                     </div>
-                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Date Line: {{ date('d-m-Y', strtotime($job->last_date)) }}</small>
+                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Deadline: {{ date('d-m-Y', strtotime($job->last_date)) }}</small>
                 </div>
             </div>
         </div>

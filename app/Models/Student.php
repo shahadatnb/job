@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable; // for auth
 use Illuminate\Foundation\Auth\User as Authenticatable; // for auth
 use App\Notifications\CustomerResetPasswordNotification;
+use Illuminate\Console\Application;
 use Laravel\Sanctum\HasApiTokens;
 
 class Student extends Authenticatable
@@ -25,6 +26,10 @@ class Student extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new CustomerResetPasswordNotification($token));
+    }
+
+    public function result(){
+        return $this->hasOne(ApplicantResult::class, 'applicant_id');
     }
 
     public function upazila()

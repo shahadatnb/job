@@ -25,7 +25,7 @@
                     <p><i class="fa fa-angle-right text-primary me-2"></i>Gender: {{ $job->gender }}</p>
                     <p><i class="fa fa-angle-right text-primary me-2"></i>Salary: {{ $job->nagotiable == 1 ? 'Nagotiable' : $job->salary }}</p>
                     <p><i class="fa fa-angle-right text-primary me-2"></i>Location: {{ $job->location }}</p>
-                    <p class="m-0"><i class="fa fa-angle-right text-primary me-2"></i>Date Line: {{ date('d-m-Y', strtotime($job->last_date)) }}</p>
+                    <p class="m-0"><i class="fa fa-angle-right text-primary me-2"></i>Deadline: {{ date('d-m-Y', strtotime($job->last_date)) }}</p>
                 </div>
 
                 <div class="mb-5">
@@ -77,9 +77,9 @@
                 </div>
 
                 <div class="">
-                    {{-- <h4 class="mb-4">Apply For The Job</h4>
+                    <h4 class="mb-4">Apply For The Job</h4>
                     <a class="btn btn-primary apply_now" data-job_id="{{ $job->id }}" data-post="{{ $job->title }}"  href="javascript:void(0)">Apply Now</a>
-                    <form>
+                    {{-- <form>
                         <div class="row g-3">
                             <div class="col-12 col-sm-6">
                                 <input type="text" class="form-control" placeholder="Your Name">
@@ -100,14 +100,14 @@
                                 <button class="btn btn-primary w-100" type="submit">Apply Now</button>
                             </div>
                         </div>
-                    </form>
-                </div> --}}
+                    </form> --}}
+                </div>
             </div>
 
             <div class="col-lg-4">                
-                <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
+                {{-- <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
                     <a class="btn btn-primary apply_now" data-job_id="{{ $job->id }}" data-post="{{ $job->title }}"  href="javascript:void(0)">Apply Now</a>
-                </div>
+                </div> --}}
                 <div class="bg-light rounded p-5 wow slideInUp" data-wow-delay="0.1s">
                     <h4 class="mb-4">Job List</h4>
                     @foreach ($jobs as $job)

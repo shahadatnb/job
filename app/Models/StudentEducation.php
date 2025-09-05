@@ -23,4 +23,9 @@ class StudentEducation extends Model
     {
         return $this->belongsTo(EduGroup::class, 'edu_group_id');
     }
+
+    public function examTitle()
+    {
+        return $this->belongsTo(EduLevelGroup::class, 'edu_level_group_id');
+    }
 }

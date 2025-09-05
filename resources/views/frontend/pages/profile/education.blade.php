@@ -18,8 +18,8 @@
 		<tr data-id="{{ $edu->id }}">
 				<td>{{ $edu->exam->name }}</td>
 				<td>{{ $edu->group ? $edu->group->name : '' }}</td>
-				{{-- <td>{{ $edu->board ? $edu->board->name : $edu->university }}</td> --}}
-				<td>{{ $edu->university }}{{ $edu->board ? '(Board: '.$edu->board->name.')' : '' }}</td>
+				{{-- <td>{{ $edu->board ? $edu->board->name : $edu->institute }}</td> --}}
+				<td>{{ $edu->institute }}{{ $edu->board ? '(Board: '.$edu->board->name.')' : '' }}</td>
 				<td>{{ $edu->passing_year }}</td>
 				<td>{{ $edu->result }}</td>
 				<td>
@@ -111,19 +111,27 @@
             <div id="errorMsg"></div>
             <form action="{{route('student.education.store')}}" id="eduForm" method="post">
                 @csrf
+								<div class="row">
+									<div class="form-group col-md-6">
+										<label for="edu_level_id">Exam</label>
+										<select name="edu_level_id" id="edu_level_id" class="form-control">
+											<option value="">Select Exam</option>
+											@foreach($exams as $exam)
+											<option value="{{$exam->id}}">{{$exam->name}}</option>
+											@endforeach
+										</select>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="edu_level_group_id">Exam/Degree Title</label>
+										<select name="edu_level_group_id" id="edu_level_group_id" class="form-control">
+											<option value="">Select Exam Title</option>
+										</select>
+									</div>
+								</div>
                 <div class="form-group">
-                    <label for="edu_level_id">Exam</label>
-                    <select name="edu_level_id" id="edu_level_id" class="form-control">
-                        <option value="">Select Exam</option>
-                        @foreach($exams as $exam)
-                        <option value="{{$exam->id}}">{{$exam->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="university">Institute Name</label>
-					          <input type="text" name="university" id="university" class="form-control">
-                </div>
+									<label for="institute">Institute Name</label>
+									<input type="text" name="institute" id="institute" class="form-control">
+								</div>
                 <div class="form-group" id="groupDiv">
                     <label for="edu_group_id">Group</label>
                     <select name="edu_group_id" id="edu_group_id" class="form-control">
@@ -253,6 +261,62 @@
 	$(document).ready(function() {
 						// EDUCATION
 
+						$('#edu_level_id').change(function() {
+						$.LoadingOverlay("show");
+            var edu_level_id = $(this).val();
+            $.ajax({
+                url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
+                method: 'GET',
+                success: function(data) {
+                    //console.log(data);                    
+                    if(data.status == true){
+                        $('#edu_group_id').empty();
+												if(data.groups.length > 0){
+													$('#edu_group_id').append('<option value="">Select Group</option>');
+													$.each(data.groups, function(index, value) {
+															$('#edu_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+													});
+												}else{
+													$('#edu_group_id').append('<option value="0">Select Group</option>');
+												}
+
+                        $('#edu_level_group_id').empty();
+												if(data.level_groups.length > 0){
+													$('#edu_level_group_id').prop('required', true);
+													$('#edu_level_group_id').removeClass('d-none');
+													$('#edu_level_group_id').append('<option value="">Select Exam Title</option>');
+													$.each(data.level_groups, function(index, value) {
+															$('#edu_level_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+													});
+												}else{
+													$('#edu_level_group_id').prop('required', false);
+													$('#edu_level_group_id').addClass('d-none');
+												}
+                        
+                        $('#edu_board_id').empty();
+                        //$('#institute').val('');
+                        if(data.boards.length > 0){
+                          $('#boardDiv').removeClass('d-none');
+                          //$('#instituteDiv').addClass('d-none');
+                          //$('#institute').attr('required', false);
+                          $('#edu_board_id').attr('required', true);
+
+                          $('#edu_board_id').append('<option value="">Select Board</option>');
+                          $.each(data.boards, function(index, value) {
+                              $('#edu_board_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                          });
+                        }else{
+                          $('#boardDiv').addClass('d-none');
+                          //$('#instituteDiv').removeClass('d-none');
+                          //$('#institute').attr('required', true);
+                          $('#edu_board_id').attr('required', false);
+                        }
+                    }
+                }
+            });
+						$.LoadingOverlay("hide");
+					});
+
         $('#newAcademicModal').click(function() {
 			$('#eduForm')[0].reset();
 			$("input[name='result_type']").trigger('change');
@@ -295,7 +359,7 @@
 							$("#academicTable").append(`<tr>
 								<td>${data.education.exam_name}</td>
 								<td>${data.education.group_name}</td>
-								<td>${data.education.university}</td>
+								<td>${data.education.institute}</td>
 								<td>${data.education.passing_year}</td>
 								<td>${data.education.result}</td>
 								<td>
@@ -309,7 +373,7 @@
 							$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
 							.find('td').eq(1).html(data.education.group_name);
 							$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
-							.find('td').eq(2).html(data.education.university);
+							.find('td').eq(2).html(data.education.institute);
 							$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
 							.find('td').eq(3).html(data.education.passing_year);
 							$("#academicTable").find('tr[data-id="'+data.education.id+'"]')
@@ -353,11 +417,26 @@
 							$('#edu_group_id').append('<option value="0" selected>Select Group</option>');
 							$('#edu_group_id').val('0').change();
 						}
+
+						$('#edu_level_group_id').empty();
+						if(data.level_groups.length > 0){
+							$('#edu_level_group_id').prop('required', true);
+							$('#edu_level_group_id').removeClass('d-none');
+							$('#edu_level_group_id').append('<option value="">Select Exam Title</option>');
+							$.each(data.level_groups, function(index, value) {
+									$('#edu_level_group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+							});
+						}else{
+							$('#edu_level_group_id').prop('required', false);
+							$('#edu_level_group_id').addClass('d-none');
+							$('#edu_level_group_id').append('<option value="0">Select Exam Title</option>');
+						}
+
 						$('#edu_board_id').empty();
             if(data.boards.length > 0){
               $('#boardDiv').removeClass('d-none');
-              //$('#university').addClass('d-none');
-              //$('#university').attr('required', false);
+              //$('#institute').addClass('d-none');
+              //$('#institute').attr('required', false);
               $('#edu_board_id').attr('required', true);
 
               $('#edu_board_id').append('<option value="">Select Board</option>');
@@ -366,14 +445,15 @@
               }); 
             }else{
               $('#boardDiv').addClass('d-none');
-              //$('#university').removeClass('d-none');
-              //$('#university').attr('required', true);
+              //$('#institute').removeClass('d-none');
+              //$('#institute').attr('required', true);
               $('#edu_board_id').attr('required', false);
             }
 						
+					$("#edu_level_group_id").val(data.education.edu_level_group_id);
 					$("#edu_group_id").val(data.education.edu_group_id);
 					$("#edu_board_id").val(data.education.edu_board_id);
-					$("#university").val(data.education.university);
+					$("#institute").val(data.education.institute);
 					$("#passing_year").val(data.education.passing_year);
 					//console.log(data.education.result_type);
 					if(data.education.result_type == 'gpa'){

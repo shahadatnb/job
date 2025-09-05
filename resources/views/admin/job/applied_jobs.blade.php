@@ -2,6 +2,7 @@
 @section('title',"Application Lists")
 @section('css')
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.24/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/datatables.min.css"/>
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 <style>
         @media print {
             body * {
@@ -57,14 +58,20 @@
           <div class="col-6 col-md-3">
             {!! Form::select('job_id',$jobs,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Job Title')]) !!}
           </div>
-          <div class="col-6 col-md-2">
+          {{-- <div class="col-6 col-md-2">
             {!! Form::text('email',null,['class'=>'form-control form-control-sm','placeholder'=> __('Email')]) !!}
-          </div>
+          </div> --}}
           <div class="col-6 col-md-2">
             {!! Form::text('phone',null,['class'=>'form-control form-control-sm','placeholder'=> __('Phone')]) !!}
           </div>
           <div class="col-6 col-md-2">
             {!! Form::select('status',$applicationStatus,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Status')]) !!}
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="input-group">              
+              {!! Form::text('date',null,['class'=>'form-control date datetimepicker-input', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date", 'id'=>'date', 'placeholder'=> __('Date')]) !!}
+              {{ Form::text('time',null,array('class'=>'form-control timepicker datetimepicker-input', 'data-toggle'=>"datetimepicker", 'data-target'=>"#time", 'id'=>'time', 'maxlenth'=>'60','placeholder'=>'Time')) }}
+            </div>
           </div>
           <div class="col-6 col-md-2">
             <div class="btn-group">
@@ -76,8 +83,8 @@
           {!! Form::close() !!}
         </div>
       </div>
-      <div class="row d-flex justify-content-between">        
-        <div class="col-6">
+      <div class="row d-flex justify-content-end">        
+        <div class="col-6 d-flex justify-content-end">
           <button type="button" class="btn btn-primary btn-sm" onclick="exportTableToExcel('applied_jobs')" ><i class="fas fa-file-excel"></i> Export</button>
           <button type="button" class="btn btn-success btn-sm" onclick="PrintElem('#vivaSheet','Viva Sheet')"><i class="fas fa-print"></i> Viva Sheet</button>
           <button type="button" class="btn btn-info btn-sm" onclick="PrintElem('#attendanceSheet','Attendance Sheet')"><i class="fas fa-print"></i> Attendance Sheet</button>
@@ -87,16 +94,21 @@
     </div>
     <div class="card-body">
       <div id="errorMsg"></div>
-      <div class="col-3 mb-2">
-          {!! Form::open(['route' => 'job.application_status','class'=>'d-print-none row','id'=>'application_status']) !!}
-          <div class="input-group">
-            {!! Form::select('status',$applicationStatus,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Approval Application')]) !!}
-            <div class="input-group-append">
-              <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-save"></i> Save</button>
+      <div class="row d-flex justify-content-between mb-2">
+        <div class="col-3">
+            {!! Form::open(['route' => 'job.application_status','class'=>'d-print-none row','id'=>'application_status']) !!}
+            <div class="input-group">
+              {!! Form::select('status',$applicationStatus,null,['class'=>'form-control form-control-sm select2','placeholder'=> __('Approval Application')]) !!}
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-save"></i> Save</button>
+              </div>
             </div>
+            {!! Form::close() !!}
           </div>
-          {!! Form::close() !!}
-        </div>
+          <div class="col-3 text-right">
+            Showing {{ $sl = $sl2 = $sl3 = $sl4 = $applied_jobs->firstItem() }} to {{ $applied_jobs->lastItem() }} of {{ $applied_jobs->total() }} Applications
+          </div>
+      </div>
       <div class="table-responsive">
         <table id="applied_jobs" class="table table-sm table-bordered table-striped">
             <thead>
@@ -113,15 +125,14 @@
               <th>Action</th>
             </tr>
             </thead>
-            @php $sl=1;
-              //$date_of_birth = '1990-01-01';
-              //$age = \Carbon\Carbon::parse($date_of_birth)->age;
-            @endphp
             <tbody>
-                @foreach ($applied_jobs as $item)
+                @foreach ($applied_jobs as $key => $item)
                 <tr>
                   <td class="not-exported"><input class="candidate_list" name="candidate[]" type="checkbox" value="{{$item->id}}"></td>
-                    <td>{{$sl++}}</td>
+                    <td>
+                      {{-- {{ ($applied_jobs->currentPage() - 1) * $applied_jobs->perPage() + $loop->iteration }} --}}
+                      {{ $sl++ }}
+                    </td>
                     <td>
                       {{-- @dd($item->student) --}}
                       {{-- {{$item->student}} --}}
@@ -131,7 +142,13 @@
                       {{$item->student->name }} <br>
                       Age: {{$item->age }} <br>
                       @foreach ($item->student->educations as $education)
-                        {{$education->exam ? $education->exam->name : '' }}: {{ $education->university }}{{ $education->board ? '(Board: '.$education->board->name.')' : '' }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }}<br>
+                        @if($education->examTitle)
+                          {{$education->examTitle->name}}
+                        @else
+                          {{$education->exam ? $education->exam->name : '' }}
+                        @endif
+                          :  {{ $education->institute }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }}<br>
+                        {{-- {{ $education->board ? '(Board: '.$education->board->name.')' : '' }} --}}
                       @endforeach
                       Phone: {{$item->student->phone }} <br>
                       Email: {{$item->student->email }} <br>
@@ -145,7 +162,7 @@
                         {{$employment->company_name }}, {{$employment->job_title }}, {{ $experience =  $length>0 ? number_format($length/365,1) : 0}}+ <br>
                         @php $total_experience += $experience @endphp
                       @endforeach
-                      <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p>
+                      {{-- <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p> --}}
                     </td>
                     <td>
                       {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }}  and Taka: {{$item->expected_salary}}/-
@@ -203,8 +220,8 @@
         <th colspan="9" class="text-center">{{ config('settings.appAddress') }}</th>
       </tr>
       <tr>
-        <th align="left" colspan="6">Interview Sheet For {{ $data['job_title'] }}</th>
-        <th colspan="3">Date: {{ date('d-m-Y') }}</th>
+        <th align="left" colspan="5">Interview Sheet For {{ $data['job_title'] }}</th>
+        <th colspan="4">Date: {{ $data['date'] }} {{ $data['time'] }}</th>
       </tr>
       {{-- <tr>
         <th colspan="9">Interview Sheet For {{ $data['job_title'] }}</th>
@@ -224,7 +241,7 @@
     <tbody>
       @foreach ($applied_jobs as $key => $item)
         <tr>
-          <td>{{ ++$key }}</td>
+          <td>{{ $sl2++ }}</td>
           <td>
             <img src="{{asset('/storage/'.$item->student->photo)}}" alt="" width="100">
           </td>
@@ -232,7 +249,13 @@
             {{$item->student->name }} <br>
             Age: {{$item->age }} <br>
             @foreach ($item->student->educations as $education)
-              {{$education->exam ? $education->exam->name : '' }}: {{ $education->university }}{{ $education->board ? '(Board: '.$education->board->name.')' : '' }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }} <br>
+              @if($education->examTitle)
+                {{$education->examTitle->name}}
+              @else
+                {{$education->exam ? $education->exam->name : '' }}
+              @endif
+              :  {{ $education->institute }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }} <br>
+              {{-- {{ $education->board ? '(Board: '.$education->board->name.')' : '' }} --}}
             @endforeach
             Phone: {{$item->student->phone }} <br>
             Email: {{$item->student->email }} <br>
@@ -246,15 +269,15 @@
               {{$employment->company_name }}, {{$employment->job_title }}, {{ $experience =  $length>0 ? number_format($length/365,1) : 0}}+ <br>
               @php $total_experience += $experience @endphp
             @endforeach
-            <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p>
+            {{-- <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p> --}}
           </td>
           <td>
             {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }}  and Taka: {{$item->expected_salary}}/-
           </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{$item->result ? $item->result->present_salary : ''}}</td>
+          <td>{{$item->result ? $item->result->preferred_salary : ''}}</td>
+          <td>{{$item->result ? $item->result->marks : ''}}</td>
+          <td>{{$item->result ? $item->result->position : ''}}</td>
         </tr>
       @endforeach
     </tbody>
@@ -274,8 +297,8 @@
         <th colspan="9" class="text-center">{{ config('settings.appAddress') }}</th>
       </tr>
       <tr>
-        <th align="left" colspan="6">Selected Sheet For {{ $data['job_title'] }}</th>
-        <th colspan="3">Date: {{ date('d-m-Y') }}</th>
+        <th align="left" colspan="5">Selected Sheet For {{ $data['job_title'] }}</th>
+        <th colspan="4">Date: {{ $data['date'] }} {{ $data['time'] }}</th>
       </tr>
       {{-- <tr>
         <th colspan="9">Interview Sheet For {{ $data['job_title'] }}</th>
@@ -295,7 +318,7 @@
     <tbody>
       @foreach ($applied_jobs as $key => $item)
         <tr>
-          <td>{{ ++$key }}</td>
+          <td>{{ $sl3++ }}</td>
           <td>
             <img src="{{asset('/storage/'.$item->student->photo)}}" alt="" width="100">
           </td>
@@ -303,7 +326,13 @@
             {{$item->student->name }} <br>
             Age: {{$item->age }} <br>
             @foreach ($item->student->educations as $education)
-              {{$education->exam ? $education->exam->name : '' }}: {{ $education->university }}{{ $education->board ? '(Board: '.$education->board->name.')' : '' }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }} <br>
+            @if($education->examTitle)
+              {{$education->examTitle->name}}
+            @else
+              {{$education->exam ? $education->exam->name : '' }}
+            @endif
+              : {{ $education->institute }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }} <br>
+              {{-- {{ $education->board ? '(Board: '.$education->board->name.')' : '' }} --}}
             @endforeach
             Phone: {{$item->student->phone }} <br>
             Email: {{$item->student->email }} <br>
@@ -317,15 +346,15 @@
               {{$employment->company_name }}, {{$employment->job_title }}, {{ $experience =  $length>0 ? number_format($length/365,1) : 0}}+ <br>
               @php $total_experience += $experience @endphp
             @endforeach
-            <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p>
+            {{-- <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p> --}}
           </td>
           <td>
             {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }}  and Taka: {{$item->expected_salary}}/-
           </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{$item->result ? $item->result->present_salary : ''}}</td>
+          <td>{{$item->result ? $item->result->preferred_salary : ''}}</td>
+          <td>{{$item->result ? $item->result->marks : ''}}</td>
+          <td>{{$item->result ? $item->result->position : ''}}</td>
         </tr>
       @endforeach
     </tbody>
@@ -352,8 +381,8 @@
         <th colspan="5" class="text-center">{{ config('settings.appAddress') }}</th>
       </tr>
       <tr>
-        <th align="left" colspan="4">Subject: Attendance Sheet For {{ $data['job_title'] }}</th>
-        <th>Date: {{ date('d-m-Y') }}</th>
+        <th align="left" colspan="3">Subject: Attendance Sheet For {{ $data['job_title'] }}</th>
+        <th colspan="2">Date: {{ $data['date'] }} {{ $data['time'] }}</th>
       </tr>
       {{-- <tr>
         <th colspan="9">Interview Sheet For {{ $data['job_title'] }}</th>
@@ -369,7 +398,7 @@
     <tbody>
       @foreach ($applied_jobs as $key => $item)
         <tr>
-          <td>{{ ++$key }}</td>
+          <td>{{ $sl4++ }}</td>
           <td>
             <img src="{{asset('/storage/'.$item->student->photo)}}" alt="" width="100">
           </td>
@@ -377,7 +406,7 @@
             {{$item->student->name }} <br>
             Age: {{$item->age }} <br>
             @foreach ($item->student->educations as $education)
-              {{$education->exam ? $education->exam->name : '' }}, {{$education->edu_board_id != '' ? $education->board->name : $education->university }} <br>
+              {{$education->exam ? $education->exam->name : '' }}, {{$education->edu_board_id != '' ? $education->board->name : $education->institute }} <br>
             @endforeach
             Phone: {{$item->student->phone }} <br>
             Email: {{$item->student->email }} <br>
@@ -401,6 +430,9 @@
 <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script> --}}
 {{-- <script src="{{asset('/assets/admin/js/main.js')}}"></script> --}}
+<script src="{{ asset('assets/admin/plugins/moment/moment.min.js') }}"> </script>
+<!-- Tempusdominus -->
+<script src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"> </script>
 <script>
 /*
     function exportToExcel() {
@@ -413,6 +445,14 @@
     }
 */
 
+  $('.date').datetimepicker({
+      //format: 'DD/MM/YYYY'
+      format: 'YYYY-MM-DD'
+  });
+
+  $('.timepicker').datetimepicker({
+      format: 'LT',
+  });
 
 async function exportTableToExcel(tableID, options = {}) {
     // Default options

@@ -58,14 +58,20 @@
               <p>Application Lists</p>
             </a>
           </li>          
+          <li class="nav-item">
+            <a href="{{ route("job.result_entry") }}" class="nav-link {{ (request()->routeIs('job.result_entry')) ? ' active' : '' }}">
+              <i class="nav-icon fas fa-briefcase"></i>
+              <p>Result Entry</p>
+            </a>
+          </li>          
           <li class="nav-item has-treeview {{ (request()->routeIs('student.*','designation.*','eduBoard.*','eduGroup.*','signature.*')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ (request()->routeIs('student.*','designation.*','eduBoard.*','eduGroup.*','signature.*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-restroom"></i>
               <p>CV Management <i class="right fas fa-angle-left"></i> </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item has-treeview {{ (request()->routeIs('eduBoard.*','eduGroup.*','designation.*')) ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ (request()->routeIs('eduBoard.*','eduGroup.*','designation.*')) ? 'active' : '' }}">
+              <li class="nav-item has-treeview {{ (request()->routeIs('eduBoard.*','eduLevelGroup.*','eduGroup.*','designation.*')) ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ (request()->routeIs('eduBoard.*','eduLevelGroup.*','eduGroup.*','designation.*')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-tools"></i>
                   <p>
                     Setting
@@ -73,6 +79,9 @@
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
+                  <li class="nav-item"><a href="{{ route("eduLevelGroup.index") }}" class="nav-link {{ (request()->routeIs('eduLevelGroup.*')) ? ' active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i> <p>{{__('Exam/Degree Title') }}</p></a>
+                  </li>                  
                   <li class="nav-item"><a href="{{ route("eduBoard.index") }}" class="nav-link {{ (request()->routeIs('eduBoard.*')) ? ' active' : '' }}">
                     <i class="far fa-circle nav-icon"></i> <p>{{__('Education Board') }}</p></a>
                   </li>                  

@@ -136,7 +136,7 @@
     </div>        
 
         <!-- Footer Start -->
-        <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn d-print-none" data-wow-delay="0.1s">
+        <div class="container-fluid bg-dark text-white-50 footer mt-5 wow fadeIn d-print-none" data-wow-delay="0.1s">
             {{-- <div class="container py-5">
                 <div class="row g-5">
                     <div class="col-lg-3 col-md-6">

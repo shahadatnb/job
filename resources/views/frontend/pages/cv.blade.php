@@ -87,7 +87,7 @@
                   <tr>
                       <th width="15%">Exam</th>
                       <th width="15%">Group</th>
-                      <th width="45%">Instotute</th>
+                      <th width="45%">Institute</th>
                       <th width="10%">Year</th>
                       <th width="15%">Result</th>
                   </tr>
@@ -97,7 +97,7 @@
                   <tr data-id="{{ $edu->id }}">
                       <td>{{ $edu->exam ? $edu->exam->name : '' }}</td>
                       <td>{{ $edu->group ? $edu->group->name : '' }}</td>
-                      <td>{{ $edu->university }}{{ $edu->board ? '(Board: '.$edu->board->name.')' : '' }}</td>
+                      <td>{{ $edu->institute }}{{ $edu->board ? '(Board: '.$edu->board->name.')' : '' }}</td>
                       <td>{{ $edu->passing_year }}</td>    
                       <td>{{ $edu->result }}{{ $edu->result_type == 'gpa' ? ' out of '.$edu->out_of : '' }}</td>
                   </tr>

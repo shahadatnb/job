@@ -187,7 +187,7 @@ class JobApplicationController extends Controller
     
     public function application(Request $request)
     {
-        $data = ['job_id'=>'','status'=>'','job_title'=>'','email'=>'','phone'=>''];
+        $data = ['job_id'=>'','status'=>'','job_title'=>'','email'=>'','phone'=>'', 'date'=>date('Y-m-d'),'time'=>''];
         $jobs = Job::where('status', 1)->pluck('title', 'id');
         $applied_jobs = JobApplication::with('job')->with('student')->latest();
         $applicationStatus = ApplicationStatus::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
@@ -218,7 +218,15 @@ class JobApplicationController extends Controller
             $applied_jobs = $applied_jobs->where('status', $request->status);
         }
 
-        $applied_jobs = $applied_jobs->paginate(300);
+        if(!empty($request->date)) {
+            $data['date'] = $request->date;
+        }
+
+        if(!empty($request->time)) {
+            $data['time'] = $request->time;
+        }            
+
+        $applied_jobs = $applied_jobs->paginate(100);
         return view('admin.job.applied_jobs', compact('applied_jobs', 'data', 'jobs','applicationStatus','jobSignature'));
     }
 

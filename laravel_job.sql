@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 24, 2025 at 01:32 PM
+-- Generation Time: Sep 04, 2025 at 01:13 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -20,6 +20,31 @@ SET time_zone = "+00:00";
 --
 -- Database: `laravel_job`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `applicant_results`
+--
+
+CREATE TABLE `applicant_results` (
+  `id` bigint UNSIGNED NOT NULL,
+  `application_id` bigint UNSIGNED NOT NULL,
+  `present_salary` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `preferred_salary` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `marks` decimal(4,2) DEFAULT NULL,
+  `position` tinyint UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `applicant_results`
+--
+
+INSERT INTO `applicant_results` (`id`, `application_id`, `present_salary`, `preferred_salary`, `marks`, `position`, `created_at`, `updated_at`) VALUES
+(3, 4, NULL, '5000', '50.00', 2, '2025-08-29 09:54:36', '2025-08-29 09:57:19'),
+(4, 3, NULL, '16000', '60.00', 1, '2025-08-29 09:54:36', '2025-08-29 09:57:19');
 
 -- --------------------------------------------------------
 
@@ -141,7 +166,8 @@ INSERT INTO `edu_groups` (`id`, `edu_level_id`, `name`, `is_active`, `created_at
 (6, 2, 'Electronics', 1, NULL, NULL),
 (7, 3, 'Computer Science', 1, NULL, NULL),
 (8, 5, 'MBBS', 1, '2025-07-15 15:14:06', '2025-07-15 15:14:06'),
-(9, 5, 'BDS', 1, '2025-07-15 15:14:13', '2025-07-15 15:14:13');
+(9, 5, 'BDS', 1, '2025-07-15 15:14:13', '2025-07-15 15:14:13'),
+(10, 7, 'Scince', 1, '2025-09-02 14:34:40', '2025-09-02 14:34:40');
 
 -- --------------------------------------------------------
 
@@ -164,12 +190,43 @@ CREATE TABLE `edu_levels` (
 --
 
 INSERT INTO `edu_levels` (`id`, `name`, `is_diploma`, `serial`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'SSC/Equivalent', 0, 2, 1, NULL, NULL),
+(1, 'Secondary', 0, 2, 1, NULL, NULL),
 (2, 'Diploma', 1, 2, 1, NULL, NULL),
-(3, 'Hon', NULL, 3, 1, NULL, NULL),
+(3, 'Honorers/Pass', NULL, 3, 1, NULL, NULL),
 (4, 'Masters', NULL, 4, 1, NULL, NULL),
 (5, 'MBBS/BDS', NULL, 5, 1, NULL, NULL),
-(6, 'JDC/Equivalent', 0, 1, 1, NULL, NULL);
+(6, 'JDC/Equivalent', 0, 1, 1, NULL, NULL),
+(7, 'Intermediate', 1, 2, 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `edu_level_groups`
+--
+
+CREATE TABLE `edu_level_groups` (
+  `id` bigint UNSIGNED NOT NULL,
+  `edu_level_id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_active` tinyint UNSIGNED DEFAULT '1',
+  `sl` tinyint UNSIGNED DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `edu_level_groups`
+--
+
+INSERT INTO `edu_level_groups` (`id`, `edu_level_id`, `name`, `is_active`, `sl`, `created_at`, `updated_at`) VALUES
+(1, 1, 'SSC', 1, 1, '2025-09-02 11:01:48', '2025-09-02 11:01:48'),
+(2, 1, 'Dakhil', 1, 2, '2025-09-02 11:02:00', '2025-09-02 11:02:00'),
+(3, 1, 'Vocational', 1, 3, '2025-09-02 11:02:30', '2025-09-02 11:02:30'),
+(4, 1, 'Others', 1, 4, '2025-09-02 11:02:39', '2025-09-02 11:02:39'),
+(5, 3, 'Honorers', 1, 1, '2025-09-02 11:05:40', '2025-09-02 11:05:40'),
+(6, 3, 'Pass', 1, 2, '2025-09-02 11:05:55', '2025-09-02 11:05:55'),
+(7, 3, 'Fazil', 1, 3, '2025-09-02 11:06:10', '2025-09-02 11:06:10'),
+(8, 7, 'HSC', 1, NULL, '2025-09-02 14:32:51', '2025-09-02 14:32:51');
 
 -- --------------------------------------------------------
 
@@ -257,7 +314,8 @@ CREATE TABLE `jobs` (
 --
 
 INSERT INTO `jobs` (`id`, `company_id`, `designation_id`, `title`, `requirements`, `responsibility`, `compensation_other_benefits`, `location`, `vacancy`, `job_nature`, `education_level_id`, `age_min`, `age_max`, `minimum_experience`, `gender`, `edu_level_id`, `edu_group_any`, `edu_group_ids`, `edu_level2_id`, `edu_group2_any`, `edu_group2_ids`, `last_date`, `salary`, `nagotiable`, `status`, `created_at`, `updated_at`) VALUES
-(1, NULL, 1, 'Marketing Manager', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Dolor justo tempor duo ipsum accusam rebum gubergren erat. Elitr stet dolor vero clita labore gubergren. Kasd sed ipsum elitr clita rebum ut sea diam tempor. Sadipscing nonumy vero labore invidunt dolor sed, eirmod dolore amet aliquyam consetetur lorem, amet elitr clita et sed consetetur dolore accusam. Vero kasd nonumy justo rebum stet. Ipsum amet sed lorem sea magna. Rebum vero dolores dolores elitr vero dolores magna, stet sea sadipscing stet et. Est voluptua et sanctus at sanctus erat vero sed sed, amet duo no diam clita rebum duo, accusam tempor takimata clita stet nonumy rebum est invidunt stet, dolor.</p><p><br></p>', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Magna et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed lorem stet voluptua sit sit at stet consetetur, takimata at diam kasd gubergren elitr dolor</p><ul class=\"list-unstyled\" style=\"box-sizing: border-box; padding-left: 0px; margin-top: 0px; margin-bottom: 1rem; list-style: none; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Dolor justo tempor duo ipsum accusam</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Elitr stet dolor vero clita labore gubergren</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Rebum vero dolores dolores elitr</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Est voluptua et sanctus at sanctus erat</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Diam diam stet erat no est est</li></ul><p><br></p>', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Magna\r\n et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed \r\nlorem stet voluptua sit sit at stet consetetur, takimata at diam kasd \r\ngubergren elitr dolor</p><ul class=\"list-unstyled\" style=\"box-sizing: border-box; padding-left: 0px; margin-top: 0px; margin-bottom: 1rem; list-style: none; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Dolor justo tempor duo ipsum accusam</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Elitr stet dolor vero clita labore gubergren</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Rebum vero dolores dolores elitr</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Est voluptua et sanctus at sanctus erat</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Diam diam stet erat no est est</li></ul><p><br></p>', 'Dhaka', '5', 'Full Time', NULL, 35, 40, 2, 'Any', 3, NULL, '[\"7\"]', 2, NULL, '[\"4\"]', '2025-07-31', '25000', 1, 1, '2025-04-17 14:20:44', '2025-07-22 15:58:55');
+(1, NULL, 1, 'Marketing Manager', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Dolor justo tempor duo ipsum accusam rebum gubergren erat. Elitr stet dolor vero clita labore gubergren. Kasd sed ipsum elitr clita rebum ut sea diam tempor. Sadipscing nonumy vero labore invidunt dolor sed, eirmod dolore amet aliquyam consetetur lorem, amet elitr clita et sed consetetur dolore accusam. Vero kasd nonumy justo rebum stet. Ipsum amet sed lorem sea magna. Rebum vero dolores dolores elitr vero dolores magna, stet sea sadipscing stet et. Est voluptua et sanctus at sanctus erat vero sed sed, amet duo no diam clita rebum duo, accusam tempor takimata clita stet nonumy rebum est invidunt stet, dolor.</p><p><br></p>', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Magna et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed lorem stet voluptua sit sit at stet consetetur, takimata at diam kasd gubergren elitr dolor</p><ul class=\"list-unstyled\" style=\"box-sizing: border-box; padding-left: 0px; margin-top: 0px; margin-bottom: 1rem; list-style: none; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Dolor justo tempor duo ipsum accusam</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Elitr stet dolor vero clita labore gubergren</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Rebum vero dolores dolores elitr</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Est voluptua et sanctus at sanctus erat</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"Font Awesome 5 Free\"; font-weight: 900; margin-right: 0.5rem !important; color: rgb(0, 176, 116) !important;\"></i>Diam diam stet erat no est est</li></ul><p><br></p>', '<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 1rem; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Magna\r\n et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed \r\nlorem stet voluptua sit sit at stet consetetur, takimata at diam kasd \r\ngubergren elitr dolor</p><ul class=\"list-unstyled\" style=\"box-sizing: border-box; padding-left: 0px; margin-top: 0px; margin-bottom: 1rem; list-style: none; color: rgb(102, 101, 101); font-family: Heebo, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Dolor justo tempor duo ipsum accusam</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Elitr stet dolor vero clita labore gubergren</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Rebum vero dolores dolores elitr</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Est voluptua et sanctus at sanctus erat</li><li style=\"box-sizing: border-box;\"><i class=\"fa fa-angle-right text-primary me-2\" style=\"box-sizing: border-box; -webkit-font-smoothing: antialiased; display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; font-family: \"></i>Diam diam stet erat no est est</li></ul><p><br></p>', 'Dhaka', '5', 'Full Time', NULL, 35, 40, 2, 'Any', 3, NULL, '[\"7\"]', 2, NULL, '[\"4\"]', '2025-07-31', '25000', 1, 1, '2025-04-17 14:20:44', '2025-07-22 15:58:55'),
+(2, NULL, 2, 'IT Engineer', '<p>aa</p>', '<p>bbb</p>', '<p>bbb</p>', 'Rajshahi', NULL, 'Full Time', NULL, 20, 40, 2, 'Any', 3, 1, 'null', NULL, 1, 'null', '2025-08-31', NULL, 1, 1, '2025-08-06 17:16:41', '2025-08-14 01:20:29');
 
 -- --------------------------------------------------------
 
@@ -282,10 +340,33 @@ CREATE TABLE `job_applications` (
 --
 
 INSERT INTO `job_applications` (`id`, `job_id`, `student_id`, `age`, `expected_salary`, `remarks`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 2, NULL, '50000', NULL, 4, '2025-04-22 13:56:40', '2025-05-17 15:54:40'),
-(2, 1, 2, NULL, '3000', NULL, 2, '2025-04-22 14:08:35', '2025-05-17 15:56:16'),
-(3, 1, 2, '36', '2000', NULL, 1, '2025-07-12 08:20:47', '2025-07-12 08:20:47'),
-(4, 1, 2, '36', '50000', NULL, 1, '2025-07-22 16:20:12', '2025-07-22 16:20:12');
+(1, 2, 2, NULL, '50000', NULL, 5, '2025-04-22 13:56:40', '2025-08-29 08:49:20'),
+(2, 2, 2, NULL, '3000', NULL, 5, '2025-04-22 14:08:35', '2025-08-29 08:49:20'),
+(3, 1, 2, '36', '2000', NULL, 5, '2025-07-12 08:20:47', '2025-08-29 08:49:20'),
+(4, 1, 1, '36', '50000', NULL, 5, '2025-07-22 16:20:12', '2025-08-29 08:49:20');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_signatures`
+--
+
+CREATE TABLE `job_signatures` (
+  `id` bigint UNSIGNED NOT NULL,
+  `job_id` bigint UNSIGNED NOT NULL,
+  `signature_id` bigint UNSIGNED NOT NULL,
+  `serial` smallint UNSIGNED NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `job_signatures`
+--
+
+INSERT INTO `job_signatures` (`id`, `job_id`, `signature_id`, `serial`, `created_at`, `updated_at`) VALUES
+(1, 2, 1, 1, '2025-08-18 04:32:27', '2025-08-18 04:43:23'),
+(3, 2, 2, 0, '2025-08-18 04:45:22', '2025-08-18 04:45:22');
 
 -- --------------------------------------------------------
 
@@ -314,6 +395,30 @@ INSERT INTO `languages` (`id`, `code`, `group`, `en`, `bn`, `created_at`, `updat
 (4, 'Address', 'Customer', 'পিতা/রেফারেন্স', 'পিতা/রেফারেন্স', NULL, '2022-03-14 09:54:37'),
 (5, 'Name', 'Customer', 'নাম', 'নাম', NULL, '2022-03-14 09:54:37'),
 (6, 'Phone', 'Customer', 'মোবাইল', 'মোবাইল', NULL, '2022-03-14 09:54:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `language_proficiencies`
+--
+
+CREATE TABLE `language_proficiencies` (
+  `id` bigint UNSIGNED NOT NULL,
+  `student_id` int UNSIGNED NOT NULL,
+  `language` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reading` enum('High','Medium','Low') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `writing` enum('High','Medium','Low') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `speaking` enum('High','Medium','Low') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `language_proficiencies`
+--
+
+INSERT INTO `language_proficiencies` (`id`, `student_id`, `language`, `reading`, `writing`, `speaking`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Bangla', 'Low', 'Medium', 'High', '2025-07-31 01:18:15', '2025-07-31 01:19:16');
 
 -- --------------------------------------------------------
 
@@ -1033,7 +1138,14 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (167, '2025_04_17_185933_create_companies_table', 48),
 (168, '2025_04_17_193557_create_jobs_table', 48),
 (170, '2025_04_22_190854_create_job_applications_table', 49),
-(171, '2025_05_17_085348_create_application_statuses_table', 50);
+(171, '2025_05_17_085348_create_application_statuses_table', 50),
+(172, '2025_07_27_182657_create_professional_certificates_table', 51),
+(173, '2025_07_27_182721_create_references_table', 51),
+(174, '2025_07_27_182753_create_language_proficiencies_table', 51),
+(175, '2025_08_18_090346_create_signatures_table', 52),
+(176, '2025_08_18_091004_create_job_signatures_table', 52),
+(177, '2025_08_27_073857_create_applicant_results_table', 53),
+(178, '2025_09_02_160027_create_edu_level_groups_table', 54);
 
 -- --------------------------------------------------------
 
@@ -1163,6 +1275,61 @@ CREATE TABLE `post_tax` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `professional_certificates`
+--
+
+CREATE TABLE `professional_certificates` (
+  `id` bigint UNSIGNED NOT NULL,
+  `student_id` bigint NOT NULL,
+  `certification` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `institute` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `professional_certificates`
+--
+
+INSERT INTO `professional_certificates` (`id`, `student_id`, `certification`, `institute`, `location`, `start_date`, `end_date`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Test', 'Text Institute', 'Test location', '2025-02-01', '2025-03-31', '2025-07-30 11:13:22', '2025-07-30 11:19:19'),
+(2, 1, 'Test', 'Text Institute', 'Test location', '2025-07-01', '2025-07-30', '2025-07-30 11:13:29', '2025-07-30 11:13:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `references`
+--
+
+CREATE TABLE `references` (
+  `id` bigint UNSIGNED NOT NULL,
+  `student_id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `designation` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `organization` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `relation` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `mobile` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone_off` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone_res` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `references`
+--
+
+INSERT INTO `references` (`id`, `student_id`, `name`, `designation`, `organization`, `email`, `relation`, `mobile`, `phone_off`, `phone_res`, `address`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Md. Saddam Hossoin Majumder', 'Programar', 'Land', 'saddam@gmail.com', 'Office', '01757839516', NULL, NULL, NULL, '2025-07-31 01:21:00', '2025-07-31 01:21:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `roles`
 --
 
@@ -1264,6 +1431,29 @@ INSERT INTO `settings` (`id`, `sl`, `name`, `description`, `value`, `category`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `signatures`
+--
+
+CREATE TABLE `signatures` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint UNSIGNED NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `signatures`
+--
+
+INSERT INTO `signatures` (`id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Dr. Fazlul Haque', 'Director<br>\r\nDFHCH', 1, '2025-08-18 03:39:34', '2025-08-18 03:39:34'),
+(2, 'Shahadat Hosain', 'IT Specialist <br>\r\nDFHCH', 1, '2025-08-18 03:41:07', '2025-08-18 03:41:07');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sms_logs`
 --
 
@@ -1350,6 +1540,14 @@ CREATE TABLE `students` (
   `permanent_post_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `permanent_upazila_id` int UNSIGNED DEFAULT NULL,
   `permanent_district_id` int UNSIGNED DEFAULT NULL,
+  `objective` text COLLATE utf8mb4_unicode_ci,
+  `present_salary` decimal(6,0) DEFAULT NULL,
+  `expected_salary` decimal(6,0) DEFAULT NULL,
+  `looking_for` enum('Entry Level','Mid Level','Top Level') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Job Level',
+  `available_for` enum('Full Time','Part Time','Contract','Internship','Freelance') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Job Nature',
+  `career_summary` text COLLATE utf8mb4_unicode_ci,
+  `special_qualification` text COLLATE utf8mb4_unicode_ci,
+  `keywords` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `photo` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `signature` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `otp` int DEFAULT NULL,
@@ -1361,9 +1559,9 @@ CREATE TABLE `students` (
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `name`, `name_bn`, `email`, `email_verified_at`, `password`, `remember_token`, `father_name`, `mother_name`, `nid`, `phone`, `date_of_birth`, `gender`, `religion`, `blood_group`, `village`, `post_office`, `post_code`, `upazila_id`, `district_id`, `permanent_village`, `permanent_post_office`, `permanent_post_code`, `permanent_upazila_id`, `permanent_district_id`, `photo`, `signature`, `otp`, `created_at`, `updated_at`) VALUES
-(1, 'Shahadat Hosain', 'শাহাদাত হোসেন', 'shahadat@asiancoder.com', NULL, '$2y$12$xzCBS3kSroA3LAz3WiVlYuEFmjDhwVUFLfWM/B0QVHEyClveb1IY.', NULL, 'Mostafa Kamal', 'Sazida Begum', '1234567890', '01757839516', '1989-01-02', NULL, 'islam', 'AB+', 'Kecuatoil44', 'Khorkhori44', NULL, 585, 392, 'Kecuatoil44', 'Khorkhori44', NULL, 585, 392, 'ex_student/1743306588.jpg', 'student/signature/1753015702.jpg', 5285, '2025-01-24 05:47:21', '2025-07-22 08:23:03'),
-(2, 'Md. Saddam Hossoin Majumder', NULL, 'saddamhossoin@gmail.com', NULL, '$2y$12$Bfn7fleTDe1fMIwD6splAOetWeUDKTYl.V.31IwJREKBFdpEOlfJ6', NULL, 'Abdur Rob', 'Sayra Begum Maya', '19851315069212138', '01833582121', '1985-11-05', 'Male', 'islam', 'A-', '75/A/A Gangchil Apartment', 'Tejgaoun', NULL, 429, 348, 'Majumder Villa, Utichgava', 'Rahima Nagar', NULL, 600, 344, 'student/1745253790.jpg', NULL, NULL, '2025-04-21 16:34:07', '2025-04-21 16:47:07');
+INSERT INTO `students` (`id`, `name`, `name_bn`, `email`, `email_verified_at`, `password`, `remember_token`, `father_name`, `mother_name`, `nid`, `phone`, `date_of_birth`, `gender`, `religion`, `blood_group`, `village`, `post_office`, `post_code`, `upazila_id`, `district_id`, `permanent_village`, `permanent_post_office`, `permanent_post_code`, `permanent_upazila_id`, `permanent_district_id`, `objective`, `present_salary`, `expected_salary`, `looking_for`, `available_for`, `career_summary`, `special_qualification`, `keywords`, `photo`, `signature`, `otp`, `created_at`, `updated_at`) VALUES
+(1, 'Shahadat Hosain', 'শাহাদাত হোসেন', 'shahadat@asiancoder.com', NULL, '$2y$12$xzCBS3kSroA3LAz3WiVlYuEFmjDhwVUFLfWM/B0QVHEyClveb1IY.', NULL, 'Mostafa Kamal', 'Sazida Begum', '1234567890', '01757839516', '1989-01-02', 'Male', 'islam', 'AB+', 'Kecuatoil44', 'Khorkhori44', NULL, 585, 392, 'Kecuatoil44', 'Khorkhori44', NULL, 585, 392, 'Current objective is to be expending in any job with information technology related technical support in any Company. Long-term objective is being a key person in any aggressive national organization. \r\n\r\nOver 11 years of experience in the field of IT, demonstrated expertise and efficiency in progressing from problem to well researched, implementation and support.', '35000', '50000', 'Mid Level', 'Full Time', 'Current objective is to be expending in any job with information technology related technical support in any Company. Long-term objective is being a key person in any aggressive national organization. \r\n\r\nOver 11 years of experience in the field of IT, demonstrated expertise and efficiency in progressing from problem to well researched, implementation and support.', 'Current objective is to be expending in any job with information technology related technical support in any Company. Long-term objective is being a key person in any aggressive national organization. \r\n\r\nOver 11 years of experience in the field of IT, demonstrated expertise and efficiency in progressing from problem to well researched, implementation and support.', 'Laravel, Php, Mysql', 'ex_student/1743306588.jpg', 'student/signature/1753015702.jpg', 5285, '2025-01-24 05:47:21', '2025-07-31 11:54:49'),
+(2, 'Md. Saddam Hossoin Majumder', NULL, 'saddamhossoin@gmail.com', NULL, '$2y$12$Bfn7fleTDe1fMIwD6splAOetWeUDKTYl.V.31IwJREKBFdpEOlfJ6', NULL, 'Abdur Rob', 'Sayra Begum Maya', '19851315069212138', '01833582121', '1985-11-05', 'Male', 'islam', 'A-', '75/A/A Gangchil Apartment', 'Tejgaoun', NULL, 429, 348, 'Majumder Villa, Utichgava', 'Rahima Nagar', NULL, 600, 344, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'student/1745253790.jpg', NULL, NULL, '2025-04-21 16:34:07', '2025-04-21 16:47:07');
 
 -- --------------------------------------------------------
 
@@ -1393,9 +1591,10 @@ CREATE TABLE `student_education` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
   `edu_level_id` bigint UNSIGNED NOT NULL,
-  `edu_group_id` bigint UNSIGNED NOT NULL,
+  `edu_level_group_id` int UNSIGNED DEFAULT NULL,
+  `edu_group_id` bigint UNSIGNED DEFAULT NULL,
   `edu_board_id` bigint UNSIGNED DEFAULT NULL,
-  `university` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `institute` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `roll_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `reg_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `passing_year` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -1410,11 +1609,13 @@ CREATE TABLE `student_education` (
 -- Dumping data for table `student_education`
 --
 
-INSERT INTO `student_education` (`id`, `student_id`, `edu_level_id`, `edu_group_id`, `edu_board_id`, `university`, `roll_no`, `reg_no`, `passing_year`, `result_type`, `result`, `out_of`, `created_at`, `updated_at`) VALUES
-(8, 1, 1, 2, 1, NULL, NULL, NULL, '2004', 'gpa', '3.25', '4', '2025-03-09 18:06:49', '2025-07-22 09:07:52'),
-(9, 2, 1, 1, 1, NULL, NULL, NULL, '2000', 'gpa', '4', NULL, '2025-04-21 16:49:17', '2025-04-21 16:49:17'),
-(10, 1, 2, 4, 2, NULL, NULL, NULL, '2008', 'division', '2nd', NULL, '2025-04-22 11:19:56', '2025-04-22 11:19:56'),
-(12, 1, 5, 8, NULL, 'RSTU', NULL, NULL, '2020', 'pass', 'Pass', NULL, '2025-07-15 15:24:23', '2025-07-15 15:38:55');
+INSERT INTO `student_education` (`id`, `student_id`, `edu_level_id`, `edu_level_group_id`, `edu_group_id`, `edu_board_id`, `institute`, `roll_no`, `reg_no`, `passing_year`, `result_type`, `result`, `out_of`, `created_at`, `updated_at`) VALUES
+(8, 1, 1, 2, 2, 1, 'Bashirabad dawatul Islam Dakhil Amdrasah', NULL, NULL, '2004', 'gpa', '3.25', '4', '2025-03-09 18:06:49', '2025-09-02 14:24:10'),
+(9, 2, 1, NULL, 1, 1, NULL, NULL, NULL, '2000', 'gpa', '4', NULL, '2025-04-21 16:49:17', '2025-04-21 16:49:17'),
+(10, 1, 2, NULL, 4, 2, NULL, NULL, NULL, '2008', 'division', '2nd', NULL, '2025-04-22 11:19:56', '2025-04-22 11:19:56'),
+(12, 1, 5, NULL, 8, NULL, 'RSTU', NULL, NULL, '2020', 'pass', 'Pass', NULL, '2025-07-15 15:24:23', '2025-07-15 15:38:55'),
+(13, 1, 6, NULL, NULL, NULL, 'Bashirabad dawatul Islam Dakhil Amdrasah', NULL, NULL, '1999', 'pass', 'Pass', NULL, '2025-08-15 10:14:01', '2025-08-19 11:54:51'),
+(14, 1, 7, 8, 10, NULL, 'Bashirabad dawatul Islam Dakhil Amdrasah', NULL, NULL, '2003', 'gpa', '3', '5', '2025-09-02 14:35:07', '2025-09-02 14:35:07');
 
 -- --------------------------------------------------------
 
@@ -1441,7 +1642,8 @@ CREATE TABLE `student_employments` (
 --
 
 INSERT INTO `student_employments` (`id`, `student_id`, `start_date`, `end_date`, `is_current`, `company_name`, `job_title`, `job_description`, `company_location`, `created_at`, `updated_at`) VALUES
-(1, 1, '2023-04-25', '2025-05-26', 0, 'IBMCHR', 'HE', 'Computer printer servising', 'Rajshahi', '2025-03-10 16:54:57', '2025-07-12 08:20:07');
+(1, 1, '2009-01-01', NULL, 1, 'IBMCHR', 'HE', 'Computer printer servising', 'Rajshahi', '2025-03-10 16:54:57', '2025-08-19 12:04:32'),
+(2, 1, '2021-01-01', '2025-08-31', 0, 'Pondit', 'Software Engineer', 'Test', 'Rajshahi', '2025-07-31 10:04:34', '2025-07-31 10:08:26');
 
 -- --------------------------------------------------------
 
@@ -1598,6 +1800,13 @@ INSERT INTO `user_branches` (`id`, `branch_id`, `user_id`) VALUES
 --
 
 --
+-- Indexes for table `applicant_results`
+--
+ALTER TABLE `applicant_results`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `application_id_foreign` (`application_id`);
+
+--
 -- Indexes for table `application_statuses`
 --
 ALTER TABLE `application_statuses`
@@ -1636,6 +1845,13 @@ ALTER TABLE `edu_levels`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `edu_level_groups`
+--
+ALTER TABLE `edu_level_groups`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `edu_level_groups_edu_level_id_foreign` (`edu_level_id`);
+
+--
 -- Indexes for table `ex_students`
 --
 ALTER TABLE `ex_students`
@@ -1661,9 +1877,23 @@ ALTER TABLE `job_applications`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `job_signatures`
+--
+ALTER TABLE `job_signatures`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `job_signatures_job_id_foreign` (`job_id`),
+  ADD KEY `job_signatures_signature_id_foreign` (`signature_id`);
+
+--
 -- Indexes for table `languages`
 --
 ALTER TABLE `languages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `language_proficiencies`
+--
+ALTER TABLE `language_proficiencies`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1735,6 +1965,18 @@ ALTER TABLE `post_tax`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `professional_certificates`
+--
+ALTER TABLE `professional_certificates`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `references`
+--
+ALTER TABLE `references`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
@@ -1759,6 +2001,12 @@ ALTER TABLE `sessions`
 -- Indexes for table `settings`
 --
 ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `signatures`
+--
+ALTER TABLE `signatures`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1860,6 +2108,12 @@ ALTER TABLE `user_branches`
 --
 
 --
+-- AUTO_INCREMENT for table `applicant_results`
+--
+ALTER TABLE `applicant_results`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `application_statuses`
 --
 ALTER TABLE `application_statuses`
@@ -1887,13 +2141,19 @@ ALTER TABLE `edu_boards`
 -- AUTO_INCREMENT for table `edu_groups`
 --
 ALTER TABLE `edu_groups`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `edu_levels`
 --
 ALTER TABLE `edu_levels`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `edu_level_groups`
+--
+ALTER TABLE `edu_level_groups`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `ex_students`
@@ -1911,7 +2171,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `job_applications`
@@ -1920,10 +2180,22 @@ ALTER TABLE `job_applications`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `job_signatures`
+--
+ALTER TABLE `job_signatures`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `languages`
 --
 ALTER TABLE `languages`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `language_proficiencies`
+--
+ALTER TABLE `language_proficiencies`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `locations`
@@ -1947,7 +2219,7 @@ ALTER TABLE `menu_items`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=179;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1980,6 +2252,18 @@ ALTER TABLE `post_tax`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `professional_certificates`
+--
+ALTER TABLE `professional_certificates`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `references`
+--
+ALTER TABLE `references`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
@@ -1990,6 +2274,12 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `settings`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `signatures`
+--
+ALTER TABLE `signatures`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `sms_logs`
@@ -2019,13 +2309,13 @@ ALTER TABLE `student_certifications`
 -- AUTO_INCREMENT for table `student_education`
 --
 ALTER TABLE `student_education`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `student_employments`
 --
 ALTER TABLE `student_employments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `student_skills`
@@ -2068,6 +2358,12 @@ ALTER TABLE `user_branches`
 --
 
 --
+-- Constraints for table `applicant_results`
+--
+ALTER TABLE `applicant_results`
+  ADD CONSTRAINT `application_id_foreign` FOREIGN KEY (`application_id`) REFERENCES `job_applications` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+--
 -- Constraints for table `edu_boards`
 --
 ALTER TABLE `edu_boards`
@@ -2078,6 +2374,19 @@ ALTER TABLE `edu_boards`
 --
 ALTER TABLE `edu_groups`
   ADD CONSTRAINT `edu_groups_edu_level_id_foreign` FOREIGN KEY (`edu_level_id`) REFERENCES `edu_levels` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `edu_level_groups`
+--
+ALTER TABLE `edu_level_groups`
+  ADD CONSTRAINT `edu_level_groups_edu_level_id_foreign` FOREIGN KEY (`edu_level_id`) REFERENCES `edu_levels` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `job_signatures`
+--
+ALTER TABLE `job_signatures`
+  ADD CONSTRAINT `job_signatures_job_id_foreign` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `job_signatures_signature_id_foreign` FOREIGN KEY (`signature_id`) REFERENCES `signatures` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `roles_permissions`
