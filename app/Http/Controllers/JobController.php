@@ -6,6 +6,7 @@ use App\Models\Job;
 use App\Models\EduLevel;
 use App\Models\EduGroup;
 use App\Models\Designation;
+use App\Models\Department;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -24,9 +25,10 @@ class JobController extends Controller
     {
         $exams = EduLevel::where('is_active', 1)->pluck('name', 'id');
         $designations = Designation::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
+        $departments = Department::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
         $eduGroups = [];
         $eduGroups2 = [];
-        return view('admin.job.createOrEdit', compact('designations', 'exams', 'eduGroups', 'eduGroups2'));
+        return view('admin.job.createOrEdit', compact('designations', 'departments', 'exams', 'eduGroups', 'eduGroups2'));
     }
 
     /**
@@ -36,6 +38,7 @@ class JobController extends Controller
     {
         $request->validate([
             'title' => 'required',
+            'department_id' => 'required',
             'designation_id' => 'nullable',
             'requirements' => 'required',
             'responsibility' => 'required',
@@ -56,6 +59,7 @@ class JobController extends Controller
         $job = new Job();
         $job->title = $request->title;
         $job->designation_id = $request->designation_id;
+        $job->department_id = $request->department_id;
         $job->requirements = $request->requirements;
         $job->responsibility = $request->responsibility;
         $job->compensation_other_benefits = $request->compensation_other_benefits;
@@ -114,8 +118,9 @@ class JobController extends Controller
         $job->edu_group_ids = json_decode($job->edu_group_ids, true);
         $job->edu_group2_ids = json_decode($job->edu_group2_ids, true);
 
-        $designations = Designation::where('status', 1)->pluck('name', 'id');
-        return view('admin.job.createOrEdit', compact('job', 'designations', 'exams', 'eduGroups','eduGroups2'));
+        $designations = Designation::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
+        $departments = Department::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
+        return view('admin.job.createOrEdit', compact('job', 'designations', 'departments', 'exams', 'eduGroups','eduGroups2'));
     }
 
     /**
@@ -126,6 +131,7 @@ class JobController extends Controller
         $request->validate([
             'title' => 'required',
             'designation_id' => 'nullable',
+            'department_id' => 'required',
             'requirements' => 'required',
             'responsibility' => 'required',
             'compensation_other_benefits' => 'required',
@@ -145,6 +151,7 @@ class JobController extends Controller
 
         $job->title = $request->title;
         $job->designation_id = $request->designation_id;
+        $job->department_id = $request->department_id;
         $job->requirements = $request->requirements;
         $job->responsibility = $request->responsibility;
         $job->compensation_other_benefits = $request->compensation_other_benefits;

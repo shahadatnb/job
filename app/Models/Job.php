@@ -14,6 +14,11 @@ class Job extends Model
         return $this->belongsTo(Designation::class);
     }
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
     public function eduLevel()
     {
         return $this->belongsTo(EduLevel::class);

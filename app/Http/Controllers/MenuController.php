@@ -12,7 +12,7 @@ class MenuController extends Controller
 
     public function index()
     {
-        $menus = Menu::where('branch_id', session('branch')['id'])->orderBy('title', 'asc')->get();
+        $menus = Menu::orderBy('title', 'asc')->get();
         return view('admin.menus.index', compact('menus'));
     }
 
@@ -53,7 +53,6 @@ class MenuController extends Controller
         ]);
 
         $data = new Menu;
-        $data->branch_id = session('branch')['id'];
         $data->Title = $request->Title;
         $data->menu_id = $request->menu_id;
         $data->save();
@@ -64,10 +63,10 @@ class MenuController extends Controller
     
     public function show($id)
     {
-        $menu = Menu::where('branch_id', session('branch')['id'])->where('id', $id)->first();
+        $menu = Menu::where('id', $id)->first();
         $menuType = $this->menuType();
         $parent_id = $this->parent_id($menu->id);
-        $pages = Post::where('post_type', 'page')->where('branch_id', session('branch')['id'])->orderBy('title', 'asc')->get();
+        $pages = Post::where('post_type', 'page')->orderBy('title', 'asc')->get();
         return view('admin.menus.show', compact('menu','menuType','parent_id','pages'));
     }
     

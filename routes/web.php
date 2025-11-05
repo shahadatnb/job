@@ -24,6 +24,7 @@ use App\Http\Controllers\EduLevelGroupController;
 use App\Http\Controllers\EduGroupController;
 use App\Http\Controllers\LanguageProficiencyController;
 use App\Http\Controllers\ReferencesController;
+use App\Http\Controllers\DepartmentController;
 
 use App\Http\Controllers\SMS\SmsContactController;
 use App\Http\Controllers\SMS\SmsLogController;
@@ -142,6 +143,7 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
     
     Route::resource('job', JobController::class);
     Route::resource('designation', DesignationController::class);
+    Route::resource('department', DepartmentController::class);
     Route::resource('eduLevelGroup', EduLevelGroupController::class);
     Route::resource('eduBoard', EduBoardController::class);
     Route::resource('eduGroup', EduGroupController::class);

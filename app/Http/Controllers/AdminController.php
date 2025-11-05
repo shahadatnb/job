@@ -56,13 +56,13 @@ class AdminController extends Controller
 
     
     public function siteCache(){
-        $munus = Menu::where('branch_id', session('branch')['id'])->get();
+        $munus = Menu::all();
         foreach($munus as $m){
             $settings[$m->menu_id] = MenuItem::with('subMenu')->withCount('subMenu')->where('menu_id',$m->id)->where('parent_id',null)->orderBy('sl')->orderBy('sl','ASC')->get()->toArray();
         }
         
         //$branch = Branch::where('id', session('branch')['id'])->first()->toArray( );
-        Cache::put(session('branch')['subdomain'], ['menus'=>$settings]);
+        Cache::put('site_settings', ['menus'=>$settings]);
         session()->flash('success', "Saved.");
         return redirect()->back();
     }

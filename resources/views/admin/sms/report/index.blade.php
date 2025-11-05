@@ -27,7 +27,7 @@
             <tbody>
                 @foreach ($logs as $key=>$item)
                     <tr>
-                        <td>{{ ++$key }}</td>
+                        <td>{{ $item->id }}</td>
                         <td>{{ $item->mobile }}</td>
                         <td>{{ $item->message }}</td>
                         <td>{{ $item->response }}</td>

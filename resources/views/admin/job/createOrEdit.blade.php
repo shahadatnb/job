@@ -31,9 +31,19 @@
               {!! Form::label('title', __('Job Title'),['class'=>'']) !!}
               {!! Form::text('title',null,['class'=>'form-control','placeholder'=> __('Job Title')]) !!}
             </div>
-            <div class="form-group">
-              {!! Form::label('designation_id', __('Designation'),['class'=>'']) !!}
-              {!! Form::select('designation_id',$designations,null,['class'=>'form-control select2','placeholder'=> __('Designation')]) !!}
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  {!! Form::label('department_id', __('Department'),['class'=>'']) !!}
+                  {!! Form::select('department_id',$departments,null,['class'=>'form-control select2','placeholder'=> __('Department')]) !!}
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  {!! Form::label('designation_id', __('Designation'),['class'=>'']) !!}
+                  {!! Form::select('designation_id',$designations,null,['class'=>'form-control select2','placeholder'=> __('Designation')]) !!}
+                </div>
+              </div>
             </div>
             <div class="form-group">
               {!! Form::label('requirements', __('Requirements'),['class'=>'']) !!}

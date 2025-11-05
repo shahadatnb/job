@@ -64,14 +64,14 @@
               <p>Result Entry</p>
             </a>
           </li>          
-          <li class="nav-item has-treeview {{ (request()->routeIs('student.*','designation.*','eduBoard.*','eduGroup.*','signature.*')) ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ (request()->routeIs('student.*','designation.*','eduBoard.*','eduGroup.*','signature.*')) ? 'active' : '' }}">
+          <li class="nav-item has-treeview {{ (request()->routeIs('student.*','designation.*','eduBoard.*','eduGroup.*','signature.*','eduLevelGroup.*','department.*')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ (request()->routeIs('student.*','designation.*','eduBoard.*','eduGroup.*','signature.*','eduLevelGroup.*','department.*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-restroom"></i>
               <p>CV Management <i class="right fas fa-angle-left"></i> </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item has-treeview {{ (request()->routeIs('eduBoard.*','eduLevelGroup.*','eduGroup.*','designation.*')) ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ (request()->routeIs('eduBoard.*','eduLevelGroup.*','eduGroup.*','designation.*')) ? 'active' : '' }}">
+              <li class="nav-item has-treeview {{ (request()->routeIs('eduBoard.*','eduLevelGroup.*','eduGroup.*','designation.*','department.*','signature.*')) ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ (request()->routeIs('eduBoard.*','eduLevelGroup.*','eduGroup.*','designation.*','department.*','signature.*')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-tools"></i>
                   <p>
                     Setting
@@ -90,6 +90,9 @@
                   </li>
                   <li class="nav-item"><a href="{{ route("designation.index") }}" class="nav-link {{ (request()->routeIs('designation.*')) ? ' active' : '' }}">
                     <i class="far fa-user nav-icon"></i> <p>{{__('Designation List') }}</p></a>
+                  </li>
+                  <li class="nav-item"><a href="{{ route("department.index") }}" class="nav-link {{ (request()->routeIs('department.*')) ? ' active' : '' }}">
+                    <i class="far fa-user nav-icon"></i> <p>{{__('Department List') }}</p></a>
                   </li>
                   <li class="nav-item"><a href="{{ route("signature.index") }}" class="nav-link {{ (request()->routeIs('signature.*')) ? ' active' : '' }}">
                     <i class="far fa-user nav-icon"></i> <p>{{__('Signature List') }}</p></a>

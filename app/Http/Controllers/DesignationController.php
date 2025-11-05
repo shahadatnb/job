@@ -31,7 +31,8 @@ class DesignationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|unique:designations,name',
+            'serial' => 'required|numeric',
         ]);
         
         $designation = new Designation();
@@ -66,7 +67,8 @@ class DesignationController extends Controller
     public function update(Request $request, Designation $designation)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|unique:designations,name,'.$designation->id,
+            'serial' => 'required|numeric',
         ]);
         
         $designation->name = $request->name;

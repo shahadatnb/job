@@ -188,13 +188,18 @@ class JobApplicationController extends Controller
     public function application(Request $request)
     {
         $data = ['job_id'=>'','status'=>'','job_title'=>'','email'=>'','phone'=>'', 'date'=>date('Y-m-d'),'time'=>''];
-        $jobs = Job::where('status', 1)->pluck('title', 'id');
+        $jobdata = Job::where('status', 1)->get();
+        $jobs = [];
+        foreach ($jobdata as $key => $value) {
+            $jobs[$value->id] = $value->title.' ('.$value->last_date.')';
+        }
         $applied_jobs = JobApplication::with('job')->with('student')->latest();
         $applicationStatus = ApplicationStatus::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
         $jobSignature = [];
         if(!empty($request->job_id)) {
+            $job = Job::find($request->job_id);
             $data['job_id'] = $request->job_id;
-            $data['job_title'] = $jobs[$request->job_id];
+            $data['job_title'] = $job->title;
             $applied_jobs = $applied_jobs->whereHas('job', function ($query) use ($request) {
                 $query->where('id', $request->job_id);
             });
