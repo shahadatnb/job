@@ -1,4 +1,0 @@
-ALTER TABLE `applicant_results` ADD `present_salary` VARCHAR(50) NULL DEFAULT NULL AFTER `application_id`;
-ALTER TABLE `student_education` ADD `edu_level_group_id` INT UNSIGNED NULL DEFAULT NULL AFTER `edu_level_id`; 
-
-ALTER TABLE `jobs` ADD `department_id` BIGINT UNSIGNED NULL DEFAULT NULL AFTER `designation_id`; 

@@ -20,7 +20,7 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
-            if ($guard == "student" && Auth::guard($guard)->check()) {
+            if ($guard == "applicant" && Auth::guard($guard)->check()) {
                 return redirect('/applicant');
             }
             if (Auth::guard($guard)->check()) {

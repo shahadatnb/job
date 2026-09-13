@@ -115,16 +115,16 @@
                     </div> --}}
                     {{-- <a href="#" class="nav-item nav-link">Contact</a> --}}
                 </div>
-				@guest('student')
-                <a href="{{route('student.login')}}" class="btn btn-info rounded-0 py-4 px-lg-5">Login</a>
-                <a href="{{route('student.register')}}" class="btn btn-secondary rounded-0 py-4 px-lg-5">Register</a>
+				@guest('applicant')
+                <a href="{{route('applicant.login')}}" class="btn btn-info rounded-0 py-4 px-lg-5">Login</a>
+                <a href="{{route('applicant.register')}}" class="btn btn-secondary rounded-0 py-4 px-lg-5">Register</a>
 				@endguest
-				@auth('student')
-                <a href="{{route('student.dashboard')}}" class="btn btn-info rounded-0 py-4 px-lg-5">{{ auth('student')->user()->name }}</a>
-                <a class="btn btn-secondary rounded-0 py-4 px-lg-5" href="{{ route('student.logout') }}" onclick="event.preventDefault();
+				@auth('applicant')
+                <a href="{{route('applicant.dashboard')}}" class="btn btn-info rounded-0 py-4 px-lg-5">{{ auth('applicant')->user()->name }}</a>
+                <a class="btn btn-secondary rounded-0 py-4 px-lg-5" href="{{ route('applicant.logout') }}" onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">Logout</a>
 				@endauth
-				<form id="logout-form" action="{{ route('student.logout') }}" method="POST" style="display: none;">
+				<form id="logout-form" action="{{ route('applicant.logout') }}" method="POST" style="display: none;">
 					@csrf
 				</form>
             </div>

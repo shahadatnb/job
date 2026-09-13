@@ -5,6 +5,7 @@
     <div class="card-header d-print-none">
         {{-- <h2 class="text-center">Curriculum Vitae</h2> --}}
         <div class="card-tools">
+        <a href="{{ route('applicant.edit', $applicant) }}" class="btn btn-sm btn-warning d-print-none"><i class="fas fa-edit"></i> Edit</a>
         <button class="btn btn-sm btn-primary" id="download_cv"><i class="far fa-file-pdf"></i> Download</button>
         <button class="btn btn-sm btn-primary" onclick="window.print()" id="print_cv"><i class="fas fa-print"></i> Print</button>
         </div>
@@ -13,30 +14,30 @@
         <h2 class="text-center">Curriculum Vitae</h2>
         <div class="d-flex justify-content-between">
         <div class="">
-            <h2 class="mb-0">{{ $student->name }}</h2>
-            <p class="mb-0">{{ $student->village }}, {{ $student->post_office }}, {{ $student->upazila ? $student->upazila->name : '' }}, {{ $student->district? $student->district->name : '' }}</p>
-            <p class="mb-0">{{ $student->phone }}</p>
-            <p>{{ $student->email }}</p>
+            <h2 class="mb-0">{{ $applicant->name }}</h2>
+            <p class="mb-0">{{ $applicant->village }}, {{ $applicant->post_office }}, {{ $applicant->upazila ? $applicant->upazila->name : '' }}, {{ $applicant->district? $applicant->district->name : '' }}</p>
+            <p class="mb-0">{{ $applicant->phone }}</p>
+            <p>{{ $applicant->email }}</p>
         </div>
         <div class="">
-                            <img id="photoPreview" src="{{asset('/storage/'.$student->photo)}}" alt="" class="img-thumbnail" width="150 px">
+                            <img id="photoPreview" src="{{asset('/storage/'.$applicant->photo)}}" alt="" class="img-thumbnail" width="150 px">
         </div>
         </div>
 
-        @if($student->objective != '')
+        @if($applicant->objective != '')
         <h4>Objective</h4>
-        <div class="mb-3">{!! nl2br($student->objective) !!}</div>
+        <div class="mb-3">{!! nl2br(e($applicant->objective)) !!}</div>
         @endif
-        @if($student->career_summary != '')                
+        @if($applicant->career_summary != '')                
         <h4>Career Summary</h4>
-        <div class="mb-3">{!! nl2br($student->career_summary) !!}</div>
+        <div class="mb-3">{!! nl2br(e($applicant->career_summary)) !!}</div>
         @endif
-        @if($student->special_qualification != '')
+        @if($applicant->special_qualification != '')
         <h4>Special Qualification</h4>
-        <div class="mb-3">{!! nl2br($student->special_qualification) !!}</div>
+        <div class="mb-3">{!! nl2br(e($applicant->special_qualification)) !!}</div>
         @endif
 
-        @if($student->employments->count() > 0)
+        @if($applicant->employments->count() > 0)
         <h4>Experience</h4>
         <table class="table table-sm ">
         <thead class="table-light">
@@ -49,7 +50,7 @@
             </tr>
         </thead>
         <tbody id="experienceTable">
-            @foreach($student->employments as $exp)
+            @foreach($applicant->employments as $exp)
             <tr data-id="{{ $exp->id }}">
                 <td>{{ $exp->job_title }}</td>
                 <td>{{ $exp->company_name }}</td>
@@ -73,7 +74,7 @@
             </tr>
         </thead>
         <tbody id="academicTable">
-            @foreach($student->educations as $edu)
+            @foreach($applicant->educations as $edu)
             <tr data-id="{{ $edu->id }}">
                 <td>{{ $edu->exam ? $edu->exam->name : '' }}</td>
                 <td>{{ $edu->group ? $edu->group->name : '' }}</td>
@@ -85,7 +86,7 @@
         </tbody>
         </table>
 
-        @if($student->trainings->count() > 0)
+        @if($applicant->trainings->count() > 0)
         <h4>Training Summary</h4>
         <table class="table table-sm">
         <thead class="table-light">
@@ -99,7 +100,7 @@
             </tr>
         </thead>
         <tbody id="trainingTable">
-            @foreach($student->trainings as $edu)
+            @foreach($applicant->trainings as $edu)
             <tr data-id="{{ $edu->id }}">
                 <td>{{ $edu->training_title }}</td>
                 <td>{{ $edu->topics_covered }}</td>
@@ -113,7 +114,7 @@
         </table>
         @endif
 
-        @if($student->certifications->count() > 0)
+        @if($applicant->certifications->count() > 0)
         <h4>Professional Certificates</h4>
         <table class="table table-sm">
         <thead class="table-light">
@@ -126,7 +127,7 @@
             </tr>
         </thead>
         <tbody id="certificationTable">
-            @foreach($student->certifications as $edu)
+            @foreach($applicant->certifications as $edu)
             <tr data-id="{{ $edu->id }}">
                 <td>{{ $edu->certification }}</td>
                 <td>{{ $edu->institute }}</td>
@@ -139,16 +140,16 @@
         </table>
         @endif
 
-        @if($student->skills->count() > 0)
+        @if($applicant->skills->count() > 0)
         <h4>Skills</h4>
         <p>
-        @foreach($student->skills as $skill)
+        @foreach($applicant->skills as $skill)
         {{ $skill->skill }}, 
         @endforeach
         </p>
         @endif
 
-        @if($student->languages->count() > 0)
+        @if($applicant->languages->count() > 0)
         <h4>Languages Preficiency</h4>
         <table class="table table-sm">
         <thead class="table-light">
@@ -160,7 +161,7 @@
             </tr>
         </thead>
         <tbody id="languageTable">
-            @foreach($student->languages as $lang)
+            @foreach($applicant->languages as $lang)
             <tr data-id="{{ $lang->id }}">
                 <td>{{ $lang->language }}</td>
                 <td>{{ $lang->reading }}</td>
@@ -176,76 +177,76 @@
         <tbody id="basicTable">
             <tr>
             <th>Father Name</th>
-            <td id="profile_father_name">{{ $student->father_name }}</td>
+            <td id="profile_father_name">{{ $applicant->father_name }}</td>
             </tr>
             <tr>
             <th>Mother Name</th>
-            <td id="profile_mother_name">{{ $student->mother_name }}</td>
+            <td id="profile_mother_name">{{ $applicant->mother_name }}</td>
             </tr>
             <tr>
             <th>NID</th>
-            <td id="profile_nid">{{ $student->nid }}</td>
+            <td id="profile_nid">{{ $applicant->nid }}</td>
             </tr>
             <tr>
             <th>Date of Birth</th>
-            <td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($student->date_of_birth)) }}</td>
+            <td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($applicant->date_of_birth)) }}</td>
             </tr>
             <tr>
             <th>Gender</th>
-            <td id="profile_gender">{{ $student->gender }}</td>
+            <td id="profile_gender">{{ $applicant->gender }}</td>
             </tr>
             <tr>
             <th>Religion</th>
-            <td id="profile_religion">{{ $student->religion }}</td>
+            <td id="profile_religion">{{ $applicant->religion }}</td>
             </tr>
             <tr>
             <th>Blood Group</th>
-            <td id="profile_blood_group">{{ $student->blood_group }}</td>
+            <td id="profile_blood_group">{{ $applicant->blood_group }}</td>
             </tr>
             {{-- <tr>
             <th colspan="2">Present Address</th>
             </tr>
             <tr>
             <th>Village</th>
-            <td>{{ $student->village }}</td>
+            <td>{{ $applicant->village }}</td>
             </tr>
             <tr>
             <th>Post Office</th>
-            <td>{{ $student->post_office }}</td>
+            <td>{{ $applicant->post_office }}</td>
             </tr>
             <tr>
             <th>Upazila</th>
-            <td>{{ $student->upazila ? $student->upazila->name : '' }}</td>
+            <td>{{ $applicant->upazila ? $applicant->upazila->name : '' }}</td>
             </tr>
             <tr>
             <th>District</th>
-            <td>{{ $student->district ? $student->district->name : '' }}</td>
+            <td>{{ $applicant->district ? $applicant->district->name : '' }}</td>
             </tr> --}}
             <tr>
             <th colspan="2">Permanent Address:</th>
             </tr>
             <tr>
             <th>Village</th>
-            <td>{{ $student->permanent_village }}</td>
+            <td>{{ $applicant->permanent_village }}</td>
             </tr>
             <tr>
             <th>Post Office</th>
-            <td>{{ $student->permanent_post_office }}</td>
+            <td>{{ $applicant->permanent_post_office }}</td>
             </tr>
             <tr>
             <th>Upazila</th>
-            <td>{{ $student->upazilaPermanent ? $student->upazilaPermanent->name : '' }}</td>
+            <td>{{ $applicant->upazilaPermanent ? $applicant->upazilaPermanent->name : '' }}</td>
             </tr>
             <tr>
             <th>District</th>
-            <td>{{ $student->districtPermanent ? $student->districtPermanent->name : '' }}</td>
+            <td>{{ $applicant->districtPermanent ? $applicant->districtPermanent->name : '' }}</td>
             </tr>
         </tbody>
         </table>
 
         <h4>References:</h4>
         <div class="row">
-        @foreach($student->references as $reference)
+        @foreach($applicant->references as $reference)
         <div class="col-md-6">
             <table class="table table-sm">
             <tbody>
@@ -286,7 +287,7 @@
         <div class="row">
             <div class="col-md-6 offset-md-6 text-center">
                 <div style="width: 300px">
-                    <img src="{{asset('/storage/'.$student->signature)}}" style="height: 50px;" alt="">
+                    <img src="{{asset('/storage/'.$applicant->signature)}}" style="height: 50px;" alt="">
                     <p class="mt-0" style="border-top: 1px solid black;">Signature</p>
                 </div>
             </div>
@@ -302,7 +303,7 @@
         var element = document.getElementById('content-to-pdf');
         var opt = {
           margin:       .3,
-          filename:     'cv of {{ $student->name }}.pdf',
+          filename:     'cv of {{ $applicant->name }}.pdf',
           image:        { type: 'jpeg', quality: 0.98 },
           html2canvas:  { scale: 2 },
           jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },

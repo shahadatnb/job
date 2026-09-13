@@ -2,7 +2,6 @@
 @section('title',"Circular Add/Edit")
 @section('css')
 <link href="//cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 <style type="text/css">
   .summary p{
     margin-bottom: 1px;
@@ -79,7 +78,15 @@
             </div>
             <div class="form-group">
               {!! Form::label('last_date', __('Last Apply Date').' *',['class'=>'']) !!}
-              {!! Form::text('last_date',null,['class'=>'form-control datetimepicker-input', 'data-toggle'=>"datetimepicker", 'data-target'=>"#last_date", 'placeholder'=> __('Last Date')]) !!}
+              @php
+                  $lastDateRaw = old('last_date', isset($job) ? $job->last_date : null);
+                  $lastDateDisplay = $lastDateRaw ? \Carbon\Carbon::parse($lastDateRaw)->format('d-m-Y') : '';
+                  $lastDateValue = $lastDateRaw ? \Carbon\Carbon::parse($lastDateRaw)->format('Y-m-d') : null;
+              @endphp
+              <input type="text" class="form-control js-datepicker" id="last_date_display" autocomplete="off" placeholder="dd-mm-yyyy"
+                     value="{{ $lastDateDisplay }}"
+                     data-alt-field="#last_date">
+              {!! Form::hidden('last_date', $lastDateValue, ['id' => 'last_date']) !!}
             </div>
             <div class="form-group">
               {!! Form::label('age_min', __('Age Min').' *',['class'=>'']) !!}
@@ -181,39 +188,31 @@
             {!! $job->requirements !!}
             <p><strong>Education:</strong> {{ $job->eduLevel? $job->eduLevel->name : 'Not defined' }}
                 @php
-                    if($job->edu_group_any !=1 && $job->edu_group_ids != ''){
+                    $groupIds = is_array($job->edu_group_ids) ? $job->edu_group_ids : json_decode($job->edu_group_ids ?: '[]', true);
+                    if($job->edu_group_any != 1 && !empty($groupIds)){
                     echo ' in ';
-                    if(count(json_decode($job->edu_group_ids)) > 1){
+                    if(count($groupIds) > 1){
                         echo implode(', ', array_map(function($value) use ($eduGroups) {
-                            return $eduGroups[$value];
-                        }, json_decode($job->edu_group_ids)));
+                            return $eduGroups[$value] ?? '';
+                        }, $groupIds));
                     }else{
-                        echo $eduGroups[json_decode($job->edu_group_ids)[0]];
+                        echo $eduGroups[$groupIds[0]] ?? '';
                     }
-                    /*
-                        foreach (json_decode($job->edu_group_ids) as $value) {
-                            echo $eduGroups[$value].', ';
-                        }
-                    */
                     }
                 @endphp
                 @if($job->edu_level2_id != '') 
                     Or {{ $job->eduLevel2? $job->eduLevel2->name : 'Not defined' }}
                     @php
-                        if($job->edu_group2_any !=1 && $job->edu_group2_ids != ''){
+                        $groupIds2 = is_array($job->edu_group2_ids) ? $job->edu_group2_ids : json_decode($job->edu_group2_ids ?: '[]', true);
+                        if($job->edu_group2_any != 1 && !empty($groupIds2)){
                         echo ' in ';
-                        if(count(json_decode($job->edu_group2_ids)) > 1){
+                        if(count($groupIds2) > 1){
                             echo implode(', ', array_map(function($value) use ($eduGroups2) {
-                                return $eduGroups2[$value];
-                            }, json_decode($job->edu_group2_ids)));
+                                return $eduGroups2[$value] ?? '';
+                            }, $groupIds2));
                         }else{
-                            echo $eduGroups2[json_decode($job->edu_group2_ids)[0]];
+                            echo $eduGroups2[$groupIds2[0]] ?? '';
                         }
-                        /*
-                            foreach (json_decode($job->edu_group2_ids) as $value) {
-                                echo $eduGroups2[$value].', ';
-                            }
-                        */
                         }
                     @endphp
                 @endif
@@ -236,22 +235,15 @@
 @section('js')
 {{-- <script src="{{ asset('assets/admin/plugins/summernote/summernote-bs4.min.js') }}"> </script> --}}
 <script src="//cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-<script src="{{ asset('assets/admin/plugins/moment/moment.min.js') }}"> </script>
-<!-- Tempusdominus -->
-<script src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"> </script>
+@include('admin.layouts._datepicker')
     <script>
         $(document).ready(function(){
           $('.textarea').summernote();
 
-          $('#last_date').datetimepicker({
-              //format: 'DD/MM/YYYY'
-              format: 'YYYY-MM-DD'
-          });
-
           $('#edu_level_id').change(function() {
             var edu_level_id = $(this).val();
             $.ajax({
-                url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
+                url: "{{route('applicant.education.group')}}?edu_level_id=" + edu_level_id,
                 method: 'GET',
                 success: function(data) {
                     //console.log(data);
@@ -269,7 +261,7 @@
           $('#edu_level2_id').change(function() {
             var edu_level_id = $(this).val();
             $.ajax({
-                url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
+                url: "{{route('applicant.education.group')}}?edu_level_id=" + edu_level_id,
                 method: 'GET',
                 success: function(data) {
                     //console.log(data);                    

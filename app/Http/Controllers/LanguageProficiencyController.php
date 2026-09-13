@@ -20,9 +20,9 @@ class LanguageProficiencyController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $student = auth('student')->user();
+        $applicant = auth('applicant')->user();
         $language = new LanguageProficiency();
-        $language->student_id = $student->id;
+        $language->applicant_id = $applicant->id;
         $language->language = $request->language;
         $language->reading = $request->reading;
         $language->writing = $request->writing;
@@ -43,7 +43,7 @@ class LanguageProficiencyController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $language = LanguageProficiency::find($request->id);
+        $language = $this->ownedOrFail(LanguageProficiency::class, $request->id);
         $language->language = $request->language;
         $language->reading = $request->reading;
         $language->writing = $request->writing;
@@ -54,12 +54,12 @@ class LanguageProficiencyController extends Controller
     }
 
     public function edit(Request $request){
-        $language = LanguageProficiency::find($request->id);
+        $language = $this->ownedOrFail(LanguageProficiency::class, $request->id);
         return response()->json(['status' => true, 'type'=> 'edit', 'language'=> $language]);
     }
 
     public function destroy(Request $request){
-        $language = LanguageProficiency::find($request->id);
+        $language = $this->ownedOrFail(LanguageProficiency::class, $request->id);
         $language->delete();
         return response()->json(['status' => true, 'type'=> 'delete', 'message' => 'Employment deleted successfully']);
     }

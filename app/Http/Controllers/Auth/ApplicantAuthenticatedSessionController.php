@@ -8,16 +8,17 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
-class StudentAuthenticatedSessionController extends Controller
+class ApplicantAuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
      */
     public function create(): View
     {
-        return view('auth.student.login');
+        return view('auth.applicant.login');
     }
 
     /**
@@ -25,14 +26,19 @@ class StudentAuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->student_authenticate();
+        $request->applicant_authenticate();
 
         $request->session()->regenerate();
-        
-        if ($request->has('redirect')) {
-            return redirect($request->input('redirect'));
+
+        if ($request->filled('redirect')) {
+            $target = (string) $request->input('redirect');
+            $isRelative = ! Str::startsWith($target, ['//', 'http://', 'https://']);
+            $isLocal = $isRelative && ! Str::contains($target, ["\r", "\n"]);
+            if ($isLocal) {
+                return redirect('/'.ltrim($target, '/'));
+            }
         }
-        return redirect()->route('student.dashboard');
+        return redirect()->route('applicant.dashboard');
     }
 
     /**
@@ -40,7 +46,7 @@ class StudentAuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('student')->logout();
+        Auth::guard('applicant')->logout();
 
         $request->session()->invalidate();
 

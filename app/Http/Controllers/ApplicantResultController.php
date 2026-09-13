@@ -24,16 +24,16 @@ class ApplicantResultController extends Controller
             $data['job_title'] = $jobs[$request->job_id];
             $data['status'] = $request->status;
 
-            $applied_jobs = JobApplication::with('job','student','result')->where('job_id', $request->job_id)->where('status', $request->status)->latest();
+            $applied_jobs = JobApplication::with('job','applicant','result')->where('job_id', $request->job_id)->where('status', $request->status)->latest();
             if(!empty($request->email)) {
                 $data['email'] = $request->email;
-                $applied_jobs = $applied_jobs->whereHas('student', function ($query) use ($request) {
+                $applied_jobs = $applied_jobs->whereHas('applicant', function ($query) use ($request) {
                     $query->where('email', $request->email);
                 });
             }
             if(!empty($request->phone)) {
                 $data['phone'] = $request->phone;
-                $applied_jobs = $applied_jobs->whereHas('student', function ($query) use ($request) {
+                $applied_jobs = $applied_jobs->whereHas('applicant', function ($query) use ($request) {
                     $query->where('phone', $request->phone);
                 });
             }        

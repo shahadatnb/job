@@ -8,50 +8,50 @@
             <tbody id="basicTable">
                 <tr>
                         <th>Name</th>
-                        <td id="profile_name">{{ $student->name }}</td>
+                        <td id="profile_name">{{ $applicant->name }}</td>
                 </tr>
                 <tr>
                         <th>Father Name</th>
-                        <td id="profile_father_name">{{ $student->father_name }}</td>
+                        <td id="profile_father_name">{{ $applicant->father_name }}</td>
                 </tr>
                 <tr>
                         <th>Mother Name</th>
-                        <td id="profile_mother_name">{{ $student->mother_name }}</td>
+                        <td id="profile_mother_name">{{ $applicant->mother_name }}</td>
                 </tr>
                 <tr>
                         <th>Email</th>
-                        <td id="profile_email">{{ $student->email }}</td>
+                        <td id="profile_email">{{ $applicant->email }}</td>
                 </tr>
                 <tr>
                         <th>Phone</th>
-                        <td id="profile_phone">{{ $student->phone }}</td>
+                        <td id="profile_phone">{{ $applicant->phone }}</td>
                 </tr>
                 <tr>
                         <th>NID</th>
-                        <td id="profile_nid">{{ $student->nid }}</td>
+                        <td id="profile_nid">{{ $applicant->nid }}</td>
                 </tr>
                 <tr>
                         <th>Date of Birth</th>
-                        <td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($student->date_of_birth)) }}</td>
+                        <td id="profile_date_of_birth">{{ date('d-m-Y', strtotime($applicant->date_of_birth)) }}</td>
                 </tr>
                 <tr>
                         <th>Gender</th>
-                        <td id="profile_gender">{{ $student->gender }}</td>
+                        <td id="profile_gender">{{ $applicant->gender }}</td>
                 </tr>
                 <tr>
                         <th>Religion</th>
-                        <td id="profile_religion">{{ $student->religion }}</td>
+                        <td id="profile_religion">{{ $applicant->religion }}</td>
                 </tr>
                 <tr>
                         <th>Blood Group</th>
-                        <td id="profile_blood_group">{{ $student->blood_group }}</td>
+                        <td id="profile_blood_group">{{ $applicant->blood_group }}</td>
                 </tr>
             </tbody>
         </table>
     </div> --}}
 </div>
 <div id="errorMsgAddress"></div>
-{!! Form::model($student, ['route'=>['student.address.update', $student], 'method'=>'POST', 'id' => 'updateAddress']) !!}
+{!! Form::model($applicant, ['route'=>['applicant.address.update', $applicant], 'method'=>'POST', 'id' => 'updateAddress']) !!}
 <div class="row">
     <div class="col-12 mb-3">
         <h3>Basic Information</h3>
@@ -97,7 +97,7 @@
             <div class="col-6">
                 <div class="form-group">
                     {{ Form::label('date_of_birth', 'Date of Birth') }}
-                    {!! Form::text('date_of_birth', $student->date_of_birth == '' ? null : date('d-m-Y', strtotime($student->date_of_birth)), ['class' => 'form-control datetimepicker-input','id'=>'date_of_birth', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date_of_birth", 'placeholder' => 'YYYY-MM-DD', 'required'=>true]) !!}
+                    {!! Form::text('date_of_birth', $applicant->date_of_birth == '' ? null : date('d-m-Y', strtotime($applicant->date_of_birth)), ['class' => 'form-control datetimepicker-input','id'=>'date_of_birth', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date_of_birth", 'placeholder' => 'YYYY-MM-DD', 'required'=>true]) !!}
                 </div>
             </div>
         </div>
@@ -169,13 +169,13 @@
             {{ Form::select('permanent_upazila_id', $permanent_upazilas, null, ['class' => 'form-control select2', 'placeholder' => 'Select Thana/Upazila']) }}
         </div>
     </div>
-    {{ Form::hidden('id', $student->id) }}
+    {{ Form::hidden('id', $applicant->id) }}
     {{ Form::button('Update', ['type' => 'submit', 'class' => 'btn btn-primary mt-3']) }}
 </div>
 {{ Form::close() }}
 
 <div id="errorMsgCareer" class="mt-3"></div>
-{!! Form::model($student, ['route'=>['student.career.update', $student], 'method'=>'POST', 'id' => 'updateCareer']) !!}
+{!! Form::model($applicant, ['route'=>['applicant.career.update', $applicant], 'method'=>'POST', 'id' => 'updateCareer']) !!}
 <div class="row">
     <div class="col-12 mb-3">
         <h3>Career and Application Information</h3>
@@ -211,14 +211,14 @@
                 </div>
             </div>
         </div>
-        {{ Form::hidden('id', $student->id) }}
+        {{ Form::hidden('id', $applicant->id) }}
         {{ Form::button('Update', ['type' => 'submit', 'class' => 'btn btn-primary mt-3']) }}
     </div>
 </div>
 {{ Form::close() }}
 
 <div id="errorMsgOther" class="mt-3"></div>
-{!! Form::model($student, ['route'=>['student.other.update', $student], 'method'=>'POST', 'id' => 'updateOther']) !!}
+{!! Form::model($applicant, ['route'=>['applicant.other.update', $applicant], 'method'=>'POST', 'id' => 'updateOther']) !!}
 <div class="row">
     <div class="col-12 mb-3">
         <h3>Other Relevant Information</h3>
@@ -234,7 +234,7 @@
             {{ Form::label('keywords', 'Keywords') }}
             {{ Form::text('keywords', null, ['class' => 'form-control']) }}
         </div>
-        {{ Form::hidden('id', $student->id) }}
+        {{ Form::hidden('id', $applicant->id) }}
         {{ Form::button('Update', ['type' => 'submit', 'class' => 'btn btn-primary mt-3']) }}
     </div>
 </div>
@@ -276,7 +276,7 @@
 						</div>
 						<div class="form-group">
 							<label for="date_of_birth">Date of Birth</label>
-							{!! Form::text('date_of_birth', date('d-m-Y', strtotime($student->date_of_birth)), ['class' => 'form-control datetimepicker-input','id'=>'date_of_birth', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date_of_birth", 'placeholder' => 'YYYY-MM-DD', 'required'=>true]) !!}
+							{!! Form::text('date_of_birth', date('d-m-Y', strtotime($applicant->date_of_birth)), ['class' => 'form-control datetimepicker-input','id'=>'date_of_birth', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date_of_birth", 'placeholder' => 'YYYY-MM-DD', 'required'=>true]) !!}
 						</div>
 						<div class="form-group">
 							<label for="gender">Gender</label>

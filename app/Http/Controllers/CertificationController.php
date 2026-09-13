@@ -22,9 +22,9 @@ class CertificationController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $student = auth('student')->user();
+        $applicant = auth('applicant')->user();
         $professional_certificate = new ProfessionalCertificate();
-        $professional_certificate->student_id = $student->id;
+        $professional_certificate->applicant_id = $applicant->id;
         $professional_certificate->certification = $request->certification;
         $professional_certificate->institute = $request->institute;
         $professional_certificate->location = $request->location;
@@ -49,7 +49,7 @@ class CertificationController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $professional_certificate = ProfessionalCertificate::find($request->id);
+        $professional_certificate = $this->ownedOrFail(ProfessionalCertificate::class, $request->id);
         $professional_certificate->certification = $request->certification;
         $professional_certificate->institute = $request->institute;
         $professional_certificate->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
@@ -62,14 +62,14 @@ class CertificationController extends Controller
     }
 
     public function edit(Request $request){
-        $professional_certificate = ProfessionalCertificate::find($request->id);
+        $professional_certificate = $this->ownedOrFail(ProfessionalCertificate::class, $request->id);
         $professional_certificate->start_date = Carbon::parse($professional_certificate->start_date)->format('d-m-Y');
         $professional_certificate->end_date = Carbon::parse($professional_certificate->end_date)->format('d-m-Y');
         return response()->json(['status' => true, 'type'=> 'edit', 'professional'=> $professional_certificate]);
     }
 
     public function destroy(Request $request){
-        $professional_certificate = ProfessionalCertificate::find($request->id);
+        $professional_certificate = $this->ownedOrFail(ProfessionalCertificate::class, $request->id);
         $professional_certificate->delete();
         return response()->json(['status' => true, 'type'=> 'delete', 'message' => 'Employment deleted successfully']);
     }

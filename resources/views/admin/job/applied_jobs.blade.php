@@ -69,7 +69,7 @@
           </div>
           <div class="col-6 col-md-3">
             <div class="input-group">              
-              {!! Form::text('date',null,['class'=>'form-control date datetimepicker-input', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date", 'id'=>'date', 'placeholder'=> __('Date')]) !!}
+              {!! Form::text('date',null,['class'=>'form-control date js-datepicker','id'=>'date','autocomplete'=>'off','placeholder'=> __('dd-mm-yyyy')]) !!}
               {{ Form::text('time',null,array('class'=>'form-control timepicker datetimepicker-input', 'data-toggle'=>"datetimepicker", 'data-target'=>"#time", 'id'=>'time', 'maxlenth'=>'60','placeholder'=>'Time')) }}
             </div>
           </div>
@@ -85,7 +85,7 @@
       </div>
       <div class="row d-flex justify-content-end">        
         <div class="col-6 d-flex justify-content-end">
-          <button type="button" class="btn btn-primary btn-sm" onclick="exportTableToExcel('applied_jobs')" ><i class="fas fa-file-excel"></i> Export</button>
+          <a class="btn btn-warning btn-sm ml-1" href="{{ route('job.application.export', request()->query()) }}" target="_blank"><i class="fas fa-file-image"></i> Export with Photo</a>
           <button type="button" class="btn btn-success btn-sm" onclick="PrintElem('#vivaSheet','Viva Sheet')"><i class="fas fa-print"></i> Viva Sheet</button>
           <button type="button" class="btn btn-info btn-sm" onclick="PrintElem('#attendanceSheet','Attendance Sheet')"><i class="fas fa-print"></i> Attendance Sheet</button>
           <button type="button" class="btn btn-info btn-sm" onclick="PrintElem('#selectedSheet','Selected Sheet')"><i class="fas fa-print"></i> Selected Sheet</button>
@@ -134,14 +134,14 @@
                       {{ $sl++ }}
                     </td>
                     <td>
-                      {{-- @dd($item->student) --}}
-                      {{-- {{$item->student}} --}}
-                      <img src="{{asset('/storage/'.$item->student->photo)}}" alt="" style="width: 80px;height: 80px;" class="rounded">
+                      {{-- @dd($item->applicant) --}}
+                      {{-- {{$item->applicant}} --}}
+                      <img src="{{asset('/storage/'.$item->applicant->photo)}}" alt="" style="width: 80px;height: 80px;" class="rounded">
                     </td>
                     <td>
-                      {{$item->student->name }} <br>
+                      {{$item->applicant->name }} <br>
                       Age: {{$item->age }} <br>
-                      @foreach ($item->student->educations as $education)
+                      @foreach ($item->applicant->educations as $education)
                         @if($education->examTitle)
                           {{$education->examTitle->name}}
                         @else
@@ -150,19 +150,19 @@
                           :  {{ $education->institute }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }}<br>
                         {{-- {{ $education->board ? '(Board: '.$education->board->name.')' : '' }} --}}
                       @endforeach
-                      Phone: {{$item->student->phone }} <br>
-                      Email: {{$item->student->email }} <br>
-                      Address: {{$item->student->village }}, {{$item->student->post_office }}{{$item->student->upazila ? ', '.$item->student->upazila->name : '' }}{{$item->student->district ? ', '.$item->student->district->name : '' }}
+                      Phone: {{$item->applicant->phone }} <br>
+                      Email: {{$item->applicant->email }} <br>
+                      Address: {{$item->applicant->village }}, {{$item->applicant->post_office }}{{$item->applicant->upazila ? ', '.$item->applicant->upazila->name : '' }}{{$item->applicant->district ? ', '.$item->applicant->district->name : '' }}
                     </td>
                     <td>
                       @php $total_experience = 0 @endphp
-                      @foreach ($item->student->employments as $employment)
+                      @foreach ($item->applicant->employments as $employment)
                         @php $end_date = $employment->is_current ? \Carbon\Carbon::now() : \Carbon\Carbon::parse($employment->end_date) @endphp
                         @php $length = \Carbon\Carbon::parse($employment->start_date)->diffInDays($end_date) @endphp
                         {{$employment->company_name }}, {{$employment->job_title }}, {{ $experience =  $length>0 ? number_format($length/365,1) : 0}}+ <br>
                         @php $total_experience += $experience @endphp
                       @endforeach
-                      {{-- <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p> --}}
+                      {{-- <p><strong>Present Address: </strong> {{ $item->applicant->permanent_village }}, {{ $item->applicant->permanent_post_office }}{{ $item->applicant->upazilaPermanent ? ', '.$item->applicant->upazilaPermanent->name : '' }}{{ $item->applicant->districtPermanent? ', '.$item->applicant->districtPermanent->name : '' }}</p> --}}
                     </td>
                     <td>
                       {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }}  and Taka: {{$item->expected_salary}}/-
@@ -182,7 +182,8 @@
                           Action
                         </button>
                         <div class="dropdown-menu">
-                          <a href="{{route('student.show',$item->student_id)}}" class="dropdown-item"><i class="fas fa-eye"></i> View CV</a>
+                          <a href="{{route('applicant.show',$item->applicant_id)}}" class="dropdown-item"><i class="fas fa-eye"></i> View CV</a>
+                          <a href="{{route('applicant.edit',$item->applicant_id)}}" class="dropdown-item"><i class="fas fa-edit"></i> Edit Applicant</a>
                           {{-- @if (Auth::user()->hasAnyRole(['Manager','Admin'])) --}}
                           <div class="dropdown-divider"></div>
                             {{-- <a href="{{route('job.edit',$item->id)}}" class="dropdown-item"><i class="fas fa-edit"></i> Edit</a> --}}
@@ -243,12 +244,12 @@
         <tr>
           <td>{{ $sl2++ }}</td>
           <td>
-            <img src="{{asset('/storage/'.$item->student->photo)}}" alt="" width="100">
+            <img src="{{asset('/storage/'.$item->applicant->photo)}}" alt="" width="100">
           </td>
           <td>
-            {{$item->student->name }} <br>
+            {{$item->applicant->name }} <br>
             Age: {{$item->age }} <br>
-            @foreach ($item->student->educations as $education)
+            @foreach ($item->applicant->educations as $education)
               @if($education->examTitle)
                 {{$education->examTitle->name}}
               @else
@@ -257,19 +258,19 @@
               :  {{ $education->institute }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }} <br>
               {{-- {{ $education->board ? '(Board: '.$education->board->name.')' : '' }} --}}
             @endforeach
-            Phone: {{$item->student->phone }} <br>
-            Email: {{$item->student->email }} <br>
-            Address: {{$item->student->village }}, {{$item->student->post_office }}, {{$item->student->upazila ? $item->student->upazila->name : '' }}, {{$item->student->district ? $item->student->district->name : '' }}
+            Phone: {{$item->applicant->phone }} <br>
+            Email: {{$item->applicant->email }} <br>
+            Address: {{$item->applicant->village }}, {{$item->applicant->post_office }}, {{$item->applicant->upazila ? $item->applicant->upazila->name : '' }}, {{$item->applicant->district ? $item->applicant->district->name : '' }}
           </td>
           <td>
             @php $total_experience = 0 @endphp
-            @foreach ($item->student->employments as $employment)
+            @foreach ($item->applicant->employments as $employment)
               @php $end_date = $employment->is_current ? \Carbon\Carbon::now() : \Carbon\Carbon::parse($employment->end_date) @endphp
               @php $length = \Carbon\Carbon::parse($employment->start_date)->diffInDays($end_date) @endphp
               {{$employment->company_name }}, {{$employment->job_title }}, {{ $experience =  $length>0 ? number_format($length/365,1) : 0}}+ <br>
               @php $total_experience += $experience @endphp
             @endforeach
-            {{-- <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p> --}}
+            {{-- <p><strong>Present Address: </strong> {{ $item->applicant->permanent_village }}, {{ $item->applicant->permanent_post_office }}{{ $item->applicant->upazilaPermanent ? ', '.$item->applicant->upazilaPermanent->name : '' }}{{ $item->applicant->districtPermanent? ', '.$item->applicant->districtPermanent->name : '' }}</p> --}}
           </td>
           <td>
             {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }}  and Taka: {{$item->expected_salary}}/-
@@ -320,12 +321,12 @@
         <tr>
           <td>{{ $sl3++ }}</td>
           <td>
-            <img src="{{asset('/storage/'.$item->student->photo)}}" alt="" width="100">
+            <img src="{{asset('/storage/'.$item->applicant->photo)}}" alt="" width="100">
           </td>
           <td>
-            {{$item->student->name }} <br>
+            {{$item->applicant->name }} <br>
             Age: {{$item->age }} <br>
-            @foreach ($item->student->educations as $education)
+            @foreach ($item->applicant->educations as $education)
             @if($education->examTitle)
               {{$education->examTitle->name}}
             @else
@@ -334,19 +335,19 @@
               : {{ $education->institute }}, {{ $education->group ? $education->group->name : '' }}, Result: {{ $education->result }} {{ $education->result_type == 'gpa' ? ' out of '.$education->out_of : '' }} <br>
               {{-- {{ $education->board ? '(Board: '.$education->board->name.')' : '' }} --}}
             @endforeach
-            Phone: {{$item->student->phone }} <br>
-            Email: {{$item->student->email }} <br>
-            Address: {{$item->student->village }}, {{$item->student->post_office }}, {{$item->student->upazila ? $item->student->upazila->name : '' }}, {{$item->student->district ? $item->student->district->name : '' }}
+            Phone: {{$item->applicant->phone }} <br>
+            Email: {{$item->applicant->email }} <br>
+            Address: {{$item->applicant->village }}, {{$item->applicant->post_office }}, {{$item->applicant->upazila ? $item->applicant->upazila->name : '' }}, {{$item->applicant->district ? $item->applicant->district->name : '' }}
           </td>
           <td>
             @php $total_experience = 0 @endphp
-            @foreach ($item->student->employments as $employment)
+            @foreach ($item->applicant->employments as $employment)
               @php $end_date = $employment->is_current ? \Carbon\Carbon::now() : \Carbon\Carbon::parse($employment->end_date) @endphp
               @php $length = \Carbon\Carbon::parse($employment->start_date)->diffInDays($end_date) @endphp
               {{$employment->company_name }}, {{$employment->job_title }}, {{ $experience =  $length>0 ? number_format($length/365,1) : 0}}+ <br>
               @php $total_experience += $experience @endphp
             @endforeach
-            {{-- <p><strong>Present Address: </strong> {{ $item->student->permanent_village }}, {{ $item->student->permanent_post_office }}{{ $item->student->upazilaPermanent ? ', '.$item->student->upazilaPermanent->name : '' }}{{ $item->student->districtPermanent? ', '.$item->student->districtPermanent->name : '' }}</p> --}}
+            {{-- <p><strong>Present Address: </strong> {{ $item->applicant->permanent_village }}, {{ $item->applicant->permanent_post_office }}{{ $item->applicant->upazilaPermanent ? ', '.$item->applicant->upazilaPermanent->name : '' }}{{ $item->applicant->districtPermanent? ', '.$item->applicant->districtPermanent->name : '' }}</p> --}}
           </td>
           <td>
             {{ $total_experience > 0 ? $total_experience.'+' : 'No experience' }}  and Taka: {{$item->expected_salary}}/-
@@ -400,17 +401,17 @@
         <tr>
           <td>{{ $sl4++ }}</td>
           <td>
-            <img src="{{asset('/storage/'.$item->student->photo)}}" alt="" width="100">
+            <img src="{{asset('/storage/'.$item->applicant->photo)}}" alt="" width="100">
           </td>
           <td>
-            {{$item->student->name }} <br>
+            {{$item->applicant->name }} <br>
             Age: {{$item->age }} <br>
-            @foreach ($item->student->educations as $education)
+            @foreach ($item->applicant->educations as $education)
               {{$education->exam ? $education->exam->name : '' }}, {{$education->edu_board_id != '' ? $education->board->name : $education->institute }} <br>
             @endforeach
-            Phone: {{$item->student->phone }} <br>
-            Email: {{$item->student->email }} <br>
-            Address: {{$item->student->village }}, {{$item->student->post_office }}, {{$item->student->upazila ? $item->student->upazila->name : '' }}, {{$item->student->district ? $item->student->district->name : '' }}
+            Phone: {{$item->applicant->phone }} <br>
+            Email: {{$item->applicant->email }} <br>
+            Address: {{$item->applicant->village }}, {{$item->applicant->post_office }}, {{$item->applicant->upazila ? $item->applicant->upazila->name : '' }}, {{$item->applicant->district ? $item->applicant->district->name : '' }}
           </td>          
           <td></td>
           <td></td>
@@ -433,6 +434,7 @@
 <script src="{{ asset('assets/admin/plugins/moment/moment.min.js') }}"> </script>
 <!-- Tempusdominus -->
 <script src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"> </script>
+@include('admin.layouts._datepicker')
 <script>
 /*
     function exportToExcel() {
@@ -445,180 +447,14 @@
     }
 */
 
-  $('.date').datetimepicker({
-      //format: 'DD/MM/YYYY'
-      format: 'YYYY-MM-DD'
-  });
-
   $('.timepicker').datetimepicker({
       format: 'LT',
   });
 
-async function exportTableToExcel(tableID, options = {}) {
-    // Default options
-    const defaults = {
-        filename: 'export',
-        excludeColumns: [],
-        includeBorder: true,
-        sheetName: 'Sheet1',
-        imageOptions: {
-            includeImages: true,
-            imageWidth: 100,
-            imageHeight: 100
-        }
-    };
-    const config = {...defaults, ...options};
-
-    // Get table element
-    const table = document.getElementById(tableID);
-    if (!table) {
-        console.error(`Table with ID "${tableID}" not found`);
-        return;
-    }
-
-    // Create workbook
-    const wb = XLSX.utils.book_new();
-    
-    // Clone table and process it
-    const tableClone = table.cloneNode(true);
-    document.body.appendChild(tableClone);
-    tableClone.style.visibility = 'hidden';
-    tableClone.style.position = 'absolute';
-
-    // Process images if enabled
-    if (config.imageOptions.includeImages) {
-        await processTableImages(tableClone, config.imageOptions);
-    }
-
-    // Convert table to worksheet
-    const ws = XLSX.utils.table_to_sheet(tableClone, {raw: true});
-    document.body.removeChild(tableClone);
-
-    // Process column exclusion
-    if (config.excludeColumns.length > 0) {
-        excludeColumnsFromWorksheet(ws, config.excludeColumns);
-    }
-
-    // Apply styling
-    if (config.includeBorder) {
-        applyWorksheetBorders(ws);
-    }
-
-    // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(wb, ws, config.sheetName);
-
-    // Generate and download Excel file
-    XLSX.writeFile(wb, `${config.filename}.xlsx`);
-}
-
-async function processTableImages(table, imageOptions) {
-    const images = table.querySelectorAll('img');
-    const promises = [];
-    
-    images.forEach(img => {
-        promises.push(processImageElement(img, imageOptions));
-    });
-    
-    await Promise.all(promises);
-}
-
-async function processImageElement(img, options) {
-    try {
-        // Create canvas to handle the image
-        const canvas = document.createElement('canvas');
-        canvas.width = options.imageWidth;
-        canvas.height = options.imageHeight;
-        const ctx = canvas.getContext('2d');
-        
-        // Handle CORS
-        if (!img.crossOrigin && !img.src.startsWith('data:')) {
-            img.crossOrigin = 'Anonymous';
-        }
-        
-        // Load image
-        await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            // Force reload if already loaded
-            if (img.complete) {
-                const src = img.src;
-                img.src = '';
-                img.src = src;
-            }
-        });
-        
-        // Draw image to canvas
-        ctx.drawImage(img, 0, 0, options.imageWidth, options.imageHeight);
-        
-        // Replace img with canvas
-        const container = document.createElement('div');
-        container.appendChild(canvas);
-        img.parentNode.replaceChild(container, img);
-        
-    } catch (error) {
-        console.error('Error processing image:', error);
-        // Fallback to alt text
-        const span = document.createElement('span');
-        span.textContent = img.alt || '[IMAGE]';
-        img.parentNode.replaceChild(span, img);
-    }
-}
-
-function excludeColumnsFromWorksheet(ws, columnsToExclude) {
-    const range = XLSX.utils.decode_range(ws['!ref']);
-    
-    for (let C = range.e.c; C >= range.s.c; --C) {
-        if (columnsToExclude.includes(C)) {
-            // Delete excluded column cells
-            for (let R = range.s.r; R <= range.e.r; ++R) {
-                delete ws[XLSX.utils.encode_cell({r: R, c: C})];
-            }
-            
-            // Shift remaining cells left
-            for (let c = C + 1; c <= range.e.c; ++c) {
-                for (let R = range.s.r; R <= range.e.r; ++R) {
-                    const cell = ws[XLSX.utils.encode_cell({r: R, c: c})];
-                    if (cell) {
-                        ws[XLSX.utils.encode_cell({r: R, c: c - 1})] = cell;
-                        delete ws[XLSX.utils.encode_cell({r: R, c: c})];
-                    }
-                }
-            }
-            range.e.c--;
-        }
-    }
-    ws['!ref'] = XLSX.utils.encode_range(range);
-}
-
-function applyWorksheetBorders(ws) {
-    const range = XLSX.utils.decode_range(ws['!ref']);
-    
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-            const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
-            ws[cellAddress] = ws[cellAddress] || {};
-            ws[cellAddress].s = ws[cellAddress].s || {};
-            ws[cellAddress].s.border = {
-                top: {style: "thin", color: {rgb: "000000"}},
-                bottom: {style: "thin", color: {rgb: "000000"}},
-                left: {style: "thin", color: {rgb: "000000"}},
-                right: {style: "thin", color: {rgb: "000000"}}
-            };
-            
-            // Header styling
-            if (R === range.s.r) {
-                ws[cellAddress].s.fill = {fgColor: {rgb: "F2F2F2"}};
-                ws[cellAddress].s.font = {bold: true};
-            }
-        }
-    }
-}
-
-
     $(function () {
 
       $(':checkbox[name=selectAll]').click (function () {
-        //$(':checkbox[name=student_list]').prop('checked', this.checked);
+        //$(':checkbox[name=applicant_list]').prop('checked', this.checked);
         $('.candidate_list').prop('checked', this.checked);
       });
 

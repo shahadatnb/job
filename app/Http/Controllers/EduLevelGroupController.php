@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EduLevelGroup;
 use Illuminate\Http\Request;
 use App\Models\EduLevel;
-use App\Models\StudentEducation;
+use App\Models\ApplicantEducation;
 
 class EduLevelGroupController extends Controller
 {
@@ -89,7 +89,7 @@ class EduLevelGroupController extends Controller
      */
     public function destroy(EduLevelGroup $eduLevelGroup)
     {
-        $count = StudentEducation::where('edu_level_group_id', $eduLevelGroup->id)->count();
+        $count = ApplicantEducation::where('edu_level_group_id', $eduLevelGroup->id)->count();
         if ($count > 0) {
             session()->flash('error', 'This Board is in use');
             return back();

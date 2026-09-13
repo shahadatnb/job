@@ -1,7 +1,7 @@
 <x-guest-layout>
   <div id="errorMsg"></div>
     <p class="login-box-msg">Sign in to start your session</p>
-    <form method="POST" action="{{ route('student.login') }}">
+    <form method="POST" action="{{ route('applicant.login') }}">
         @csrf
         @if (isset(request()->redirect))
             <input type="hidden" name="redirect" value="{{ request()->redirect }}">
@@ -58,7 +58,7 @@
       </p>
       @endif
       <p class="mb-0">
-        <a href="{{ route('student.register') }}" class="text-center btn btn-sm btn-info">Register a new applicant</a>
+        <a href="{{ route('applicant.register') }}" class="text-center btn btn-sm btn-info">Register a new applicant</a>
       </p>
 <!-- /.login-box -->
 </x-guest-layout>
@@ -73,7 +73,7 @@
 				</div>
 				<div class="modal-body">
 						<div id="errorMsgBasic"></div>
-						<form action="{{route('student.password.reset.phone')}}" id="passwordResetForm" method="post">
+						<form action="{{route('applicant.password.reset.phone')}}" id="passwordResetForm" method="post">
 								@csrf
 								<div class="input-group">
 										{{-- <label for="phone_number">Phone</label> --}}
@@ -111,7 +111,7 @@ $(document).ready(function() {
       $("#errorMsgBasic").html('');
       let phone = $('#phone_number').val();
       $.ajax({
-          url: "{{route('student.password.reset.phone')}}",
+          url: "{{route('applicant.password.reset.phone')}}",
           method: "POST",
           data: {
               phone: phone,
@@ -143,7 +143,7 @@ $(document).ready(function() {
       $.LoadingOverlay("show");
       $("#errorMsgBasic").html('');
       $.ajax({
-          url: "{{route('student.password.store.phone')}}",
+          url: "{{route('applicant.password.store.phone')}}",
           method: "POST",
           data: $(this).serialize(),
           success: function(response) {

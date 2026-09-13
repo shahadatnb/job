@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StudentEducation;
+use App\Models\ApplicantEducation;
 use App\Models\EduBoard;
 use App\Models\EduGroup;
 use App\Models\EduLevelGroup;
@@ -45,7 +45,7 @@ class EducationController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $edu = new StudentEducation();
+        $edu = new ApplicantEducation();
 
         if($request->result_type == 'gpa'){
             $result = $request->result_gpa;
@@ -56,7 +56,7 @@ class EducationController extends Controller
             $result = $request->result_pass;
         }
 
-        $edu->student_id = auth('student')->user()->id;
+        $edu->applicant_id = auth('applicant')->user()->id;
         $edu->edu_level_id = $request->edu_level_id;
         $edu->edu_group_id = $request->edu_group_id != 0 ? $request->edu_group_id : null;
         $edu->edu_board_id = $request->edu_board_id;
@@ -67,7 +67,7 @@ class EducationController extends Controller
         $edu->result = $result;
         $edu->save();
         
-        $education = StudentEducation::find($edu->id);
+        $education = ApplicantEducation::find($edu->id);
         $education->exam_name = $education->exam? $education->exam->name : '';
         $education->board_name = $education->board? $education->board->name : '';
         $education->group_name = $education->group? $education->group->name : ''; 
@@ -77,7 +77,7 @@ class EducationController extends Controller
 
     public function edit(Request $request)
     {
-        $education = StudentEducation::find($request->id);
+        $education = $this->ownedOrFail(ApplicantEducation::class, $request->id);
         $groups = EduGroup::where('edu_level_id', $education->edu_level_id)->where('is_active', 1)->get();
         $boards = EduBoard::where('edu_level_id', $education->edu_level_id)->where('is_active', 1)->get();
         $level_groups = EduLevelGroup::where('edu_level_id', $education->edu_level_id)->where('is_active', 1)->get();
@@ -109,7 +109,7 @@ class EducationController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $edu = StudentEducation::find($request->id);
+        $edu = $this->ownedOrFail(ApplicantEducation::class, $request->id);
         if($request->result_type == 'gpa'){
             $result = $request->result_gpa;
             $edu->out_of = $request->out_of;
@@ -129,7 +129,7 @@ class EducationController extends Controller
         $edu->result = $result;
         $edu->save();
         
-        $education = StudentEducation::find($edu->id);
+        $education = ApplicantEducation::find($edu->id);
         $education->exam_name = $education->exam? $education->exam->name : '';
         $education->board_name = $education->board? $education->board->name : '';
         $education->group_name = $education->group? $education->group->name : '';  
@@ -139,7 +139,7 @@ class EducationController extends Controller
 
     public function destroy(Request $request)
     {
-        $education = StudentEducation::find($request->id);
+        $education = $this->ownedOrFail(ApplicantEducation::class, $request->id);
         $education->delete();
         return response()->json(['status' => true, 'type'=> 'delete', 'message' => 'Education deleted successfully']);
     }

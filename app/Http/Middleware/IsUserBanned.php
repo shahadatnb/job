@@ -17,18 +17,30 @@ class IsUserBanned
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->check() && auth()->user()->banned_till != null) {
+        $user = auth()->user();
 
-            if (auth()->user()->banned_till == 0) {
-                $message = 'Your account has been banned permanently.';
-            }
-            if (now()->lessThan(auth()->user()->banned_till)) {
-                $banned_days = now()->diffInDays(auth()->user()->banned_till) + 1;
-                $message = 'Your account has been suspended for ' . $banned_days . ' ' . Str::plural('day', $banned_days);
-            }
+        if ($user && $user->banned_till != null) {
+            $isPermanent = (int) $user->banned_till === 0 || (string) $user->banned_till === '0';
+            $stillBanned = $isPermanent || now()->lessThan($user->banned_till);
 
-            auth()->logout();
-            return redirect()->route('login')->with('message', $message);
+            if ($stillBanned) {
+                if ($isPermanent) {
+                    $message = 'Your account has been banned permanently.';
+                } else {
+                    $banned_days = now()->diffInDays($user->banned_till) + 1;
+                    $message = 'Your account has been suspended for ' . $banned_days . ' ' . Str::plural('day', $banned_days);
+                }
+
+                auth()->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                if ($request->expectsJson()) {
+                    return response()->json(['status' => false, 'message' => $message], 403);
+                }
+
+                return redirect()->route('login')->with('message', $message);
+            }
         }
 
         return $next($request);

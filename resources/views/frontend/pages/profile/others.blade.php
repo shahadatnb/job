@@ -1,6 +1,6 @@
 <h2>Skills</h2>
 <div id="skillTable" class="mb-3">
-	@foreach($student->skills as $skill)
+	@foreach($applicant->skills as $skill)
 	<span data-id="{{ $skill->id }}" class="badge bg-primary">{{ $skill->skill }} <a class="deleteSkill" data-id="{{ $skill->id }}">X</a></span>
 	@endforeach
 </div>
@@ -27,7 +27,7 @@
 		</tr>
 	</thead>
 	<tbody id="languageTable">
-		@foreach($student->languages as $lang)
+		@foreach($applicant->languages as $lang)
 		<tr data-id="{{ $lang->id }}">
 				<td>{{ $lang->language }}</td>
 				<td>{{ $lang->reading }}</td>
@@ -61,7 +61,7 @@
 		</tr>
 	</thead>
 	<tbody id="referenceTable">
-		@foreach($student->references as $ref)
+		@foreach($applicant->references as $ref)
 		<tr data-id="{{ $ref->id }}">
 				<td>{{ $ref->name }}</td>
 				<td>{{ $ref->designation }}</td>
@@ -89,7 +89,7 @@
 				</div>
 				<div class="modal-body">
 						<div id="errorMsgLanguage"></div>
-						<form action="{{route('student.language.store')}}" id="languageForm" method="post">
+						<form action="{{route('applicant.language.store')}}" id="languageForm" method="post">
 								@csrf
 								<div class="form-group">
 										<label for="lan_language">Title</label>
@@ -124,7 +124,7 @@
 				</div>
 				<div class="modal-body">
 						<div id="errorMsgReference"></div>
-						<form action="{{route('student.reference.store')}}" id="referenceForm" method="post">
+						<form action="{{route('applicant.reference.store')}}" id="referenceForm" method="post">
 								@csrf
 								<div class="form-group">
 										<label for="ref_name">Name</label>

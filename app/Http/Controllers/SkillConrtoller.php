@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\StudentSkill;
+use App\Models\ApplicantSkill;
 use Illuminate\Support\Facades\Validator;
 
 class SkillConrtoller extends Controller
@@ -18,24 +18,24 @@ class SkillConrtoller extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()]);
         }
 
-        $student = auth('student')->user();
-        $skill = new StudentSkill;
+        $applicant = auth('applicant')->user();
+        $skill = new ApplicantSkill;
         $skill->skill = $request->skill;
-        $skill->student_id = $student->id;
+        $skill->applicant_id = $applicant->id;
         $skill->save();
         return response()->json(['status' => true, 'skill' => $skill]);
     }
 
     public function destroy(Request $request)
     {
-        $skill = StudentSkill::find($request->id);
+        $skill = $this->ownedOrFail(ApplicantSkill::class, $request->id);
         $skill->delete();
         return response()->json(['status' => true]);
     }
 
     public function list(Request $request)
     {
-        $skills = StudentSkill::groupBy('skill')->pluck('skill');
+        $skills = ApplicantSkill::groupBy('skill')->pluck('skill');
         return response()->json(['status' => true, 'skills' => $skills]);
     }
 }

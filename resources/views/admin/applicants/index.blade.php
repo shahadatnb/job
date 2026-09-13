@@ -1,5 +1,5 @@
 @extends('admin.layouts.layout')
-@section('title',__("Students List"))
+@section('title',__("Applicants List"))
 @section('css')
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.24/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/datatables.min.css"/>
 @endsection
@@ -7,7 +7,7 @@
 <!-- Default box -->
 <div class="card">
     <div class="card-header d-print-none">
-          {!! Form::model($data,['route' => 'student.index','method'=>'get','class'=>'d-print-none row']) !!}
+          {!! Form::model($data,['route' => 'applicant.index','method'=>'get','class'=>'d-print-none row']) !!}
             {{-- <div class="col-6 col-md-2">
               {!! Form::select('category_id',$catetories,null,['class'=>'form-control form-control-sm','placeholder'=> __('Category')]) !!}
             </div> --}}
@@ -17,21 +17,22 @@
             <div class="col-3 col-md-2">
               {!! Form::text('phone',null,['class'=>'form-control form-control-sm','placeholder'=> __('Phone')]) !!}
             </div>
-            <div class="col-6 col-md-2">
+            <div class="col-6 col-md-3">
               <div class="btn btn-group">
                 <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-search"></i> Filter</button>
-                {{-- <a class="btn btn-primary btn-sm" href="{{ route('student.create')}}"><i class="fas fa-plus"></i> New</a> --}}
+                <a class="btn btn-warning btn-sm ml-1" href="{{ route('applicant.export', request()->query()) }}" target="_blank"><i class="fas fa-file-image"></i> Export with Photo</a>
+                {{-- <a class="btn btn-primary btn-sm" href="{{ route('applicant.create')}}"><i class="fas fa-plus"></i> New</a> --}}
               </div>              
             </div>
           {!! Form::close() !!}
       <div id="report-header" class="d-none d-print-block">
-        <h2 class="text-center">{{__('Students List')}}</h2>
+        <h2 class="text-center">{{__('Applicants List')}}</h2>
       </div>
     </div>
     <div class="card-body">
       @include('admin.layouts._message')        
       <div class="table-responsive">
-        <table id="student" class="table table-sm table-bordered table-striped">
+        <table id="applicant" class="table table-sm table-bordered table-striped">
             <thead>
             <tr>
               {{-- <th>ID</th> --}}
@@ -46,7 +47,7 @@
             </tr>
             </thead>
             <tbody>
-                @foreach ($students as $item)
+                @foreach ($applicants as $item)
                 <tr>
                     {{-- <td>{{$item->id}}</td> --}}
                     <td class="d-print-none not-exported">
@@ -56,12 +57,12 @@
                         </button>
                         <div class="dropdown-menu">
                           {{-- @if (Auth::user()->hasAnyRole(['Manager','Admin'])) --}}
-                          <div class="dropdown-divider"></div>
-                            {{-- <a href="{{route('student.edit',$item->id)}}" class="dropdown-item"><i class="fas fa-edit"></i> Edit</a> --}}
-                            <a href="{{route('student.show',$item->id)}}" class="dropdown-item"><i class="fas fa-eye"></i> Show</a>
-                            {{-- <a href="{{route('student.admissionForm',$item->id)}}" class="dropdown-item"><i class="fas fa-file-pdf"></i> Download</a> --}}
                             <div class="dropdown-divider"></div>
-                            <form class="delete" action="{{ route('student.destroy',$item->id) }}" method="post">
+                            <a href="{{route('applicant.edit',$item->id)}}" class="dropdown-item"><i class="fas fa-edit"></i> Edit</a>
+                            <a href="{{route('applicant.show',$item->id)}}" class="dropdown-item"><i class="fas fa-eye"></i> Show</a>
+                            {{-- <a href="{{route('applicant.admissionForm',$item->id)}}" class="dropdown-item"><i class="fas fa-file-pdf"></i> Download</a> --}}
+                            <div class="dropdown-divider"></div>
+                            <form class="delete" action="{{ route('applicant.destroy',$item->id) }}" method="post">
                               {{ csrf_field() }}
                               {{ method_field('DELETE') }}
                               <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete This Item?')"><i class="fas fa-trash"></i> Delete</button>
@@ -86,7 +87,7 @@
     </div>
     <!-- /.card-body -->
     <div class="card-footer">
-      <div class="text-center">{{ $students->appends($_GET)->links() }}</div>
+      <div class="text-center">{{ $applicants->appends($_GET)->links() }}</div>
     </div>
     <!-- /.card-footer-->
 </div>
@@ -106,7 +107,7 @@
 
       var header = $('#report-header').html();
 		
-        $('#student').DataTable( {
+        $('#applicant').DataTable( {
             dom: '<"row d-print-none"<"col"B><"col"f><"col text-right"l>>tip',
             buttons: [
 				'copy',

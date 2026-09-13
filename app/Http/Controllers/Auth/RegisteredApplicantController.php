@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Student;
+use App\Models\Applicant;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
-class RegisteredStudentController extends Controller
+class RegisteredApplicantController extends Controller
 {
     /**
      * Display the registration view.
      */
     public function create(): View
     {
-        return view('auth.student.register');
+        return view('auth.applicant.register');
     }
 
     /**
@@ -32,12 +32,12 @@ class RegisteredStudentController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Student::class],
-            'phone' => ['required', 'digits:11', 'unique:'.Student::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Applicant::class],
+            'phone' => ['required', 'digits:11', 'unique:'.Applicant::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = Student::create([
+        $user = Applicant::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -46,9 +46,9 @@ class RegisteredStudentController extends Controller
 
         event(new Registered($user));
 
-        auth('student')->login($user);
+        auth('applicant')->login($user);
         //Auth::login($user);
 
-        return redirect()->route('student.dashboard');
+        return redirect()->route('applicant.dashboard');
     }
 }

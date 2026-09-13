@@ -60,9 +60,9 @@
 @section('js')
 <script>
     $(document).on('click', '.apply_now', function () {
-        let check_login = "{{ auth('student')->check() ? '1' : '0' }}";
+        let check_login = "{{ auth('applicant')->check() ? '1' : '0' }}";
         if(check_login == 0){
-            location.href = "{{ route('student.login') }}";
+            location.href = "{{ route('applicant.login') }}";
         }
         let job_id = $(this).data('job_id');
         let post = $(this).data('post');
@@ -83,7 +83,7 @@
             success: function (data) {
                 if (data.status == true) {
                     $("#applyModal").modal('hide');
-                    location.href = "{{route('student.applied_jobs')}}";
+                    location.href = "{{route('applicant.applied_jobs')}}";
                 }else {
                     //$("#errorMsg").html(data.error);
                     if(data.message){

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StudentTraining;
+use App\Models\ApplicantTraining;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,8 +22,8 @@ class TrainingController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $training = new StudentTraining();
-        $training->student_id = auth('student')->user()->id;
+        $training = new ApplicantTraining();
+        $training->applicant_id = auth('applicant')->user()->id;
         $training->training_title = $request->training_title;
         $training->topics_covered = $request->topics_covered;
         $training->training_year = $request->training_year;
@@ -36,7 +36,7 @@ class TrainingController extends Controller
 
     public function edit(Request $request)
     {
-        $training = StudentTraining::find($request->id);
+        $training = $this->ownedOrFail(ApplicantTraining::class, $request->id);
         return response()->json(['status' => true, 'type'=> 'edit', 'training'=> $training]);
     }
 
@@ -53,7 +53,7 @@ class TrainingController extends Controller
         if ($validator->fails()) {
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
-        $training = StudentTraining::find($request->id);
+        $training = $this->ownedOrFail(ApplicantTraining::class, $request->id);
         $training->training_title = $request->training_title;
         $training->topics_covered = $request->topics_covered;
         $training->training_year = $request->training_year;
@@ -66,7 +66,7 @@ class TrainingController extends Controller
 
     public function destroy(Request $request)
     {
-        $training = StudentTraining::find($request->id);
+        $training = $this->ownedOrFail(ApplicantTraining::class, $request->id);
         $training->delete();
         return response()->json(['status' => true, 'type'=> 'delete', 'message' => 'Training deleted successfully']);
     }

@@ -13,10 +13,10 @@
             </div>
             <div class="card-body">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group list-group-item"><a href="{{route('student.dashboard')}}">Dashboard</a></li>
-                    <li class="list-group list-group-item"><a href="{{route('student.view_cv')}}">View CV</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('applicant.dashboard')}}">Dashboard</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('applicant.view_cv')}}">View CV</a></li>
                     <li class="list-group list-group-item"><a href="{{route('/')}}">Job List</a></li>
-                    <li class="list-group list-group-item"><a href="{{route('student.applied_jobs')}}">Applied Jobs</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('applicant.applied_jobs')}}">Applied Jobs</a></li>
                 </ul>
             </div>
         </div>

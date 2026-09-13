@@ -22,7 +22,7 @@ class SMSController extends Controller
         $data = ['job_id'=>'','status'=>'','phone'=>''];
 
         if(!empty($request->job_id)) {
-            $applied_jobs = JobApplication::with('job', 'student')->latest();
+            $applied_jobs = JobApplication::with('job', 'applicant')->latest();
             $data['job_id'] = $request->job_id;
             $applied_jobs = $applied_jobs->whereHas('job', function ($query) use ($request) {
                 $query->where('id', $request->job_id);
@@ -30,7 +30,7 @@ class SMSController extends Controller
 
             if(!empty($request->phone)) {
                 $data['phone'] = $request->phone;
-                $applied_jobs = $applied_jobs->whereHas('student', function ($query) use ($request) {
+                $applied_jobs = $applied_jobs->whereHas('applicant', function ($query) use ($request) {
                     $query->where('phone', $request->phone);
                 });
             }

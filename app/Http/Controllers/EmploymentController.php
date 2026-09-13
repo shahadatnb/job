@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StudentEmployment;
+use App\Models\ApplicantEmployment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -23,18 +23,18 @@ class EmploymentController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $student = auth('student')->user();
-        $student_employment = new StudentEmployment();
-        $student_employment->student_id = $student->id;
-        $student_employment->company_name = $request->company_name;
-        $student_employment->job_title = $request->job_title;
-        $student_employment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
-        $student_employment->end_date = $request->is_current ? null : Carbon::parse($request->end_date)->format('Y-m-d');// $request->end_date;
-        $student_employment->job_description = $request->job_description;
-        $student_employment->company_location = $request->company_location;
-        $student_employment->is_current = $request->is_current ? 1 : 0;
-        $student_employment->save();
-        return response()->json(['status' => true, 'type'=> 'save', 'employment'=> $student_employment, 'message' => 'Education saved successfully']);
+        $applicant = auth('applicant')->user();
+        $applicant_employment = new ApplicantEmployment();
+        $applicant_employment->applicant_id = $applicant->id;
+        $applicant_employment->company_name = $request->company_name;
+        $applicant_employment->job_title = $request->job_title;
+        $applicant_employment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
+        $applicant_employment->end_date = $request->is_current ? null : Carbon::parse($request->end_date)->format('Y-m-d');// $request->end_date;
+        $applicant_employment->job_description = $request->job_description;
+        $applicant_employment->company_location = $request->company_location;
+        $applicant_employment->is_current = $request->is_current ? 1 : 0;
+        $applicant_employment->save();
+        return response()->json(['status' => true, 'type'=> 'save', 'employment'=> $applicant_employment, 'message' => 'Education saved successfully']);
     }
 
     public function update(Request $request){
@@ -51,26 +51,26 @@ class EmploymentController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $student_employment = StudentEmployment::find($request->id);
-        $student_employment->company_name = $request->company_name;
-        $student_employment->job_title = $request->job_title;
-        $student_employment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
-        $student_employment->end_date = $request->is_current ? null : Carbon::parse($request->end_date)->format('Y-m-d');// $request->end_date;
-        $student_employment->job_description = $request->job_description;
-        $student_employment->company_location = $request->company_location;
-        $student_employment->is_current = $request->is_current ? 1 : 0;
-        $student_employment->save();
-        return response()->json(['status' => true, 'type'=> 'update', 'employment'=> $student_employment, 'message' => 'Education updated successfully']);
+        $applicant_employment = $this->ownedOrFail(ApplicantEmployment::class, $request->id);
+        $applicant_employment->company_name = $request->company_name;
+        $applicant_employment->job_title = $request->job_title;
+        $applicant_employment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
+        $applicant_employment->end_date = $request->is_current ? null : Carbon::parse($request->end_date)->format('Y-m-d');// $request->end_date;
+        $applicant_employment->job_description = $request->job_description;
+        $applicant_employment->company_location = $request->company_location;
+        $applicant_employment->is_current = $request->is_current ? 1 : 0;
+        $applicant_employment->save();
+        return response()->json(['status' => true, 'type'=> 'update', 'employment'=> $applicant_employment, 'message' => 'Education updated successfully']);
     }
 
     public function edit(Request $request){
-        $student_employment = StudentEmployment::find($request->id);
-        return response()->json(['status' => true, 'type'=> 'edit', 'employment'=> $student_employment]);
+        $applicant_employment = $this->ownedOrFail(ApplicantEmployment::class, $request->id);
+        return response()->json(['status' => true, 'type'=> 'edit', 'employment'=> $applicant_employment]);
     }
 
     public function destroy(Request $request){
-        $student_employment = StudentEmployment::find($request->id);
-        $student_employment->delete();
+        $applicant_employment = $this->ownedOrFail(ApplicantEmployment::class, $request->id);
+        $applicant_employment->delete();
         return response()->json(['status' => true, 'type'=> 'delete', 'message' => 'Employment deleted successfully']);
     }
 }

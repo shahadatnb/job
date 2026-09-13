@@ -24,7 +24,7 @@
           </div>
           {{-- <div class="col-6 col-md-3">
             <div class="input-group">              
-              {!! Form::text('date',null,['class'=>'form-control date datetimepicker-input', 'data-toggle'=>"datetimepicker", 'data-target'=>"#date", 'id'=>'date', 'placeholder'=> __('Date')]) !!}
+              {!! Form::text('date',null,['class'=>'form-control date js-datepicker','id'=>'date','autocomplete'=>'off','placeholder'=> __('dd-mm-yyyy')]) !!}
               {{ Form::text('time',null,array('class'=>'form-control timepicker datetimepicker-input', 'data-toggle'=>"datetimepicker", 'data-target'=>"#time", 'id'=>'time', 'maxlenth'=>'60','placeholder'=>'Time')) }}
             </div>
           </div> --}}
@@ -69,14 +69,14 @@
                       {{ $sl++ }}
                     </td>
                     <td>
-                      <img src="{{asset('/storage/'.$item->student->photo)}}" alt="" style="width: 80px;height: 80px;" class="rounded">
+                      <img src="{{asset('/storage/'.$item->applicant->photo)}}" alt="" style="width: 80px;height: 80px;" class="rounded">
                     </td>
                     <td>
-                      {{$item->student->name }} <br>
+                      {{$item->applicant->name }} <br>
                       Age: {{$item->age }} <br>
-                      Phone: {{$item->student->phone }} <br>
-                      Email: {{$item->student->email }} <br>
-                      Address: {{$item->student->village }}, {{$item->student->post_office }}{{$item->student->upazila ? ', '.$item->student->upazila->name : '' }}{{$item->student->district ? ', '.$item->student->district->name : '' }}
+                      Phone: {{$item->applicant->phone }} <br>
+                      Email: {{$item->applicant->email }} <br>
+                      Address: {{$item->applicant->village }}, {{$item->applicant->post_office }}{{$item->applicant->upazila ? ', '.$item->applicant->upazila->name : '' }}{{$item->applicant->district ? ', '.$item->applicant->district->name : '' }}
                     </td>
                     <td>
                       <input type="hidden" class="form-control" name="application_id[]" value="{{$item->id}}">
@@ -114,6 +114,7 @@
 <script src="{{ asset('assets/admin/plugins/moment/moment.min.js') }}"> </script>
 <!-- Tempusdominus -->
 <script src="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"> </script>
+@include('admin.layouts._datepicker')
 <script>
 
   $("#result_save").submit(function(e) {
@@ -155,11 +156,6 @@
         }
       }
     });
-  });
-
-  $('.date').datetimepicker({
-      //format: 'DD/MM/YYYY'
-      format: 'YYYY-MM-DD'
   });
 
   $('.timepicker').datetimepicker({

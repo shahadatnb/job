@@ -64,8 +64,8 @@
               <p>Result Entry</p>
             </a>
           </li>          
-          <li class="nav-item has-treeview {{ (request()->routeIs('student.*','designation.*','eduBoard.*','eduGroup.*','signature.*','eduLevelGroup.*','department.*')) ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ (request()->routeIs('student.*','designation.*','eduBoard.*','eduGroup.*','signature.*','eduLevelGroup.*','department.*')) ? 'active' : '' }}">
+          <li class="nav-item has-treeview {{ (request()->routeIs('applicant.*','designation.*','eduBoard.*','eduGroup.*','signature.*','eduLevelGroup.*','department.*')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ (request()->routeIs('applicant.*','designation.*','eduBoard.*','eduGroup.*','signature.*','eduLevelGroup.*','department.*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-restroom"></i>
               <p>CV Management <i class="right fas fa-angle-left"></i> </p>
             </a>
@@ -99,7 +99,7 @@
                   </li>
                 </ul>
               </li>
-              <li class="nav-item"><a href="{{ route("student.index") }}" class="nav-link {{ (request()->routeIs('student.*')) ? ' active' : '' }}">
+              <li class="nav-item"><a href="{{ route("applicant.index") }}" class="nav-link {{ (request()->routeIs('applicant.*')) ? ' active' : '' }}">
                 <i class="far fa-user nav-icon"></i> <p>{{__('CV List') }}</p></a>
               </li>
               

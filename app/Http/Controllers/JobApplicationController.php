@@ -10,7 +10,9 @@ use App\Models\ApplicationStatus;
 use App\Models\Job;
 use App\Models\EduGroup;
 use App\Models\JobSignature;
+use App\Exports\JobApplicationsExport;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class JobApplicationController extends Controller
 {
@@ -20,14 +22,14 @@ class JobApplicationController extends Controller
             'job_id' => 'required',
             'expected_salary' => 'required|numeric',
         ]);
-        $user = auth('student')->user();
+        $user = auth('applicant')->user();
 
         $job = Job::find($request->job_id);
         
         if(!$job) {
             return response()->json(['status' => false, 'message' => 'Job not found']);
         }else{
-            $check_duplicate = JobApplication::where('job_id', $job->id)->where('student_id', auth('student')->user()->id)->first();
+            $check_duplicate = JobApplication::where('job_id', $job->id)->where('applicant_id', auth('applicant')->user()->id)->first();
             if($check_duplicate) {
                 //return response()->json(['status' => false, 'message' => 'You have already applied for this job']);
                 $validator->after(function ($validator) {
@@ -148,7 +150,7 @@ class JobApplicationController extends Controller
 
         $job_application = new JobApplication();
         $job_application->job_id = $job->id;
-        $job_application->student_id = auth('student')->user()->id;
+        $job_application->applicant_id = auth('applicant')->user()->id;
         $job_application->age = Carbon::parse($user->date_of_birth)->diffInYears($job->last_date);
         $job_application->expected_salary = $request->expected_salary;
         $job_application->save();
@@ -185,15 +187,23 @@ class JobApplicationController extends Controller
         return view('frontend.pages.job_detail', compact('job', 'jobs', 'eduGroups', 'eduGroups2'));
     }
     
+    public function export(Request $request)
+    {
+        $filters = $request->only(['job_id', 'email', 'phone', 'status']);
+        $filename = 'job-applications-'.now()->format('d-m-Y-His').'.xlsx';
+
+        return Excel::download(new JobApplicationsExport($filters), $filename);
+    }
+
     public function application(Request $request)
     {
-        $data = ['job_id'=>'','status'=>'','job_title'=>'','email'=>'','phone'=>'', 'date'=>date('Y-m-d'),'time'=>''];
+        $data = ['job_id'=>'','status'=>'','job_title'=>'','email'=>'','phone'=>'', 'date'=>date('d-m-Y'),'time'=>''];
         $jobdata = Job::where('status', 1)->get();
         $jobs = [];
         foreach ($jobdata as $key => $value) {
             $jobs[$value->id] = $value->title.' ('.$value->last_date.')';
         }
-        $applied_jobs = JobApplication::with('job')->with('student')->latest();
+        $applied_jobs = JobApplication::with('job')->with('applicant')->latest();
         $applicationStatus = ApplicationStatus::where('status', 1)->orderBy('serial', 'asc')->pluck('name', 'id');
         $jobSignature = [];
         if(!empty($request->job_id)) {
@@ -207,13 +217,13 @@ class JobApplicationController extends Controller
         }
         if(!empty($request->email)) {
             $data['email'] = $request->email;
-            $applied_jobs = $applied_jobs->whereHas('student', function ($query) use ($request) {
+            $applied_jobs = $applied_jobs->whereHas('applicant', function ($query) use ($request) {
                 $query->where('email', $request->email);
             });
         }
         if(!empty($request->phone)) {
             $data['phone'] = $request->phone;
-            $applied_jobs = $applied_jobs->whereHas('student', function ($query) use ($request) {
+            $applied_jobs = $applied_jobs->whereHas('applicant', function ($query) use ($request) {
                 $query->where('phone', $request->phone);
             });
         }

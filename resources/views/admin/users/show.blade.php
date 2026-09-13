@@ -22,7 +22,9 @@
                 <input type="hidden" name="user_id" value="{{ $user->id }}">
               {!! Form::close() !!}
             @else
-                <a href="{{route('user-unban',$user->id)}}" class="btn btn-success">Unban</a>
+                {!! Form::open(['route' => ['user-unban', $user->id], 'class' => 'd-inline']) !!}
+                <button type="submit" class="btn btn-success">Unban</button>
+                {!! Form::close() !!}
             @endif
             
         </div>

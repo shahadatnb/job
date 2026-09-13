@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RolesController;
@@ -11,7 +12,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MenuController;
 
 use App\Http\Controllers\SignatureController;
-use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\EmploymentController;
@@ -47,95 +48,103 @@ use App\Http\Controllers\JobController;
 |
 */
 
-Route::get('ac_config', function()
-{
-    Artisan::call('config:cache');
-    return 'OK';
-});
-
 Route::get('/', [HomeController::class,'homepage'])->name('/');
 Route::get('/page/{slug}', [HomeController::class,'page'])->name('page');
 Route::get('/job_detail/{id}', [JobApplicationController::class,'job_detail'])->name('job.job_detail');
 Route::post('/job_apply', [JobApplicationController::class,'apply'])->name('job.apply');
 Route::get('/set_session', [JobApplicationController::class,'set_session'])->name('job.set_session');
-Route::get('applicant/get_edu_group', [EducationController::class, 'edu_group'])->name('student.education.group');
+Route::get('applicant/get_edu_group', [EducationController::class, 'edu_group'])->name('applicant.education.group');
 
 Route::prefix(config('app.admin_prefix','admin'))->group(function() {
     //Auth::routes(['register' => false]);//['verify'=> false]
 });
 
 Route::get('/dashboard', function () {
-    return redirect()->route('student.dashboard');
+    return redirect()->route('applicant.dashboard');
 });
 
 Route::get('/admin_dashboard', function () {
     return redirect()->route('home');
 });
 
-Route::group(['prefix'=>'applicant','middleware'=>'auth:student'], function(){  
+Route::group(['prefix'=>'applicant','middleware'=>'auth:applicant'], function(){  
 
-    Route::get('/', [StudentController::class,'index'])->name('student.dashboard');
-    Route::get('/profile', [StudentController::class,'profile'])->name('student.profile');
-    Route::get('/editProfile', [StudentController::class,'editProfile'])->name('student.editProfile');
-    Route::post('/updateProfile', [StudentController::class,'updateProfile'])->name('student.updateProfile');
-    Route::post('/chengePassword', [StudentController::class,'chengePassword'])->name('student.chengePassword');
-    Route::post('/updatePhoto', [StudentController::class,'updatePhoto'])->name('student.photo.update');
-    Route::post('/updateSignature', [StudentController::class,'updateSignature'])->name('student.signature.update');
-    Route::post('/updateAddress', [StudentController::class,'updateAddress'])->name('student.address.update');
-    Route::post('/updateCareer', [StudentController::class,'updateCareer'])->name('student.career.update');
-    Route::post('/updateOther', [StudentController::class,'updateOther'])->name('student.other.update');
-    Route::get('/view_cv', [StudentController::class,'view_cv'])->name('student.view_cv');
-    Route::get('/applied_jobs', [StudentController::class,'applied_jobs'])->name('student.applied_jobs');
+    Route::get('/', [ApplicantController::class,'index'])->name('applicant.dashboard');
+    Route::get('/profile', [ApplicantController::class,'profile'])->name('applicant.profile');
+    Route::get('/editProfile', [ApplicantController::class,'editProfile'])->name('applicant.editProfile');
+    Route::post('/updateProfile', [ApplicantController::class,'updateProfile'])->name('applicant.updateProfile');
+    Route::post('/chengePassword', [ApplicantController::class,'chengePassword'])->name('applicant.chengePassword');
+    Route::post('/updatePhoto', [ApplicantController::class,'updatePhoto'])->name('applicant.photo.update');
+    Route::post('/updateSignature', [ApplicantController::class,'updateSignature'])->name('applicant.signature.update');
+    Route::post('/updateAddress', [ApplicantController::class,'updateAddress'])->name('applicant.address.update');
+    Route::post('/updateCareer', [ApplicantController::class,'updateCareer'])->name('applicant.career.update');
+    Route::post('/updateOther', [ApplicantController::class,'updateOther'])->name('applicant.other.update');
+    Route::get('/view_cv', [ApplicantController::class,'view_cv'])->name('applicant.view_cv');
+    Route::get('/applied_jobs', [ApplicantController::class,'applied_jobs'])->name('applicant.applied_jobs');
 
-    Route::post('education_store', [EducationController::class, 'store'])->name('student.education.store');
-    Route::get('education_edit', [EducationController::class, 'edit'])->name('student.education.edit');
-    Route::post('education_update', [EducationController::class, 'update'])->name('student.education.update');
-    Route::get('education_destroy', [EducationController::class, 'destroy'])->name('student.education.destroy');
+    Route::post('education_store', [EducationController::class, 'store'])->name('applicant.education.store');
+    Route::get('education_edit', [EducationController::class, 'edit'])->name('applicant.education.edit');
+    Route::post('education_update', [EducationController::class, 'update'])->name('applicant.education.update');
+    Route::post('education_destroy', [EducationController::class, 'destroy'])->name('applicant.education.destroy');
 
-    Route::post('certification_store', [CertificationController::class, 'store'])->name('student.certification.store');
-    Route::get('certification_edit', [CertificationController::class, 'edit'])->name('student.certification.edit');
-    Route::post('certification_update', [CertificationController::class, 'update'])->name('student.certification.update');
-    Route::get('certification_destroy', [CertificationController::class, 'destroy'])->name('student.certification.destroy');
+    Route::post('certification_store', [CertificationController::class, 'store'])->name('applicant.certification.store');
+    Route::get('certification_edit', [CertificationController::class, 'edit'])->name('applicant.certification.edit');
+    Route::post('certification_update', [CertificationController::class, 'update'])->name('applicant.certification.update');
+    Route::post('certification_destroy', [CertificationController::class, 'destroy'])->name('applicant.certification.destroy');
 
-    Route::post('experience_store', [EmploymentController::class, 'store'])->name('student.experience.store');
-    Route::get('experience_edit', [EmploymentController::class, 'edit'])->name('student.experience.edit');
-    Route::post('experience_update', [EmploymentController::class, 'update'])->name('student.experience.update');
-    Route::get('experience_destroy', [EmploymentController::class, 'destroy'])->name('student.experience.destroy');
+    Route::post('experience_store', [EmploymentController::class, 'store'])->name('applicant.experience.store');
+    Route::get('experience_edit', [EmploymentController::class, 'edit'])->name('applicant.experience.edit');
+    Route::post('experience_update', [EmploymentController::class, 'update'])->name('applicant.experience.update');
+    Route::post('experience_destroy', [EmploymentController::class, 'destroy'])->name('applicant.experience.destroy');
 
-    Route::post('training_store', [TrainingController::class, 'store'])->name('student.training.store');
-    Route::get('training_edit', [TrainingController::class, 'edit'])->name('student.training.edit');
-    Route::post('training_update', [TrainingController::class, 'update'])->name('student.training.update');
-    Route::get('training_destroy', [TrainingController::class, 'destroy'])->name('student.training.destroy');
+    Route::post('training_store', [TrainingController::class, 'store'])->name('applicant.training.store');
+    Route::get('training_edit', [TrainingController::class, 'edit'])->name('applicant.training.edit');
+    Route::post('training_update', [TrainingController::class, 'update'])->name('applicant.training.update');
+    Route::post('training_destroy', [TrainingController::class, 'destroy'])->name('applicant.training.destroy');
 
-    Route::post('language_store', [LanguageProficiencyController::class, 'store'])->name('student.language.store');
-    Route::get('language_edit', [LanguageProficiencyController::class, 'edit'])->name('student.language.edit');
-    Route::post('language_update', [LanguageProficiencyController::class, 'update'])->name('student.language.update');
-    Route::get('language_destroy', [LanguageProficiencyController::class, 'destroy'])->name('student.language.destroy');
+    Route::post('language_store', [LanguageProficiencyController::class, 'store'])->name('applicant.language.store');
+    Route::get('language_edit', [LanguageProficiencyController::class, 'edit'])->name('applicant.language.edit');
+    Route::post('language_update', [LanguageProficiencyController::class, 'update'])->name('applicant.language.update');
+    Route::post('language_destroy', [LanguageProficiencyController::class, 'destroy'])->name('applicant.language.destroy');
 
-    Route::post('reference_store', [ReferencesController::class, 'store'])->name('student.reference.store');
-    Route::get('reference_edit', [ReferencesController::class, 'edit'])->name('student.reference.edit');
-    Route::post('reference_update', [ReferencesController::class, 'update'])->name('student.reference.update');
-    Route::get('reference_destroy', [ReferencesController::class, 'destroy'])->name('student.reference.destroy');
+    Route::post('reference_store', [ReferencesController::class, 'store'])->name('applicant.reference.store');
+    Route::get('reference_edit', [ReferencesController::class, 'edit'])->name('applicant.reference.edit');
+    Route::post('reference_update', [ReferencesController::class, 'update'])->name('applicant.reference.update');
+    Route::post('reference_destroy', [ReferencesController::class, 'destroy'])->name('applicant.reference.destroy');
 
-    Route::post('skill_store', [SkillConrtoller::class, 'store'])->name('student.skill.store');
-    Route::get('skill_destroy', [SkillConrtoller::class, 'destroy'])->name('student.skill.destroy');
-    Route::get('skill_list', [SkillConrtoller::class, 'list'])->name('student.skill.list');
+    Route::post('skill_store', [SkillConrtoller::class, 'store'])->name('applicant.skill.store');
+    Route::post('skill_destroy', [SkillConrtoller::class, 'destroy'])->name('applicant.skill.destroy');
+    Route::get('skill_list', [SkillConrtoller::class, 'list'])->name('applicant.skill.list');
 });
 
 Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth'], function(){  
 
     Route::get('/home', [AdminController::class,'home'])->name('home');
     Route::get('/', [AdminController::class,'index'])->name('dashboard');
+
+    Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('data/summary', [DashboardController::class,'summary'])->name('summary');
+        Route::get('data/applications-monthly', [DashboardController::class,'applicationsMonthly'])->name('applications.monthly');
+        Route::get('data/applications-by-status', [DashboardController::class,'applicationsByStatus'])->name('applications.status');
+        Route::get('data/applicant-gender', [DashboardController::class,'applicantGender'])->name('applicants.gender');
+        Route::get('data/top-jobs', [DashboardController::class,'topJobs'])->name('top-jobs');
+        Route::get('data/recent-applications', [DashboardController::class,'recentApplications'])->name('recent.applications');
+        Route::get('data/recent-applicants', [DashboardController::class,'recentApplicants'])->name('recent.applicants');
+    });
     Route::get('/profile', [UsersController::class,'profile'])->name('profile');
     Route::get('/editProfile', [UsersController::class,'editProfile'])->name('editProfile');
     Route::post('/updateProfile', [UsersController::class,'updateProfile'])->name('updateProfile');
     Route::post('/chengePassword', [UsersController::class,'chengePassword'])->name('chengePassword');
 
     //Route::resource('unit', UnitController::class);
-    Route::get('/applicants/destroy/{student}', [StudentController::class,'destroy'])->name('student.destroy');
-    Route::get('/applicants/{student}', [StudentController::class,'show'])->name('student.show');
-    Route::get('/applicants', [StudentController::class,'students'])->name('student.index');
+    Route::delete('/applicants/destroy/{applicant}', [ApplicantController::class,'destroy'])->name('applicant.destroy');
+    Route::get('/applicants/export', [ApplicantController::class,'export'])->name('applicant.export');
+    Route::get('/applicants/{applicant}/edit', [ApplicantController::class,'edit'])->name('applicant.edit');
+    Route::put('/applicants/{applicant}', [ApplicantController::class,'update'])->name('applicant.update');
+    Route::get('/applicants/{applicant}', [ApplicantController::class,'show'])->name('applicant.show');
+    Route::get('/applicants', [ApplicantController::class,'applicants'])->name('applicant.index');
     Route::get('/job/application', [JobApplicationController::class,'application'])->name('job.application');
+    Route::get('/job/application/export', [JobApplicationController::class,'export'])->name('job.application.export');
     Route::post('/job/application_status', [JobApplicationController::class,'application_status'])->name('job.application_status');
     
     Route::get('/job/result_entry', [ApplicantResultController::class,'result_entry'])->name('job.result_entry');
@@ -148,7 +157,7 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=>'auth']
     Route::resource('eduBoard', EduBoardController::class);
     Route::resource('eduGroup', EduGroupController::class);
     Route::post('signature_add', [SignatureController::class, 'add'])->name('signature.add');
-    Route::get('signature_delete/{id}', [SignatureController::class, 'delete'])->name('signature.delete');
+    Route::post('signature_delete/{id}', [SignatureController::class, 'delete'])->name('signature.delete');
     Route::post('signature_serial', [SignatureController::class, 'serial'])->name('signature.serial');
     Route::resource('signature', SignatureController::class);
 });
@@ -191,7 +200,7 @@ Route::group(['prefix'=>config('app.admin_prefix','admin'),'middleware'=> ['auth
     Route::resource('location', LocationController::class);
     Route::resource('menus',MenuController::class);
     Route::post('/user-ban', [UsersController::class, 'ban'])->name('user-ban');
-    Route::get('/user-unban/{id}', [UsersController::class, 'unban'])->name('user-unban');
+    Route::post('/user-unban/{id}', [UsersController::class, 'unban'])->name('user-unban');
 });
 
 Route::group(['prefix'=>'admin','middleware'=> ['auth','role:superadmin']], function(){

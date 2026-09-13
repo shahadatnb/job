@@ -52,12 +52,12 @@ class LoginRequest extends FormRequest
         RateLimiter::clear($this->throttleKey());
     }
 
-    public function student_authenticate(): void
+    public function applicant_authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
         /*
-        if (! Auth::guard('student')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (! Auth::guard('applicant')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -68,7 +68,7 @@ class LoginRequest extends FormRequest
 
         $loginType = filter_var($this->input('email'), FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
-        if (! Auth::guard('student')->attempt([
+        if (! Auth::guard('applicant')->attempt([
             $loginType => $this->input('email'),
             'password' => $this->input('password'),
         ], $this->boolean('remember'))) {

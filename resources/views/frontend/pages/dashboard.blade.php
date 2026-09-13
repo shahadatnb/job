@@ -38,10 +38,10 @@
             </div>
             <div class="card-body">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group list-group-item"><a href="{{route('student.dashboard')}}">Dashboard</a></li>
-                    <li class="list-group list-group-item"><a href="{{route('student.view_cv')}}">View CV</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('applicant.dashboard')}}">Dashboard</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('applicant.view_cv')}}">View CV</a></li>
                     <li class="list-group list-group-item"><a href="{{route('/')}}">Job List</a></li>
-                    <li class="list-group list-group-item"><a href="{{route('student.applied_jobs')}}">Applied Jobs</a></li>
+                    <li class="list-group list-group-item"><a href="{{route('applicant.applied_jobs')}}">Applied Jobs</a></li>
                 </ul>
             </div>
         </div>
@@ -82,17 +82,17 @@
                     <div class="tab-pane fade" id="nav-photograph" role="tabpanel" aria-labelledby="nav-photograph-tab">
 												<h2>Photograph</h2>
 												<div id="errorMsgPhoto"></div>
-												<img id="photoPreview" src="{{asset('/storage/'.$student->photo)}}" alt="" class="img-thumbnail" width="300 px">
+												<img id="photoPreview" src="{{asset('/storage/'.$applicant->photo)}}" alt="" class="img-thumbnail" width="300 px">
 												<br>
-												<form action="{{route('student.photo.update')}}" method="POST" enctype="multipart/form-data">
+												<form action="{{route('applicant.photo.update')}}" method="POST" enctype="multipart/form-data">
 													@csrf
 													<label for="photo">Change Photo (Photo Size: 300px X 300px and File Size: 100kb)</label>
 													<input type="file" name="photo" class="" id="photo">
 												</form>
 
-												<img id="signaturePreview" src="{{asset('/storage/'.$student->signature)}}" alt="" class="img-thumbnail mt-3" width="300 px">
+												<img id="signaturePreview" src="{{asset('/storage/'.$applicant->signature)}}" alt="" class="img-thumbnail mt-3" width="300 px">
 												<br>
-												<form action="{{route('student.signature.update')}}" method="POST" enctype="multipart/form-data">
+												<form action="{{route('applicant.signature.update')}}" method="POST" enctype="multipart/form-data">
 													@csrf
 													<label for="signature">Change Signature (Photo Size: 300px X 80px and File Size: 40kb)</label>
 													<input type="file" name="signature" class="" id="signature">
@@ -192,7 +192,7 @@
         }); 
 
 				$("#btnBasicModal").click(function() {
-					$('#basicForm').attr('action', "{{route('student.updateProfile')}}");
+					$('#basicForm').attr('action', "{{route('applicant.updateProfile')}}");
 					$('#name').val($("#profile_name").text());
 					$('#father_name').val($("#profile_father_name").text());
 					$('#mother_name').val($("#profile_mother_name").text());
@@ -219,16 +219,16 @@
 						success: function(data) {
 							//console.log(data);
 							if(data.status == true){
-								$("#profile_name").text(data.student.name);
-								$("#profile_father_name").text(data.student.father_name);
-								$("#profile_mother_name").text(data.student.mother_name);
-								$("#profile_email").text(data.student.email);
-								$("#profile_phone").text(data.student.phone);
-								$("#profile_nid").text(data.student.nid);
-								$("#profile_date_of_birth").text( moment(data.student.date_of_birth).format('DD-MM-YYYY'));
-								$("#profile_gender").text(data.student.gender);
-								$("#profile_religion").text(data.student.religion);
-								$("#profile_blood_group").text(data.student.blood_group);
+								$("#profile_name").text(data.applicant.name);
+								$("#profile_father_name").text(data.applicant.father_name);
+								$("#profile_mother_name").text(data.applicant.mother_name);
+								$("#profile_email").text(data.applicant.email);
+								$("#profile_phone").text(data.applicant.phone);
+								$("#profile_nid").text(data.applicant.nid);
+								$("#profile_date_of_birth").text( moment(data.applicant.date_of_birth).format('DD-MM-YYYY'));
+								$("#profile_gender").text(data.applicant.gender);
+								$("#profile_religion").text(data.applicant.religion);
+								$("#profile_blood_group").text(data.applicant.blood_group);
 								$('#basicModal').modal('hide');
 							}else{
 								if(data.message){
@@ -255,7 +255,7 @@
 			formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 			formData.append('photo', photo);
 			$.ajax({
-				url: "{{route('student.photo.update')}}",
+				url: "{{route('applicant.photo.update')}}",
 				method: 'POST',
 				data: formData,
 				contentType: false,
@@ -288,7 +288,7 @@
 			formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 			formData.append('signature', signature);
 			$.ajax({
-				url: "{{route('student.signature.update')}}",
+				url: "{{route('applicant.signature.update')}}",
 				method: 'POST',
 				data: formData,
 				contentType: false,
@@ -405,7 +405,7 @@
 			formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 			formData.append('skill', skill);
 			$.ajax({
-				url: "{{route('student.skill.store')}}",
+				url: "{{route('applicant.skill.store')}}",
 				method: 'POST',
 				data: formData,
 				contentType: false,
@@ -435,8 +435,9 @@
 			if(confirm("Are you sure?")){
 				var id = $(this).data('id');
 				$.ajax({
-					url: "{{route('student.skill.destroy')}}?id=" + id,
-					method: 'GET',
+					url: "{{route('applicant.skill.destroy')}}",
+					method: 'POST',
+					data: { id: id, _token: "{{ csrf_token() }}" },
 					success: function(data){
 						console.log(data);
 						if(data.status == true){
@@ -450,7 +451,7 @@
 
 		//Language Proficiency
 		$("#btnLanguageModal").click(function(){
-			$("#languageForm").attr('action', "{{route('student.language.store')}}");
+			$("#languageForm").attr('action', "{{route('applicant.language.store')}}");
 			$('#newLanguageModal').modal('show');
 		});
 
@@ -511,11 +512,11 @@
 			$.LoadingOverlay("show");
 			var id = $(this).data('id');
 			$.ajax({
-				url: "{{route('student.language.edit')}}?id=" + id,
+				url: "{{route('applicant.language.edit')}}?id=" + id,
 				method: 'GET',
 				success: function(data){
 					console.log(data);
-					$("#languageForm").attr('action', "{{route('student.language.update')}}?id=" + id);
+					$("#languageForm").attr('action', "{{route('applicant.language.update')}}?id=" + id);
 					$("#lan_language").val(data.language.language);
 					$("#lan_reading").val(data.language.reading);
 					$("#lan_writing").val(data.language.writing);
@@ -530,8 +531,9 @@
 			if(confirm("Are you sure?")){
 				var id = $(this).data('id');
 				$.ajax({
-					url: "{{route('student.language.destroy')}}?id=" + id,
-					method: 'GET',
+					url: "{{route('applicant.language.destroy')}}",
+					method: 'POST',
+					data: { id: id, _token: "{{ csrf_token() }}" },
 					success: function(data){
 						console.log(data);
 						if(data.status == true){
@@ -545,7 +547,7 @@
 
 		//Reference
 		$("#btnReferenceModal").click(function(){
-			$("#referenceForm").attr('action', "{{route('student.reference.store')}}");
+			$("#referenceForm").attr('action', "{{route('applicant.reference.store')}}");
 			$('#newReferenceModal').modal('show');
 		});
 
@@ -615,11 +617,11 @@
 			$.LoadingOverlay("show");
 			var id = $(this).data('id');
 			$.ajax({
-				url: "{{route('student.reference.edit')}}?id=" + id,
+				url: "{{route('applicant.reference.edit')}}?id=" + id,
 				method: 'GET',
 				success: function(data){
 					console.log(data);
-					$("#referenceForm").attr('action', "{{route('student.reference.update')}}?id=" + id);
+					$("#referenceForm").attr('action', "{{route('applicant.reference.update')}}?id=" + id);
 					$("#ref_name").val(data.reference.name);
 					$("#ref_designation").val(data.reference.designation);
 					$("#ref_organization").val(data.reference.organization);
@@ -637,8 +639,9 @@
 			if(confirm("Are you sure?")){
 				var id = $(this).data('id');
 				$.ajax({
-					url: "{{route('student.reference.destroy')}}?id=" + id,
-					method: 'GET',
+					url: "{{route('applicant.reference.destroy')}}",
+					method: 'POST',
+					data: { id: id, _token: "{{ csrf_token() }}" },
 					success: function(data){
 						console.log(data);
 						if(data.status == true){

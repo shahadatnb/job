@@ -18,3 +18,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Local database dumps / scratch (never commit)
+*.sql
+db.txt

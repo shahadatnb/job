@@ -156,7 +156,7 @@
 <script>
     $(document).on('click', '.apply_now', function () {
         $.LoadingOverlay("show");
-        let check_login = "{{ auth('student')->check() ? '1' : '0' }}";
+        let check_login = "{{ auth('applicant')->check() ? '1' : '0' }}";
         if(check_login == 0){
             $.ajax({
                 url: "{{ route('job.set_session') }}",
@@ -164,7 +164,7 @@
                 data: {'job_id': $(this).data('job_id'), 'job_title': $(this).data('post')},
                 success: function (data) {
                     //console.log(data);
-                    location.href = "{{ route('student.register', ['redirect' => url()->current()]) }}";
+                    location.href = "{{ route('applicant.register', ['redirect' => url()->current()]) }}";
                 }
             })
         }else{
@@ -191,7 +191,7 @@
                 //console.log(data);
                 if (data.status == true) {
                     $("#applyModal").modal('hide');
-                    location.href = "{{route('student.applied_jobs')}}";
+                    location.href = "{{route('applicant.applied_jobs')}}";
                 }else {
                     //$("#errorMsg").html(data.error);
                     if(data.message){

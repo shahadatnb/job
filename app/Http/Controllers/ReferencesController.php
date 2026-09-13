@@ -23,9 +23,9 @@ class ReferencesController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $student = auth('student')->user();
+        $applicant = auth('applicant')->user();
         $reference = new References();
-        $reference->student_id = $student->id;
+        $reference->applicant_id = $applicant->id;
         $reference->name = $request->name;
         $reference->designation = $request->designation;
         $reference->organization = $request->organization;
@@ -53,7 +53,7 @@ class ReferencesController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()->all()]);
         }
 
-        $reference = References::find($request->id);
+        $reference = $this->ownedOrFail(References::class, $request->id);
         $reference->name = $request->name;
         $reference->designation = $request->designation;
         $reference->organization = $request->organization;
@@ -67,12 +67,12 @@ class ReferencesController extends Controller
     }
 
     public function edit(Request $request){
-        $reference = References::find($request->id);
+        $reference = $this->ownedOrFail(References::class, $request->id);
         return response()->json(['status' => true, 'type'=> 'edit', 'reference'=> $reference]);
     }
 
     public function destroy(Request $request){
-        $reference = References::find($request->id);
+        $reference = $this->ownedOrFail(References::class, $request->id);
         $reference->delete();
         return response()->json(['status' => true, 'type'=> 'delete', 'message' => 'Employment deleted successfully']);
     }

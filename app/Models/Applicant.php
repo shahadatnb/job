@@ -10,10 +10,10 @@ use App\Notifications\CustomerResetPasswordNotification;
 use Illuminate\Console\Application;
 use Laravel\Sanctum\HasApiTokens;
 
-class Student extends Authenticatable
+class Applicant extends Authenticatable
 {
     use Notifiable, HasApiTokens; // for auth
-    protected $guard = 'student'; // for auth
+    protected $guard = 'applicant'; // for auth
 
     protected $fillable = [
         'name', 'phone', 'email', 'password',
@@ -30,6 +30,10 @@ class Student extends Authenticatable
 
     public function result(){
         return $this->hasOne(ApplicantResult::class, 'applicant_id');
+    }
+
+    public function applications(){
+        return $this->hasMany(JobApplication::class);
     }
 
     public function upazila()
@@ -53,22 +57,22 @@ class Student extends Authenticatable
 
     public function educations()
     {
-        return $this->hasMany(StudentEducation::class)->orderBy('passing_year', 'desc');
+        return $this->hasMany(ApplicantEducation::class)->orderBy('passing_year', 'desc');
     }
 
     public function employments()
     {
-        return $this->hasMany(StudentEmployment::class)->orderBy('end_date', 'desc');
+        return $this->hasMany(ApplicantEmployment::class)->orderBy('end_date', 'desc');
     }
 
     public function trainings()
     {
-        return $this->hasMany(StudentTraining::class);
+        return $this->hasMany(ApplicantTraining::class);
     }
 
     public function skills()
     {
-        return $this->hasMany(StudentSkill::class);
+        return $this->hasMany(ApplicantSkill::class);
     }
 
     public function certifications()

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EduGroup;
 use App\Models\EduLevel;
-use App\Models\StudentEducation;
+use App\Models\ApplicantEducation;
 use Illuminate\Http\Request;
 
 class EduGroupController extends Controller
@@ -85,7 +85,7 @@ class EduGroupController extends Controller
      */
     public function destroy(EduGroup $eduGroup)
     {
-        $count = StudentEducation::where('edu_group_id', $eduGroup->id)->count();
+        $count = ApplicantEducation::where('edu_group_id', $eduGroup->id)->count();
         if ($count > 0) {
             session()->flash('error', 'This Group is in use');
             return back();

@@ -9,4 +9,11 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+
+    protected function ownedOrFail(string $model, int|string|null $id)
+    {
+        $record = $model::where('applicant_id', auth('applicant')->id())->findOrFail($id);
+
+        return $record;
+    }
 }

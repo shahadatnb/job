@@ -14,9 +14,9 @@ class JobApplication extends Model
         return $this->belongsTo(Job::class);
     }
 
-    public function student()
+    public function applicant()
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Applicant::class);
     }
 
     public function application_status()

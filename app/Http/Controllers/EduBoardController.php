@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EduBoard;
 use App\Models\EduLevel;
-use App\Models\StudentEducation;
+use App\Models\ApplicantEducation;
 use Illuminate\Http\Request;
 
 class EduBoardController extends Controller
@@ -74,7 +74,7 @@ class EduBoardController extends Controller
 
     public function destroy(EduBoard $eduBoard)
     {
-        $count = StudentEducation::where('edu_board_id', $eduBoard->id)->count();
+        $count = ApplicantEducation::where('edu_board_id', $eduBoard->id)->count();
         if ($count > 0) {
             session()->flash('error', 'This Board is in use');
             return back();

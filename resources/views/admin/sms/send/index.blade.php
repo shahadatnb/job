@@ -79,13 +79,13 @@
                         @foreach ($applied_jobs as $key=>$item)
                             <tr>
                                 <td class="">
-                                    <input class="form-check-input ml-2 applicantNumber" name="contacts[]" value="{{ $item->student->phone }}" type="checkbox">
-                                    <input type="hidden" name="applicant_name[]" value="{{ $item->student->name }}">
+                                    <input class="form-check-input ml-2 applicantNumber" name="contacts[]" value="{{ $item->applicant->phone }}" type="checkbox">
+                                    <input type="hidden" name="applicant_name[]" value="{{ $item->applicant->name }}">
                                     <input type="hidden" name="job_title[]" value="{{ $item->job->title }}">
                                 </td>
-                                <td>{{ $item->student->name }}</td>
-                                <td>{{ $item->student->phone }}</td>
-                                <td>{{ $item->student->address }}</td>
+                                <td>{{ $item->applicant->name }}</td>
+                                <td>{{ $item->applicant->phone }}</td>
+                                <td>{{ $item->applicant->address }}</td>
                             </tr>
                         @endforeach
                     </tbody>

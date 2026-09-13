@@ -15,6 +15,23 @@ use Illuminate\Support\Str;
 class UsersController extends Controller
 {
 
+    private function guardAgainstEscalation(User $target = null, $roleIds = null): void
+    {
+        $actor = auth()->user();
+
+        if ($target && ! $actor->isSuperAdmin() && $target->isSuperAdmin()) {
+            abort(403, 'You cannot modify a superadmin account.');
+        }
+
+        if ($roleIds !== null && ! $actor->isSuperAdmin()) {
+            $ids = is_array($roleIds) ? $roleIds : array_filter(explode(',', (string) $roleIds));
+            $superadminIds = Role::where('slug', 'superadmin')->pluck('id')->all();
+            if (count(array_intersect($ids, $superadminIds)) > 0) {
+                abort(403, 'Only a superadmin can assign the superadmin role.');
+            }
+        }
+    }
+
     public function index()
     {
         if(auth()->user()->hasRole('superadmin')){
@@ -64,6 +81,7 @@ class UsersController extends Controller
         $user->save();
 
         if($request->role != null){
+            $this->guardAgainstEscalation(null, (array) $request->role);
             $user->roles()->attach($request->role);
             $user->save();
         }
@@ -100,6 +118,7 @@ class UsersController extends Controller
 
     public function edit(User $user)
     {
+        $this->guardAgainstEscalation($user);
         $get_roles = Role::get();
         $roles = [];
         $rolePermissions = null;
@@ -148,6 +167,8 @@ class UsersController extends Controller
             ],
             'password' => 'confirmed',
         ]);
+
+        $this->guardAgainstEscalation($user, $request->roles);
 
         $user->name = $request->name;
         $user->username = $request->username;
@@ -241,6 +262,10 @@ class UsersController extends Controller
 
     public function destroy(User $user)
     {
+        $this->guardAgainstEscalation($user);
+        if ($user->id === auth()->id()) {
+            abort(403, 'You cannot delete your own account.');
+        }
         $user->roles()->detach();
         $user->permissions()->detach();
         $user->delete();
@@ -260,6 +285,7 @@ class UsersController extends Controller
         // ban user
         $user = User::find($request->user_id);
         if($user){
+            $this->guardAgainstEscalation($user);
             $user->banned_till = $ban_days;
             $user->save();
             session()->flash('success', "Successfully ban.");

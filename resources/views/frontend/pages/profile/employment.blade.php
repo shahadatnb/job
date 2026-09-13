@@ -14,7 +14,7 @@
 			</tr>
 		</thead>
 		<tbody id="employmentTable">
-			@foreach($student->employments as $edu)
+			@foreach($applicant->employments as $edu)
 			<tr data-id="{{ $edu->id }}">
 					<td>{{ $edu->job_title }}</td>
 					<td>{{ $edu->company_name }}</td>
@@ -43,7 +43,7 @@
 				</div>
 				<div class="modal-body">
 						<div id="errorMsgEmployment"></div>
-						<form action="{{route('student.experience.store')}}" id="employmentForm" method="post">
+						<form action="{{route('applicant.experience.store')}}" id="employmentForm" method="post">
 								@csrf
 								<div class="form-group">
 										<label for="company_name">Company Name</label>
@@ -95,7 +95,7 @@
 
 
 		$("#btnEmploymentModal").click(function(){
-			$("#employmentForm").attr('action', "{{route('student.experience.store')}}");
+			$("#employmentForm").attr('action', "{{route('applicant.experience.store')}}");
 			$('#newEmploymentModal').modal('show');
 		});
 
@@ -161,11 +161,11 @@
 			$.LoadingOverlay("show");
 			var id = $(this).data('id');
 			$.ajax({
-				url: "{{route('student.experience.edit')}}?id=" + id,
+				url: "{{route('applicant.experience.edit')}}?id=" + id,
 				method: 'GET',
 				success: function(data){
 					//console.log(data);
-					$("#employmentForm").attr('action', "{{route('student.experience.update')}}?id=" + id);
+					$("#employmentForm").attr('action', "{{route('applicant.experience.update')}}?id=" + id);
 					$("#employment_title").val(data.employment.employment_title);
 					$("#company_name").val(data.employment.company_name);
 					$("#company_location").val(data.employment.company_location);
@@ -186,8 +186,9 @@
 			if(confirm("Are you sure?")){
 				var id = $(this).data('id');
 				$.ajax({
-					url: "{{route('student.experience.destroy')}}?id=" + id,
-					method: 'GET',
+					url: "{{route('applicant.experience.destroy')}}",
+					method: 'POST',
+					data: { id: id, _token: "{{ csrf_token() }}" },
 					success: function(data){
 						console.log(data);
 						if(data.status == true){

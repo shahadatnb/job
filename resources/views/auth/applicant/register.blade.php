@@ -4,7 +4,7 @@
                 <div class="card-header">{{ __('Register') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('student.register') }}">
+                    <form method="POST" action="{{ route('applicant.register') }}">
                         @csrf
                         {{-- @include('admin.layouts._message')   --}}
                         <div class="form-group row">
@@ -69,7 +69,7 @@
                             </div>
                         </div>
                         <p class="mb-0">
-                        <a href="{{ route('student.login', ['redirect' => request()->input('redirect')]) }}" class="text-center">Already registered? Login</a>
+                        <a href="{{ route('applicant.login', ['redirect' => request()->input('redirect')]) }}" class="text-center">Already registered? Login</a>
                         </p>
                     </form>
                 </div>

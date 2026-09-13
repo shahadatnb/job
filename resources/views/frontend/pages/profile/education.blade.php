@@ -14,7 +14,7 @@
 		</tr>
 	</thead>
 	<tbody id="academicTable">
-		@foreach($student->educations as $edu)
+		@foreach($applicant->educations as $edu)
 		<tr data-id="{{ $edu->id }}">
 				<td>{{ $edu->exam->name }}</td>
 				<td>{{ $edu->group ? $edu->group->name : '' }}</td>
@@ -48,7 +48,7 @@
 		</tr>
 	</thead>
 	<tbody id="trainingTable">
-		@foreach($student->trainings as $edu)
+		@foreach($applicant->trainings as $edu)
 		<tr data-id="{{ $edu->id }}">
 				<td>{{ $edu->training_title }}</td>
 				<td>{{ $edu->topics_covered }}</td>
@@ -81,7 +81,7 @@
 		</tr>
 	</thead>
 	<tbody id="professionalTable">
-		@foreach($student->certifications as $certificate)
+		@foreach($applicant->certifications as $certificate)
 		<tr data-id="{{ $certificate->id }}">
 				<td>{{ $certificate->certification }}</td>
 				<td>{{ $certificate->institute }}</td>
@@ -109,7 +109,7 @@
         </div>
         <div class="modal-body">
             <div id="errorMsg"></div>
-            <form action="{{route('student.education.store')}}" id="eduForm" method="post">
+            <form action="{{route('applicant.education.store')}}" id="eduForm" method="post">
                 @csrf
 								<div class="row">
 									<div class="form-group col-md-6">
@@ -182,7 +182,7 @@
 				</div>
 				<div class="modal-body">
 						<div id="errorMsgTraining"></div>
-						<form action="{{route('student.training.store')}}" id="trainingForm" method="post">
+						<form action="{{route('applicant.training.store')}}" id="trainingForm" method="post">
 								@csrf
 								<div class="form-group">
 										<label for="training_title">Title</label>
@@ -227,7 +227,7 @@
 				</div>
 				<div class="modal-body">
 						<div id="errorMsgProfessional"></div>
-						<form action="{{route('student.certification.store')}}" id="professionalForm" method="post">
+						<form action="{{route('applicant.certification.store')}}" id="professionalForm" method="post">
 								@csrf
 								<div class="form-group">
 										<label for="pro_certification">Certificate</label>
@@ -265,7 +265,7 @@
 						$.LoadingOverlay("show");
             var edu_level_id = $(this).val();
             $.ajax({
-                url: "{{route('student.education.group')}}?edu_level_id=" + edu_level_id,
+                url: "{{route('applicant.education.group')}}?edu_level_id=" + edu_level_id,
                 method: 'GET',
                 success: function(data) {
                     //console.log(data);                    
@@ -321,7 +321,7 @@
 			$('#eduForm')[0].reset();
 			$("input[name='result_type']").trigger('change');
 			$("#errorMsg").empty();
-            $('#eduForm').attr('action', "{{route('student.education.store')}}");
+            $('#eduForm').attr('action', "{{route('applicant.education.store')}}");
             $('#newEduModal').modal('show');
         });
 
@@ -400,11 +400,11 @@
 			$("#errorMsg").empty();
 			var id = $(this).data('id');
 			$.ajax({
-				url: "{{route('student.education.edit')}}?id=" + id,
+				url: "{{route('applicant.education.edit')}}?id=" + id,
 				method: 'GET',
 				success: function(data){
 					//console.log(data);
-					$("#eduForm").attr('action', "{{route('student.education.update')}}?id=" + id);
+					$("#eduForm").attr('action', "{{route('applicant.education.update')}}?id=" + id);
 					$("#edu_level_id").val(data.education.edu_level_id);
 					//$('#edu_level_id').trigger('change');
 							$('#edu_group_id').empty();
@@ -477,8 +477,9 @@
 			if(confirm("Are you sure?")){
 				var id = $(this).data('id');
 				$.ajax({
-					url: "{{route('student.education.destroy')}}?id=" + id,
-					method: 'GET',
+					url: "{{route('applicant.education.destroy')}}",
+					method: 'POST',
+					data: { id: id, _token: "{{ csrf_token() }}" },
 					success: function(data){
 						console.log(data);
 						if(data.status == true){
@@ -492,7 +493,7 @@
 
 		// TRAINING
 		$("#btnTrainingModal").click(function(){
-			$("#trainingForm").attr('action', "{{route('student.training.store')}}");
+			$("#trainingForm").attr('action', "{{route('applicant.training.store')}}");
 			$('#newTrainingModal').modal('show');
 		})
 		$('#trainingForm').submit(function(e) {
@@ -556,11 +557,11 @@
 		$("#nav-education").on('click', '.editTraining', function(){
 			var id = $(this).data('id');
 			$.ajax({
-				url: "{{route('student.training.edit')}}?id=" + id,
+				url: "{{route('applicant.training.edit')}}?id=" + id,
 				method: 'GET',
 				success: function(data){
 					//console.log(data);
-					$("#trainingForm").attr('action', "{{route('student.training.update')}}?id=" + id);
+					$("#trainingForm").attr('action', "{{route('applicant.training.update')}}?id=" + id);
 					$("#training_title").val(data.training.training_title);
 					$("#topics_covered").val(data.training.topics_covered);
 					$("#training_year").val(data.training.training_year);
@@ -576,8 +577,9 @@
 			if(confirm("Are you sure?")){
 				var id = $(this).data('id');
 				$.ajax({
-					url: "{{route('student.training.destroy')}}?id=" + id,
-					method: 'GET',
+					url: "{{route('applicant.training.destroy')}}",
+					method: 'POST',
+					data: { id: id, _token: "{{ csrf_token() }}" },
 					success: function(data){
 						console.log(data);
 						if(data.status == true){
@@ -590,7 +592,7 @@
 
 		// Proffessional Certificate
 		$("#btnProfessionalModal").click(function(){
-			$("#professionalForm").attr('action', "{{route('student.certification.store')}}");
+			$("#professionalForm").attr('action', "{{route('applicant.certification.store')}}");
 			$('#newProfessionalModal').modal('show');
 		})
 		$('#professionalForm').submit(function(e) {
@@ -651,11 +653,11 @@
 		$("#nav-education").on('click', '.editProfessional', function(){
 			var id = $(this).data('id');
 			$.ajax({
-				url: "{{route('student.certification.edit')}}?id=" + id,
+				url: "{{route('applicant.certification.edit')}}?id=" + id,
 				method: 'GET',
 				success: function(data){
 					//console.log(data);
-					$("#professionalForm").attr('action', "{{route('student.certification.update')}}?id=" + id);
+					$("#professionalForm").attr('action', "{{route('applicant.certification.update')}}?id=" + id);
 					$("#pro_certification").val(data.professional.certification);
 					$("#pro_institute").val(data.professional.institute);
 					$("#pro_location").val(data.professional.location);
@@ -670,8 +672,9 @@
 			if(confirm("Are you sure?")){
 				var id = $(this).data('id');
 				$.ajax({
-					url: "{{route('student.certification.destroy')}}?id=" + id,
-					method: 'GET',
+					url: "{{route('applicant.certification.destroy')}}",
+					method: 'POST',
+					data: { id: id, _token: "{{ csrf_token() }}" },
 					success: function(data){
 						console.log(data);
 						if(data.status == true){

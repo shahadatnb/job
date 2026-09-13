@@ -101,7 +101,9 @@
             @foreach ($jobSignature as $item)
               <li id="{{$item->id}}" class="ui-state-default">{{ $item->signature ? $item->signature->name : '' }}
                 <div class="float-right">                               
-                    <a onclick="return confirm('Are You Sure To Delete This Item?')" href="{{route('signature.delete',$item->id)}}" class="btn btn-xs btn-danger">Delete</a>
+                    {!! Form::open(['route' => ['signature.delete', $item->id], 'class' => 'd-inline']) !!}
+                    <button type="submit" onclick="return confirm('Are You Sure To Delete This Item?')" class="btn btn-xs btn-danger">Delete</button>
+                    {!! Form::close() !!}
                 </div>
               </li>
             @endforeach
